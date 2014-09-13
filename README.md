@@ -26,6 +26,11 @@ documentation stored by *Docile.jl*.
 package load times are not impacted when documenting packages using
 `@doc`. See [this issue][issue-url] for details regarding the change.
 
+## Documentation
+
+Documentation for this package is available for the following versions:
+
+* [master][docs-master-url]
 
 [travis-img]: https://travis-ci.org/MichaelHatherly/Lexicon.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/MichaelHatherly/Lexicon.jl
@@ -33,3 +38,5 @@ package load times are not impacted when documenting packages using
 [docile-url]: https://github.com/MichaelHatherly/Docile.jl
 
 [issue-url]: https://github.com/MichaelHatherly/Docile.jl/issues/27
+
+[docs-master-url]: https://michaelhatherly.github.io/Lexicon.jl/master/index.html
