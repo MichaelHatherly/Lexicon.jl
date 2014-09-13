@@ -25,7 +25,7 @@ stringmime("text/plain", results)
 results = @query Docile.Documentation
 stringmime("text/plain", results)
 
-dir  = tempname()
+dir  = joinpath(tempdir(), randstring())
 file = joinpath(dir, "index.html")
 save(file, Lexicon; mathjax = true)
 rm(dir, recursive = true)
