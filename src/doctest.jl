@@ -97,7 +97,7 @@ block.
 **Example:**
 
 ```julia
-doctest(Docile)
+doctest(Lexicon)
 
 ```
 """ {

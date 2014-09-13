@@ -28,7 +28,7 @@ after the search term `q`.
 Display documentation for the `Docile` module.
 
 ```julia
-query(Docile)
+query(Lexicon.Summary)
 ```
 
 To display the documentation for a function, but not the associated
@@ -47,7 +47,7 @@ for this are `:method`, `:global`, `:function`, `:macro`, `:module`, and
 than an object search.
 
 ```julia
-query("Examples", Docile; categories = [:method, :macro])
+query("Examples", Lexicon; categories = [:method, :macro])
 ```
 
 """ {
@@ -74,6 +74,8 @@ function query(q, modules... = Main; categories = Symbol[], all = true)
     ents
 end
 
+@doc "Search packages for *Docile.jl* generated documentation." -> query
+
 @doc """
 
 Search through documentation of a particular package or globally.
@@ -91,7 +93,7 @@ documentation of a method that would be called with the given arguments.
 
 ```julia
 @query query("Examples", Main)
-@query Docile.doctest(Docile)
+@query Lexicon.doctest(Lexicon)
 ```
 
 Full text searching is provided and looks through all text and code in
@@ -107,15 +109,15 @@ method searches the module may be specified.
 
 ```julia
 @query query
-@query Docile.query
-@query Docile.Summary
+@query Lexicon.query
+@query Lexicon.Summary
 ```
 
 Globals require a prefix argument `global` to avoid conflicting with
 function/type queries as see above.
 
 ```julia
-@query global Docile.METADATA # this won't show anything
+@query global Lexicon.METADATA # this won't show anything
 ```
 
 """ ->

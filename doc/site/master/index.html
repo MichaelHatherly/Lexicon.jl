@@ -23,6 +23,15 @@
 <p><em>Lexicon.jl</em> includes a <code>doctest</code> function that tries to execute that code blocks in docstrings. </p><h1 id='module-reference'>Reference</h1>
 <ul class='index'>
 <li >
+<strong>functions:</strong>
+</li>
+<li >
+<ul >
+<li >
+<a href='#query'>query</a></li>
+</ul>
+</li>
+<li >
 <strong>methods:</strong>
 </li>
 <li >
@@ -64,6 +73,22 @@
 </ul>
 <div class='entries'>
 <div class='entry'>
+<div id='query' class='entry-name category-function'>
+<div class='category'>[function] &mdash; </div> query
+</div>
+<div class='entry-body'>
+<p>Search packages for <em>Docile.jl</em> generated documentation.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/query.jl#L77'>Lexicon/src/query.jl:77</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
 <div id='doctest(modname::Module)' class='entry-name category-method'>
 <div class='category'>[method] &mdash; </div> doctest(modname::Module)
 </div>
@@ -71,7 +96,7 @@
 <p>Run code blocks in the docstrings of the specified module <code>modname</code> and return a <code>Summary</code> of the results.</p>
 <p>Code blocks may be skipped by adding an extra newline at the end of the block.</p>
 <p><strong>Example:</strong></p>
-<pre><code>doctest(Docile)
+<pre><code>doctest(Lexicon)
 </code></pre><div class='entry-meta'>
 <strong>Details:</strong>
 <table class='meta-table'>
@@ -87,7 +112,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></code></td>
 </tr>
 </table>
 </div>
@@ -108,7 +133,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -124,7 +149,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/types.jl#L12'>Lexicon/src/types.jl:12</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/types.jl#L12'>Lexicon/src/types.jl:12</a></code></td>
 </tr>
 </table>
 </div>
@@ -145,7 +170,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -160,12 +185,12 @@
 <p>The search can be restricted to particular modules by listing them after the search term <code>q</code>.</p>
 <p><strong>Examples:</strong></p>
 <p>Display documentation for the <code>Docile</code> module.</p>
-<pre><code>query(Docile)</code></pre>
+<pre><code>query(Lexicon.Summary)</code></pre>
 <p>To display the documentation for a function, but not the associated methods use <code>all = false</code> as a keyword to <code>query</code>.</p>
 <pre><code>query(query; all = false)</code></pre>
 <p>Querying can be narrowed down by providing a module or modules to search through (defaults to searching <code>Main</code>).</p>
 <p><code>categories</code> further narrows down the types of results returned. Choices for this are <code>:method</code>, <code>:global</code>, <code>:function</code>, <code>:macro</code>, <code>:module</code>, and <code>:type</code>. These options are more useful when doing a text search rather than an object search.</p>
-<pre><code>query("Examples", Docile; categories = [:method, :macro])</code></pre><div class='entry-meta'>
+<pre><code>query("Examples", Lexicon; categories = [:method, :macro])</code></pre><div class='entry-meta'>
 <strong>Details:</strong>
 <table class='meta-table'>
 <tr >
@@ -175,7 +200,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
 </tr>
 </table>
 </div>
@@ -193,7 +218,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/render.jl#L10'>Lexicon/src/render.jl:10</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/render.jl#L10'>Lexicon/src/render.jl:10</a></code></td>
 </tr>
 </table>
 </div>
@@ -214,7 +239,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -230,7 +255,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></code></td>
 </tr>
 </table>
 </div>
@@ -246,20 +271,20 @@
 <p><strong>Examples:</strong></p>
 <p>In a similar way to <code>Base.@which</code> you can use <code>@query</code> to search for the documentation of a method that would be called with the given arguments.</p>
 <pre><code>@query query("Examples", Main)
-@query Docile.doctest(Docile)</code></pre>
+@query Lexicon.doctest(Lexicon)</code></pre>
 <p>Full text searching is provided and looks through all text and code in docstrings, thus behaving in a similar way to <code>Base.apropos</code>. To specify the module(s) to search through rather use the <code>query</code> method directly.</p>
 <pre><code>@query "Examples"</code></pre>
 <p>Generic functions and types are supported directly by <code>@query</code>. As with method searches the module may be specified.</p>
 <pre><code>@query query
-@query Docile.query
-@query Docile.Summary</code></pre>
+@query Lexicon.query
+@query Lexicon.Summary</code></pre>
 <p>Globals require a prefix argument <code>global</code> to avoid conflicting with function/type queries as see above.</p>
-<pre><code>@query global Docile.METADATA # this won't show anything</code></pre><div class='entry-meta'>
+<pre><code>@query global Lexicon.METADATA # this won't show anything</code></pre><div class='entry-meta'>
 <strong>Details:</strong>
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/42e9a10a3c0fbac883ac0e11e2f50af1b44657b2/src/query.jl#L121'>Lexicon/src/query.jl:121</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/query.jl#L123'>Lexicon/src/query.jl:123</a></code></td>
 </tr>
 </table>
 </div>
