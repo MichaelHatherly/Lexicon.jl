@@ -1,6 +1,8 @@
 # Lexicon
 
 [![Build Status][travis-img]][travis-url]
+[![Build status][appveyor-img]][appveyor-url]
+[![Coverage Status][coveralls-img]][coveralls-url]
 
 ## Installation
 
@@ -30,10 +32,22 @@ package load times are not impacted when documenting packages using
 
 Documentation for this package is available for the following versions:
 
-* [master][docs-master-url]
+**Stable:**
+
+`NA`
+
+**Master:**
+
+[`Lexicon`][docs-master-url]
 
 [travis-img]: https://travis-ci.org/MichaelHatherly/Lexicon.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/MichaelHatherly/Lexicon.jl
+
+[appveyor-img]: https://ci.appveyor.com/api/projects/status/qmuv67ku625ioiwc/branch/master
+[appveyor-url]: https://ci.appveyor.com/project/MichaelHatherly/lexicon-jl/branch/master
+
+[coveralls-img]: https://img.shields.io/coveralls/MichaelHatherly/Lexicon.jl.svg
+[coveralls-url]: https://coveralls.io/r/MichaelHatherly/Lexicon.jl
 
 [docile-url]: https://github.com/MichaelHatherly/Docile.jl
 
