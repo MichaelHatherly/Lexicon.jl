@@ -1,17 +1,29 @@
-# Lexicon
+*Lexicon.jl* provides access to the documentation created by the `@doc`
+macro from [Docile.jl](https://github.com/MichaelHatherly/Docile.jl). It
+allows querying of package documentation from the Julia REPL and
+building HTML documentation.
 
-## Introduction
+### Viewing Documentation
 
-*Lexicon* provides access to the documentation created by the `@doc`
-macro from the *Docile* package. It allows querying of package
-documentation from the Julia REPL and building static HTML and PDF
-documents.
+This package provides several ways to search and view documentation.
 
-## Installation
+`query` and `@query` can be used to search for documented objects in modules
+that are **currently** loaded.
 
-*Lexicon* is available from the official `METADATA` repository
-and can be installed with the following command at the Julia REPL.
+`manual` displays external documentation that doesn't belong to any
+particular object and is intended to be an overview of the entire
+package.
 
-```julia
-Pkg.add("Lexicon")
-```
+To see examples of their use please consult the
+[reference](#module-reference) section below.
+
+### Generating Documentation
+
+Documentation may be exported using the provided `save` function. It
+currently supports HTML output which can be hosted on a package's
+`gh-pages` branch or anywhere other hosting service.
+
+### Doctests
+
+*Lexicon.jl* includes a `doctest` function that tries to execute that
+code blocks in docstrings.

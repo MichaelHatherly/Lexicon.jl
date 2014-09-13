@@ -111,7 +111,7 @@ function writemime(io::IO, mime::MIME"text/html", documentation::Documentation; 
         addentry!(index, obj, entry)
     end
     
-    println(io, "<h1>Reference</h1>")
+    println(io, "<h1 id='module-reference'>Reference</h1>")
     
     ents = Entries()
     wrap(io, "ul", "class='index'") do
