@@ -4,10 +4,15 @@
 [![Build status][appveyor-img]][appveyor-url]
 [![Coverage Status][coveralls-img]][coveralls-url]
 
+*Lexicon.jl* provides access to the documentation created by the `@doc`
+macro from [*Docile.jl*][docile-url]. It
+allows querying of package documentation from the Julia REPL and
+building HTML documentation.
+
 ## Installation
 
 *Lexicon.jl* is not currently in `METADATA` and requires recent changes
-that were made to [*Docile.jl*][docile-url]. To try this package out
+that were made to *Docile.jl*. To try this package out
 now:
 
 ```julia
