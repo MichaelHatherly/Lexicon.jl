@@ -25,7 +25,7 @@ after the search term `q`.
 
 **Examples:**
 
-Display documentation for the `Docile` module.
+Display documentation for the `Lexicon.Summary`:
 
 ```julia
 query(Lexicon.Summary)
@@ -79,8 +79,8 @@ end
 @doc """
 
 Search through documentation of a particular package or globally.
-`@query` supports every type of object that Docile can document with
-`@doc`.
+`@query` supports every type of object that *Docile.jl* can document
+with `@doc`.
 
 Qualifying searches with a module identifier narrows the searching to
 only the specified module. When no module is provided every loaded module

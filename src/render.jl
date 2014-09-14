@@ -1,5 +1,5 @@
 @doc tex"""
-Write the documentation stored in `modulename` module to the specified file `file`
+Write the documentation stored in `modulename` to the specified `file`
 in the format guessed from the file's extension.
 
 If MathJax support is required then the optional keyword argument
@@ -7,6 +7,36 @@ If MathJax support is required then the optional keyword argument
 and `\[...\]` or `$$...$$` for display equations.
 
 Currently supported formats: `HTML`.
+
+**Example:**
+
+The documentation for this package was created in the following manner.
+All commands are run from the top-level folder in the package.
+
+```julia
+save("doc/site/master/index.html", Lexicon)
+
+```
+
+From the command line, or using `run`, push the `doc/site` directory
+to the `gh-pages` branch on the package repository after pushing the
+changes to the `master` branch.
+
+```
+git add .
+git commit -m "documentation changes"
+git push origin master
+git subtree push --prefix doc/site origin gh-pages
+
+```
+
+If this is the first push to the branch then the site may take some time
+to become available. Subsequent updates should appear immediately. Only
+the contents of the `doc/site` folder will be pushed to the branch.
+
+The documentation will be available from
+`https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html`.
+
 """ ->
 function save(file::String, modulename::Module; mathjax = false)
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")

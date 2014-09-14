@@ -18,9 +18,9 @@
 <p><code>manual</code> displays external documentation that doesn't belong to any particular object and is intended to be an overview of the entire package.</p>
 <p>To see examples of their use please consult the <a href="#module-reference">reference</a> section below.</p>
 <h3>Generating Documentation</h3>
-<p>Documentation may be exported using the provided <code>save</code> function. It currently supports HTML output which can be hosted on a package's <code>gh-pages</code> branch or anywhere other hosting service.</p>
+<p>Documentation may be exported using the provided <code>save</code> function. It currently supports HTML output which can be hosted on a package's <code>gh-pages</code> branch or any other hosting service.</p>
 <h3>Doctests</h3>
-<p><em>Lexicon.jl</em> includes a <code>doctest</code> function that tries to execute that code blocks in docstrings. </p><h1 id='module-reference'>Reference</h1>
+<p><em>Lexicon.jl</em> includes a <code>doctest</code> function that runs code blocks in docstrings and generates summaries of the results. </p><h1 id='module-reference'>Reference</h1>
 <ul class='index'>
 <li >
 <strong>functions:</strong>
@@ -82,7 +82,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/query.jl#L77'>Lexicon/src/query.jl:77</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/query.jl#L77'>Lexicon/src/query.jl:77</a></code></td>
 </tr>
 </table>
 </div>
@@ -112,7 +112,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></code></td>
 </tr>
 </table>
 </div>
@@ -133,7 +133,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -149,7 +149,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/types.jl#L12'>Lexicon/src/types.jl:12</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/types.jl#L12'>Lexicon/src/types.jl:12</a></code></td>
 </tr>
 </table>
 </div>
@@ -170,7 +170,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -184,7 +184,7 @@
 <p>Search through loaded documentation for the query term <code>q</code>. <code>q</code> can be a <code>String</code>, for full text searches, or an object such as a function or type. When searching for macros, methods, or globals use the provided <code>@query</code> macro instead.</p>
 <p>The search can be restricted to particular modules by listing them after the search term <code>q</code>.</p>
 <p><strong>Examples:</strong></p>
-<p>Display documentation for the <code>Docile</code> module.</p>
+<p>Display documentation for the <code>Lexicon.Summary</code>:</p>
 <pre><code>query(Lexicon.Summary)</code></pre>
 <p>To display the documentation for a function, but not the associated methods use <code>all = false</code> as a keyword to <code>query</code>.</p>
 <pre><code>query(query; all = false)</code></pre>
@@ -200,7 +200,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
 </tr>
 </table>
 </div>
@@ -211,14 +211,26 @@
 <div class='category'>[method] &mdash; </div> save(file::String,modulename::Module)
 </div>
 <div class='entry-body'>
-<p>Write the documentation stored in <code>modulename</code> module to the specified file <code>file</code> in the format guessed from the file's extension.</p>
+<p>Write the documentation stored in <code>modulename</code> to the specified <code>file</code> in the format guessed from the file's extension.</p>
 <p>If MathJax support is required then the optional keyword argument <code>mathjax::Bool</code> may be given. MathJax uses <code>\(...\)</code> for in-line maths and <code>\[...\]</code> or <code>$$...$$</code> for display equations.</p>
-<p>Currently supported formats: <code>HTML</code>. </p><div class='entry-meta'>
+<p>Currently supported formats: <code>HTML</code>.</p>
+<p><strong>Example:</strong></p>
+<p>The documentation for this package was created in the following manner. All commands are run from the top-level folder in the package.</p>
+<pre><code>save("doc/site/master/index.html", Lexicon)
+</code></pre>
+<p>From the command line, or using <code>run</code>, push the <code>doc/site</code> directory to the <code>gh-pages</code> branch on the package repository after pushing the changes to the <code>master</code> branch.</p>
+<pre><code>git add .
+git commit -m "documentation changes"
+git push origin master
+git subtree push --prefix doc/site origin gh-pages
+</code></pre>
+<p>If this is the first push to the branch then the site may take some time to become available. Subsequent updates should appear immediately. Only the contents of the <code>doc/site</code> folder will be pushed to the branch.</p>
+<p>The documentation will be available from <code>https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html</code>.</p><div class='entry-meta'>
 <strong>Details:</strong>
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/render.jl#L10'>Lexicon/src/render.jl:10</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/render.jl#L40'>Lexicon/src/render.jl:40</a></code></td>
 </tr>
 </table>
 </div>
@@ -239,7 +251,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -255,7 +267,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></code></td>
 </tr>
 </table>
 </div>
@@ -266,7 +278,7 @@
 <div class='category'>[macro] &mdash; </div> @query
 </div>
 <div class='entry-body'>
-<p>Search through documentation of a particular package or globally. <code>@query</code> supports every type of object that Docile can document with <code>@doc</code>.</p>
+<p>Search through documentation of a particular package or globally. <code>@query</code> supports every type of object that <em>Docile.jl</em> can document with <code>@doc</code>.</p>
 <p>Qualifying searches with a module identifier narrows the searching to only the specified module. When no module is provided every loaded module containing docstrings is searched.</p>
 <p><strong>Examples:</strong></p>
 <p>In a similar way to <code>Base.@which</code> you can use <code>@query</code> to search for the documentation of a method that would be called with the given arguments.</p>
@@ -284,7 +296,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/6d1b8128f1784705fd25cff740e55a1c79e248c8/src/query.jl#L123'>Lexicon/src/query.jl:123</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/cdc34eda73d941bcfba5901ff180e7e5eeb25eab/src/query.jl#L123'>Lexicon/src/query.jl:123</a></code></td>
 </tr>
 </table>
 </div>

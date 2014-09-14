@@ -21,9 +21,9 @@ To see examples of their use please consult the
 
 Documentation may be exported using the provided `save` function. It
 currently supports HTML output which can be hosted on a package's
-`gh-pages` branch or anywhere other hosting service.
+`gh-pages` branch or any other hosting service.
 
 ### Doctests
 
-*Lexicon.jl* includes a `doctest` function that tries to execute that
-code blocks in docstrings.
+*Lexicon.jl* includes a `doctest` function that runs code blocks in
+docstrings and generates summaries of the results.
