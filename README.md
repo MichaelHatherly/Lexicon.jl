@@ -11,16 +11,10 @@ building HTML documentation.
 
 ## Installation
 
-*Lexicon.jl* is not currently in `METADATA` and requires recent changes
-that were made to *Docile.jl*. To try this package out
-now:
+*Lexicon.jl* is available from `METADATA` and may be installed via:
 
 ```julia
-Pkg.clone("https://github.com/MichaelHatherly/Lexicon.jl")
-Pkg.checkout("Docile")
-
-using Lexicon
-doctest(Lexicon)
+Pkg.add("Lexicon")
 ```
 
 ## About
@@ -37,9 +31,9 @@ package load times are not impacted when documenting packages using
 
 Documentation for this package is available for the following versions:
 
-**Stable:**
+**Stable (0.0.1):**
 
-`NA`
+[`Lexicon`][docs-stable-url]
 
 **Master:**
 
@@ -58,4 +52,5 @@ Documentation for this package is available for the following versions:
 
 [issue-url]: https://github.com/MichaelHatherly/Docile.jl/issues/27
 
+[docs-stable-url]: https://michaelhatherly.github.io/Lexicon.jl/stable/index.html
 [docs-master-url]: https://michaelhatherly.github.io/Lexicon.jl/master/index.html

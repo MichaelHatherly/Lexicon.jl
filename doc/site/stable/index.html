@@ -1,0 +1,314 @@
+<!doctype html>
+
+<meta charset="utf-8">
+
+<title>Lexicon</title>
+
+<link rel="stylesheet" type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.min.css">
+
+<link rel="stylesheet" type="text/css" href="static/custom.css">
+
+<h1 class='package-header'>Lexicon</h1>
+
+<p><em>Lexicon.jl</em> provides access to the documentation created by the <code>@doc</code> macro from <a href="https://github.com/MichaelHatherly/Docile.jl">Docile.jl</a>. It allows querying of package documentation from the Julia REPL and building HTML documentation.</p>
+<h3>Viewing Documentation</h3>
+<p>This package provides several ways to search and view documentation.</p>
+<p><code>query</code> and <code>@query</code> can be used to search for documented objects in modules that are <strong>currently</strong> loaded.</p>
+<p><code>manual</code> displays external documentation that doesn't belong to any particular object and is intended to be an overview of the entire package.</p>
+<p>To see examples of their use please consult the <a href="#module-reference">reference</a> section below.</p>
+<h3>Generating Documentation</h3>
+<p>Documentation may be exported using the provided <code>save</code> function. It currently supports HTML output which can be hosted on a package's <code>gh-pages</code> branch or any other hosting service.</p>
+<h3>Doctests</h3>
+<p><em>Lexicon.jl</em> includes a <code>doctest</code> function that runs code blocks in docstrings and generates summaries of the results. </p><h1 id='module-reference'>Reference</h1>
+<ul class='index'>
+<li >
+<strong>functions:</strong>
+</li>
+<li >
+<ul >
+<li >
+<a href='#query'>query</a></li>
+</ul>
+</li>
+<li >
+<strong>methods:</strong>
+</li>
+<li >
+<ul >
+<li >
+<a href='#doctest(modname::Module)'>doctest(modname::Module)</a></li>
+<li >
+<a href='#failed(s::Summary)'>failed(s::Summary)</a></li>
+<li >
+<a href='#manual(modulename::Module)'>manual(modulename::Module)</a></li>
+<li >
+<a href='#passed(s::Summary)'>passed(s::Summary)</a></li>
+<li >
+<a href='#query(q,modules...)'>query(q,modules...)</a></li>
+<li >
+<a href='#save(file::String,modulename::Module)'>save(file::String,modulename::Module)</a></li>
+<li >
+<a href='#skipped(s::Summary)'>skipped(s::Summary)</a></li>
+</ul>
+</li>
+<li >
+<strong>types:</strong>
+</li>
+<li >
+<ul >
+<li >
+<a href='#Summary'>Summary</a></li>
+</ul>
+</li>
+<li >
+<strong>macros:</strong>
+</li>
+<li >
+<ul >
+<li >
+<a href='#@query'>@query</a></li>
+</ul>
+</li>
+</ul>
+<div class='entries'>
+<div class='entry'>
+<div id='query' class='entry-name category-function'>
+<div class='category'>[function] &mdash; </div> query
+</div>
+<div class='entry-body'>
+<p>Search packages for <em>Docile.jl</em> generated documentation.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/query.jl#L77'>Lexicon/src/query.jl:77</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='doctest(modname::Module)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> doctest(modname::Module)
+</div>
+<div class='entry-body'>
+<p>Run code blocks in the docstrings of the specified module <code>modname</code> and return a <code>Summary</code> of the results.</p>
+<p>Code blocks may be skipped by adding an extra newline at the end of the block.</p>
+<p><strong>Example:</strong></p>
+<pre><code>doctest(Lexicon)
+</code></pre><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>parameters:</strong></td><td >
+<p><code>modname:</code>The module to try and test.</p>
+</td>
+</tr>
+<tr >
+<td><strong>returns:</strong></td><td >
+<code>(Summary,)</code>
+</td>
+</tr>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='failed(s::Summary)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> failed(s::Summary)
+</div>
+<div class='entry-body'>
+<p>List codeblocks that failed <code>doctest</code>ing.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>returns:</strong></td><td >
+<code>(Results{Failed},)</code>
+</td>
+</tr>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='manual(modulename::Module)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> manual(modulename::Module)
+</div>
+<div class='entry-body'>
+<p>The manual pages associated with a documented module.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/types.jl#L12'>Lexicon/src/types.jl:12</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='passed(s::Summary)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> passed(s::Summary)
+</div>
+<div class='entry-body'>
+<p>List codeblocks that passed <code>doctest</code>ing.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>returns:</strong></td><td >
+<code>(Results{Passed},)</code>
+</td>
+</tr>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='query(q,modules...)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> query(q,modules...)
+</div>
+<div class='entry-body'>
+<p>Search through loaded documentation for the query term <code>q</code>. <code>q</code> can be a <code>String</code>, for full text searches, or an object such as a function or type. When searching for macros, methods, or globals use the provided <code>@query</code> macro instead.</p>
+<p>The search can be restricted to particular modules by listing them after the search term <code>q</code>.</p>
+<p><strong>Examples:</strong></p>
+<p>Display documentation for the <code>Lexicon.Summary</code>:</p>
+<pre><code>query(Lexicon.Summary)</code></pre>
+<p>To display the documentation for a function, but not the associated methods use <code>all = false</code> as a keyword to <code>query</code>.</p>
+<pre><code>query(query; all = false)</code></pre>
+<p>Querying can be narrowed down by providing a module or modules to search through (defaults to searching <code>Main</code>).</p>
+<p><code>categories</code> further narrows down the types of results returned. Choices for this are <code>:method</code>, <code>:global</code>, <code>:function</code>, <code>:macro</code>, <code>:module</code>, and <code>:type</code>. These options are more useful when doing a text search rather than an object search.</p>
+<pre><code>query("Examples", Lexicon; categories = [:method, :macro])</code></pre><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>returns:</strong></td><td >
+<code>(Entries,)</code>
+</td>
+</tr>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='save(file::String,modulename::Module)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> save(file::String,modulename::Module)
+</div>
+<div class='entry-body'>
+<p>Write the documentation stored in <code>modulename</code> to the specified <code>file</code> in the format guessed from the file's extension.</p>
+<p>If MathJax support is required then the optional keyword argument <code>mathjax::Bool</code> may be given. MathJax uses <code>\(...\)</code> for in-line maths and <code>\[...\]</code> or <code>$$...$$</code> for display equations.</p>
+<p>Currently supported formats: <code>HTML</code>.</p>
+<p><strong>Example:</strong></p>
+<p>The documentation for this package was created in the following manner. All commands are run from the top-level folder in the package.</p>
+<pre><code>save("doc/site/master/index.html", Lexicon)
+</code></pre>
+<p>From the command line, or using <code>run</code>, push the <code>doc/site</code> directory to the <code>gh-pages</code> branch on the package repository after pushing the changes to the <code>master</code> branch.</p>
+<pre><code>git add .
+git commit -m "documentation changes"
+git push origin master
+git subtree push --prefix doc/site origin gh-pages
+</code></pre>
+<p>If this is the first push to the branch then the site may take some time to become available. Subsequent updates should appear immediately. Only the contents of the <code>doc/site</code> folder will be pushed to the branch.</p>
+<p>The documentation will be available from <code>https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html</code>.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/render.jl#L40'>Lexicon/src/render.jl:40</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='skipped(s::Summary)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> skipped(s::Summary)
+</div>
+<div class='entry-body'>
+<p>List codeblocks that were skipped during <code>doctest</code>ing.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>returns:</strong></td><td >
+<code>(Results{Skipped},)</code>
+</td>
+</tr>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='Summary' class='entry-name category-type'>
+<div class='category'>[type] &mdash; </div> Summary
+</div>
+<div class='entry-body'>
+<p>Results produced from running <code>doctest</code> on a module.</p><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='@query' class='entry-name category-macro'>
+<div class='category'>[macro] &mdash; </div> @query
+</div>
+<div class='entry-body'>
+<p>Search through documentation of a particular package or globally. <code>@query</code> supports every type of object that <em>Docile.jl</em> can document with <code>@doc</code>.</p>
+<p>Qualifying searches with a module identifier narrows the searching to only the specified module. When no module is provided every loaded module containing docstrings is searched.</p>
+<p><strong>Examples:</strong></p>
+<p>In a similar way to <code>Base.@which</code> you can use <code>@query</code> to search for the documentation of a method that would be called with the given arguments.</p>
+<pre><code>@query query("Examples", Main)
+@query Lexicon.doctest(Lexicon)</code></pre>
+<p>Full text searching is provided and looks through all text and code in docstrings, thus behaving in a similar way to <code>Base.apropos</code>. To specify the module(s) to search through rather use the <code>query</code> method directly.</p>
+<pre><code>@query "Examples"</code></pre>
+<p>Generic functions and types are supported directly by <code>@query</code>. As with method searches the module may be specified.</p>
+<pre><code>@query query
+@query Lexicon.query
+@query Lexicon.Summary</code></pre>
+<p>Globals require a prefix argument <code>global</code> to avoid conflicting with function/type queries as see above.</p>
+<pre><code>@query global Lexicon.METADATA # this won't show anything</code></pre><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/query.jl#L123'>Lexicon/src/query.jl:123</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/mode/julia/julia.min.js"></script>
+
+
+
+<script type="text/javascript" src="static/custom.js"></script>
+
