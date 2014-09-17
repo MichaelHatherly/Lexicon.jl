@@ -74,7 +74,7 @@ function writemime(io::IO, mime::MIME"text/plain", ents::Entries)
     end
 end
 
-function writemime(io, mime::MIME"text/plain", entry::Entry)
+function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
     # Parse docstring into AST and print it out.
     writemime(io, mime, parsedocs(entry))
     
