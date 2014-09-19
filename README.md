@@ -3,6 +3,7 @@
 [![Build Status][travis-img]][travis-url]
 [![Build status][appveyor-img]][appveyor-url]
 [![Coverage Status][coveralls-img]][coveralls-url]
+[![Lexicon][pkgeval-img]][pkgeval-url]
 
 *Lexicon.jl* provides access to the documentation created by the `@doc`
 macro from [*Docile.jl*][docile-url]. It
@@ -47,6 +48,9 @@ Documentation for this package is available for the following versions:
 
 [coveralls-img]: https://img.shields.io/coveralls/MichaelHatherly/Lexicon.jl.svg
 [coveralls-url]: https://coveralls.io/r/MichaelHatherly/Lexicon.jl
+
+[pkgeval-img]: http://pkg.julialang.org/badges/Lexicon_release.svg
+[pkgeval-url]: http://pkg.julialang.org/?pkg=Lexicon&ver=release
 
 [docile-url]: https://github.com/MichaelHatherly/Docile.jl
 

@@ -17,6 +17,6 @@ before_install:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
 script:
   - julia -e 'Pkg.init(); Pkg.clone(pwd())'
-  - julia -e 'Pkg.checkout("Docile"); Pkg.test("Lexicon", coverage=true)'
+  - julia -e 'Pkg.test("Lexicon", coverage=true)'
 after_success:
   - julia -e 'cd(Pkg.dir("Lexicon")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
