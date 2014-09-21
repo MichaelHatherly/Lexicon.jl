@@ -141,28 +141,30 @@ function writemime(io::IO, mime::MIME"text/html", documentation::Documentation; 
         addentry!(index, obj, entry)
     end
     
-    println(io, "<h1 id='module-reference'>Reference</h1>")
+    if !isempty(index)
+        println(io, "<h1 id='module-reference'>Reference</h1>")
     
-    ents = Entries()
-    wrap(io, "ul", "class='index'") do
-        for k in CATEGORY_ORDER
-            haskey(index, k) || continue
-            wrap(io, "li") do
-                println(io, "<strong>$(k)s:</strong>")
-            end
-            wrap(io, "li") do
-                wrap(io, "ul") do
-                    for (s, obj) in index[k]
-                        push!(ents, modulename(documentation), obj, entries(documentation)[obj])
-                        wrap(io, "li") do
-                            print(io, "<a href='#$(s)'>", s, "</a>")
+        ents = Entries()
+        wrap(io, "ul", "class='index'") do
+            for k in CATEGORY_ORDER
+                haskey(index, k) || continue
+                wrap(io, "li") do
+                    println(io, "<strong>$(k)s:</strong>")
+                end
+                wrap(io, "li") do
+                    wrap(io, "ul") do
+                        for (s, obj) in index[k]
+                            push!(ents, modulename(documentation), obj, entries(documentation)[obj])
+                            wrap(io, "li") do
+                                print(io, "<a href='#$(s)'>", s, "</a>")
+                            end
                         end
                     end
                 end
             end
         end
+        writemime(io, mime, ents)
     end
-    writemime(io, mime, ents)
     footer(io, mime, documentation; mathjax = mathjax)
 end
 
