@@ -11,7 +11,7 @@ import Base.Meta: isexpr
 export @query, query, manual, save, doctest, passed, failed, skipped
 
 using Docile, Docile.Interface
-@docstrings {"../doc/manual.md"}
+@docstrings [ :manual => ["../doc/manual.md"] ]
 
 include("types.jl")
 include("query.jl")

@@ -1,4 +1,4 @@
-@doc tex"""
+@doc md"""
 Write the documentation stored in `modulename` to the specified `file`
 in the format guessed from the file's extension.
 
