@@ -45,6 +45,8 @@
 <li >
 <a href='#passed(s::Summary)'>passed(s::Summary)</a></li>
 <li >
+<a href='#query(q)'>query(q)</a></li>
+<li >
 <a href='#query(q,modules...)'>query(q,modules...)</a></li>
 <li >
 <a href='#save(file::String,modulename::Module)'>save(file::String,modulename::Module)</a></li>
@@ -82,7 +84,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/query.jl#L77'>Lexicon/src/query.jl:77</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/query.jl#L77'>Lexicon/src/query.jl:77</a></code></td>
 </tr>
 </table>
 </div>
@@ -112,7 +114,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></code></td>
 </tr>
 </table>
 </div>
@@ -133,7 +135,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -149,7 +151,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/types.jl#L12'>Lexicon/src/types.jl:12</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/types.jl#L12'>Lexicon/src/types.jl:12</a></code></td>
 </tr>
 </table>
 </div>
@@ -170,7 +172,37 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class='entry'>
+<div id='query(q)' class='entry-name category-method'>
+<div class='category'>[method] &mdash; </div> query(q)
+</div>
+<div class='entry-body'>
+<p>Search through loaded documentation for the query term <code>q</code>. <code>q</code> can be a <code>String</code>, for full text searches, or an object such as a function or type. When searching for macros, methods, or globals use the provided <code>@query</code> macro instead.</p>
+<p>The search can be restricted to particular modules by listing them after the search term <code>q</code>.</p>
+<p><strong>Examples:</strong></p>
+<p>Display documentation for the <code>Lexicon.Summary</code>:</p>
+<pre><code>query(Lexicon.Summary)</code></pre>
+<p>To display the documentation for a function, but not the associated methods use <code>all = false</code> as a keyword to <code>query</code>.</p>
+<pre><code>query(query; all = false)</code></pre>
+<p>Querying can be narrowed down by providing a module or modules to search through (defaults to searching <code>Main</code>).</p>
+<p><code>categories</code> further narrows down the types of results returned. Choices for this are <code>:method</code>, <code>:global</code>, <code>:function</code>, <code>:macro</code>, <code>:module</code>, and <code>:type</code>. These options are more useful when doing a text search rather than an object search.</p>
+<pre><code>query("Examples", Lexicon; categories = [:method, :macro])</code></pre><div class='entry-meta'>
+<strong>Details:</strong>
+<table class='meta-table'>
+<tr >
+<td><strong>returns:</strong></td><td >
+<code>(Entries,)</code>
+</td>
+</tr>
+<tr >
+<td><strong>source:</strong></td><td >
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
 </tr>
 </table>
 </div>
@@ -200,7 +232,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/query.jl#L55'>Lexicon/src/query.jl:55</a></code></td>
 </tr>
 </table>
 </div>
@@ -230,7 +262,7 @@ git subtree push --prefix doc/site origin gh-pages
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/render.jl#L40'>Lexicon/src/render.jl:40</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/render.jl#L40'>Lexicon/src/render.jl:40</a></code></td>
 </tr>
 </table>
 </div>
@@ -251,7 +283,7 @@ git subtree push --prefix doc/site origin gh-pages
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></code></td>
 </tr>
 </table>
 </div>
@@ -267,7 +299,7 @@ git subtree push --prefix doc/site origin gh-pages
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></code></td>
 </tr>
 </table>
 </div>
@@ -296,7 +328,7 @@ git subtree push --prefix doc/site origin gh-pages
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/617ededa3b4f2c360ce61bbc4c662f63d78a7ddf/src/query.jl#L123'>Lexicon/src/query.jl:123</a></code></td>
+<code><a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/14e4afca10c0fe45ca0638bee165abd7e7dd306f/src/query.jl#L123'>Lexicon/src/query.jl:123</a></code></td>
 </tr>
 </table>
 </div>
