@@ -64,22 +64,33 @@ parsedocs(entry::Entry) = parsedocs(get(metadata(entry), :format, :md), docs(ent
 
 ## plain ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-function writemime(io::IO, mime::MIME"text/plain", ents::Entries)
-    for (modname, obj, ent) in ents.entries
-        println(io, ">>>")
-        print(io, colorize(:white, "\n [$(category(ent))] "; mode = "bold"))
-        print(io, colorize(:white, string(join(fullname(modname), "."), ".")))
-        println(io, colorize(:blue, "$(writeobj(obj))\n"; mode = "bold"))
+function writemime(io::IO, mime::MIME"text/plain", response::Response)
+    for cat in sort(collect(keys(response.categories)))
+        writemime(io, mime, response.categories[cat])
+    end
+end
+
+function writemime(io::IO, mime::MIME"text/plain", ents::MatchingEntries)
+    for (ent, objs) in ents.entries
+        # Header and signature.
+        println(io, colorize(:blue, "[$(category(ent))]\n"))
+        for obj in sort(collect(objs); by = x -> string(x))
+            print(io, " > ", colorize(:white, join(fullname(modulename(ent)), ".") * "."))
+            println(io, colorize(:cyan, writeobj(obj)))
+        end
+
+        # Main section of an entry's documentation.
         writemime(io, mime, ent)
+        println(io)
     end
 end
 
 function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
     # Parse docstring into AST and print it out.
     writemime(io, mime, parsedocs(entry))
-    
+
     # Print metadata if any is available
-    isempty(metadata(entry)) || println(io, colorize(:green, " Details:\n"; mode = "bold"))
+    isempty(metadata(entry)) || println(io, colorize(:green, " Details:\n"))
     for (k, v) in metadata(entry)
         if isa(v, Vector)
             println(io, "\t", k, ":")

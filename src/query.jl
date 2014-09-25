@@ -1,3 +1,23 @@
+type MatchingEntries
+    entries::Dict{Entry, Set}
+    MatchingEntries(entries = Dict()) = new(entries)
+end
+
+category{C}(entry::Entry{C}) = C
+
+type Response
+    categories::Dict{Symbol, MatchingEntries}
+    Response(categories = Dict()) = new(categories)
+end
+
+function addentry!{T}(ents::MatchingEntries, obj::T, entry::Entry)
+    push!(get!(ents.entries, entry, Set{T}()), obj)
+end
+
+function addentry!{C}(response::Response, obj, entry::Entry{C})
+    addentry!(get!(response.categories, C, MatchingEntries()), obj, entry)
+end
+
 function documented(md = Main)
     modules = Set{Module}()
     for name in names(md, true)
@@ -10,7 +30,6 @@ function documented(md = Main)
     modules
 end
 
-found(q, k, v)         = q == k
 found(q::String, k, v) = contains(string(k), q) || contains(docs(v), q)
 
 @doc """
@@ -31,13 +50,6 @@ Display documentation for the `Lexicon.Summary`:
 query(Lexicon.Summary)
 ```
 
-To display the documentation for a function, but not the associated
-methods use `all = false` as a keyword to `query`.
-
-```julia
-query(query; all = false)
-```
-
 Querying can be narrowed down by providing a module or modules to
 search through (defaults to searching `Main`).
 
@@ -50,29 +62,31 @@ than an object search.
 query("Examples", Lexicon; categories = [:method, :macro])
 ```
 
-""" {
-    :returns => (Entries,)
-    } ->
-function query(q, modules... = Main; categories = Symbol[], all = true)
-    ents = Entries()
+""" ->
+function query(q, modules::Module... = Main; categories = Symbol[])
+    res = Response()
     for m in union([documented(m) for m in modules]...)
-        for (k, v) in entries(documentation(m))
-            if (isempty(categories) || category(v) in categories) && found(q, k, v)
-                push!(ents, m, k, v)
-
-                # Show methods of a generic function. TODO: Optional?
-                if isa(q, Function) && all
-                    for mt in q.env
-                        if haskey(entries(documentation(m)), mt)
-                            push!(ents, m, mt, entries(documentation(m))[mt])
-                        end
-                    end
+        ents = entries(documentation(m))
+        if isa(q, String) # text search
+            for (k, v) in ents
+                if (isempty(categories) || category(v) in categories) && found(q, k, v)
+                    addentry!(res, k, v)
+                end
+            end
+        else # object search
+            haskey(ents, q) && addentry!(res, q, ents[q])
+            if isa(q, Function)
+                for method in q.env
+                    haskey(ents, method) && addentry!(res, method, ents[method])
                 end
             end
         end
     end
-    ents
+    res
 end
+
+@doc "Get documentation related to the method `q` with the given `signature`." ->
+query(q::Function, signature::Tuple) = query(which(q, signature))
 
 @doc "Search packages for *Docile.jl* generated documentation." -> query
 
@@ -122,7 +136,7 @@ function/type queries as see above.
 
 """ ->
 macro query(q)
-    Expr(:call, query, map(esc, parsequery(q))...)
+    Expr(:call, :query, map(esc, parsequery(q))...)
 end
 
 function parsequery(q)
