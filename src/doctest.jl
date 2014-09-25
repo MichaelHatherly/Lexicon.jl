@@ -109,8 +109,9 @@ function doctest(modname::Module)
     println("running doctest on $(modname)...")
     summ = Summary(modname)
     for (obj, entry) in entries(doc)
+        isa(docs(entry), Docs{:md}) || continue # Markdown is the only supported format.
         count = 0
-        for block in parsedocs(entry).content
+        for block in parsed(docs(entry)).content
             if isa(block, Markdown.BlockCode)
                 count += 1
                 try

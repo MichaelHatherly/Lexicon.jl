@@ -3,7 +3,7 @@ module Lexicon
 import Markdown
 import AnsiColor: colorize
 
-import Docile.Interface: manual # extending
+import Docile.Interface: manual, parsedocs # extending
 
 import Base: push!, length, writemime
 import Base.Meta: isexpr

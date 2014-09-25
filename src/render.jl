@@ -43,26 +43,21 @@ function save(file::String, modulename::Module; mathjax = false)
     save(file, mime, documentation(modulename); mathjax = mathjax)
 end
 
-## docstring parser selection –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+## Extending docs format support ––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-const PARSERS = [
-    :md => Markdown.parse
-    # Additional parsers go here.
-    ]
-
-function parsedocs(parser::Symbol, content::String)
-    haskey(PARSERS, parser) || error("no parser available for '$(parser)' format.")
-    PARSERS[parser](content)
-end
-
-function parsedocs(file::String, contents::String)
-    parser = symbol(strip(last(splitext(file)), '.'))
-    parsedocs(parser, contents)
-end
-
-parsedocs(entry::Entry) = parsedocs(get(metadata(entry), :format, :md), docs(entry))
+parsedocs(ds::Docs{:md}) = Markdown.parse(data(ds))
 
 ## plain ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+function writemime(io::IO, mime::MIME"text/plain", docs::Docs{:txt})
+    println(io)
+    for line in split(parsed(docs), "\n")
+        println(io, "  ", line)
+    end
+end
+
+writemime(io::IO, mime::MIME"text/plain", docs::Docs{:md}) = writemime(io, mime, parsed(docs))    
+writemime(io::IO, mime::MIME"text/html", docs::Docs{:md})  = writemime(io, mime, parsed(docs))    
 
 function writemime(io::IO, mime::MIME"text/plain", response::Response)
     for cat in sort(collect(keys(response.categories)))
@@ -81,13 +76,12 @@ function writemime(io::IO, mime::MIME"text/plain", ents::MatchingEntries)
 
         # Main section of an entry's documentation.
         writemime(io, mime, ent)
-        println(io)
     end
 end
 
 function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
     # Parse docstring into AST and print it out.
-    writemime(io, mime, parsedocs(entry))
+    writemime(io, mime, docs(entry))
 
     # Print metadata if any is available
     isempty(metadata(entry)) || println(io, colorize(:green, " Details:\n"))
@@ -104,14 +98,13 @@ function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
         else
             println(io, "\t", k, ": ", v)
         end
-        println(io)
     end
 end
 
 function writemime(io::IO, mime::MIME"text/plain", manual::Manual)
-    for (file, contents) in pages(manual)
-        println(io, colorize(:green, "File: "), file)
-        writemime(io, mime, parsedocs(file, contents))
+    for page in pages(manual)
+        println(io, colorize(:green, "File: "), file(page))
+        writemime(io, mime, docs(page))
     end
 end
 
@@ -136,8 +129,8 @@ function save(file::String, mime::MIME"text/html", documentation::Documentation;
 end
 
 function writemime(io::IO, mime::MIME"text/html", manual::Manual)
-    for (file, contents) in pages(manual)
-        writemime(io, mime, Markdown.parse(contents))
+    for page in pages(manual)
+        writemime(io, mime, docs(page))
     end
 end
 
@@ -195,7 +188,7 @@ function writemime{category}(io::IO, mime::MIME"text/html", modname, obj, ent::E
             println(io, objname)
         end
         wrap(io, "div", "class='entry-body'") do
-            writemime(io, mime, parsedocs(ent))
+            writemime(io, mime, docs(ent))
             wrap(io, "div", "class='entry-meta'") do
                 println(io, "<strong>Details:</strong>")
                 wrap(io, "table", "class='meta-table'") do

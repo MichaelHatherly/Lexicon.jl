@@ -30,7 +30,7 @@ function documented(md = Main)
     modules
 end
 
-found(q::String, k, v) = contains(string(k), q) || contains(docs(v), q)
+found(q::String, k, v) = contains(string(k), q) || contains(data(docs(v)), q)
 
 @doc """
 
