@@ -3,8 +3,6 @@ type MatchingEntries
     MatchingEntries(entries = Dict()) = new(entries)
 end
 
-category{C}(entry::Entry{C}) = C
-
 type Response
     categories::Dict{Symbol, MatchingEntries}
     Response(categories = Dict()) = new(categories)

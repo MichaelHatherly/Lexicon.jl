@@ -13,7 +13,6 @@ export @query, query, manual, save, doctest, passed, failed, skipped
 using Docile, Docile.Interface
 @docstrings [ :manual => ["../doc/manual.md"] ]
 
-include("types.jl")
 include("query.jl")
 include("render.jl")
 include("doctest.jl")

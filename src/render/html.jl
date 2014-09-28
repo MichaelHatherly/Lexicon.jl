@@ -24,6 +24,17 @@ function save(file::String, mime::MIME"text/html", doc::Documentation; mathjax =
     end
 end
 
+type Entries
+    entries::Vector{(Module, Any, Entry)}
+end
+Entries() = Entries((Module, Any, Entry)[])
+
+function push!(ents::Entries, modulename::Module, obj, ent::Entry)
+    push!(ents.entries, (modulename, obj, ent))
+end
+
+length(ents::Entries) = length(ents.entries)
+
 function writemime(io::IO, mime::MIME"text/html", manual::Manual)
     for page in pages(manual)
         writemime(io, mime, docs(page))
