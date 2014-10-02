@@ -165,8 +165,7 @@ documentation of a method that would be called with the given arguments.
 
 Full text searching is provided and looks through all text and code in docstrings, thus
 behaving in a similar way to `Base.apropos`. To specify the module(s) to search through
-rather use the `query` method directly. Note that using the method version of this
-(described in `query`) is much more flexible.
+rather use the `query` method directly.
 
 ```julia
 @query "Examples"

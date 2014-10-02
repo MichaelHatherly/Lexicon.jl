@@ -1,5 +1,3 @@
-Pkg.checkout("Docile") # remove later
-
 using Lexicon, Docile
 using Base.Test
 

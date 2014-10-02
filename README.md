@@ -32,7 +32,7 @@ package load times are not impacted when documenting packages using
 
 Documentation for this package is available for the following versions:
 
-**Stable (0.0.2):**
+**Stable (0.0.3):**
 
 [`Lexicon`][docs-stable-url]
 
