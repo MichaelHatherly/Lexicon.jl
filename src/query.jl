@@ -16,19 +16,79 @@ function addentry!{C}(response::Response, obj, entry::Entry{C})
     addentry!(get!(response.categories, C, MatchingEntries()), obj, entry)
 end
 
-function documented(md = Main)
-    modules = Set{Module}()
-    for name in names(md, true)
-        isdefined(md, name) || continue
-        if isa((obj = getfield(md, name);), Module) && isdocumented(obj)
-            push!(modules, obj)
-            md == obj || union!(modules, documented(obj))
+# Return the set of submodules of the given `modules` that are documented.
+function documented(modules::Module... = Main)
+    out = Set{Module}()
+    for md in modules
+        for name in names(md, true)
+            isdefined(md, name) || continue
+            if isa((obj = getfield(md, name);), Module) && isdocumented(obj)
+                push!(out, obj)
+                md == obj || union!(out, documented(obj))
+            end
         end
     end
-    modules
+    out
 end
 
+# Methods of `f` with ordered partial match of their signature to `sig`.
+function partial_signature_matching(f::Function, sig::Tuple)
+    meths = Set{Method}()
+    for method in f.env
+        msig = method.sig
+        for i = 1:length(msig)
+            isequal(typeintersect(msig[1:i], sig), None) || push!(meths, method)
+        end
+    end
+    meths
+end
+
+# Does the signature or raw docstring contain the search term `q`.
 found(q::String, k, v) = contains(string(k), q) || contains(data(docs(v)), q)
+
+# General object querying.
+function _query!(res, mods, cats, object)
+    for m in mods
+        ents = entries(documentation(m))
+        haskey(ents, object) && addentry!(res, object, ents[object])
+        if isa(object, Function)
+            for method in object.env
+                haskey(ents, method) && addentry!(res, method, ents[method])
+            end
+        end   
+    end
+    res
+end
+
+# Partial method signature queries. Use `@query <methodcall(args...)>` for exact matches.
+function _query!(res, mods, cats, f::Function, sig::Tuple)
+    meths = partial_signature_matching(f, sig)
+    for m in mods
+        ents = entries(documentation(m))
+        for meth in meths
+            haskey(ents, meth) && addentry!(res, meth, ents[meth])
+        end
+    end
+    res
+end
+
+# Text search of signatures and contents of docstring. Filter by category.
+function _query!(res, mods, cats, q::String)
+    for m in mods
+        ents = entries(documentation(m))
+        for (k, v) in ents
+            if (isempty(cats) || category(v) in cats) && found(q, k, v)
+                addentry!(res, k, v)
+            end
+        end
+    end
+    res
+end
+
+# Module-qualified object querying. For macros and globals.
+function _query!(res, mods, cats, q, modules::Module...)
+    _query!(res, documented(modules...), cats, q)    
+end
 
 @doc """
 
@@ -42,7 +102,22 @@ after the search term `q`.
 
 **Examples:**
 
-Display documentation for the `Lexicon.Summary`:
+Functions and their associated methods can be displayed by passing the function as the
+first argument to query.
+
+```julia
+query(query)
+```
+
+The search can be restricted to only methods whose signatures match a given tuple. The
+following `query` call will show all `query` methods where the type signature *begins*
+with `String`. For exact matching of methods see the `@query` macro.
+
+```julia
+query(query, (String,))
+```
+
+To display documentation for the type `Lexicon.Summary`:
 
 ```julia
 query(Lexicon.Summary)
@@ -53,40 +128,20 @@ search through (defaults to searching `Main`).
 
 `categories` further narrows down the types of results returned. Choices
 for this are `:method`, `:global`, `:function`, `:macro`, `:module`, and
-`:type`. These options are more useful when doing a text search rather
-than an object search.
+`:type`. These options only apply to text searches such as the following:
 
 ```julia
 query("Examples", Lexicon; categories = [:method, :macro])
 ```
 
+The previous example displays all method and macro documentation in the `Lexicon` module
+containing the text "Examples".
+
+
 """ ->
-function query(q, modules::Module... = Main; categories = Symbol[])
-    res = Response()
-    for m in union([documented(m) for m in modules]...)
-        ents = entries(documentation(m))
-        if isa(q, String) # text search
-            for (k, v) in ents
-                if (isempty(categories) || category(v) in categories) && found(q, k, v)
-                    addentry!(res, k, v)
-                end
-            end
-        else # object search
-            haskey(ents, q) && addentry!(res, q, ents[q])
-            if isa(q, Function)
-                for method in q.env
-                    haskey(ents, method) && addentry!(res, method, ents[method])
-                end
-            end
-        end
-    end
-    res
+function query(args...; categories = Symbol[])
+    _query!(Response(), documented(), categories, args...)    
 end
-
-@doc "Get documentation related to the method `q` with the given `signature`." ->
-query(q::Function, signature::Tuple) = query(which(q, signature))
-
-@doc "Search packages for *Docile.jl* generated documentation." -> query
 
 @doc """
 
@@ -108,9 +163,10 @@ documentation of a method that would be called with the given arguments.
 @query Lexicon.doctest(Lexicon)
 ```
 
-Full text searching is provided and looks through all text and code in
-docstrings, thus behaving in a similar way to `Base.apropos`. To specify
-the module(s) to search through rather use the `query` method directly.
+Full text searching is provided and looks through all text and code in docstrings, thus
+behaving in a similar way to `Base.apropos`. To specify the module(s) to search through
+rather use the `query` method directly. Note that using the method version of this
+(described in `query`) is much more flexible.
 
 ```julia
 @query "Examples"
@@ -138,10 +194,8 @@ macro query(q)
 end
 
 function parsequery(q)
-    if isa(q, Union(String, Symbol))
+    if isa(q, Union(String, Symbol)) || isexpr(q, :(.))
         (q,)
-    elseif isexpr(q, :(.))
-        (q, q.args[1])
     elseif isexpr(q, [:macrocall, :global])
         if isexpr((ex = q.args[1];), :(.))
             (Expr(:quote, ex.args[end].args[end]), ex.args[1])

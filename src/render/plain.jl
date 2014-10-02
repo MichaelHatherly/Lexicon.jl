@@ -22,7 +22,7 @@ end
 function writemime(io::IO, mime::MIME"text/plain", ents::MatchingEntries)
     for (ent, objs) in ents.entries
         # Header and signature.
-        println(io, colorize(:blue, "[$(category(ent))]\n"))
+        println(io, colorize(:blue, "\n[$(category(ent))]\n"))
         for obj in sort(collect(objs); by = x -> string(x))
             print(io, " > ", colorize(:white, join(fullname(modulename(ent)), ".") * "."))
             println(io, colorize(:cyan, writeobj(obj)))
