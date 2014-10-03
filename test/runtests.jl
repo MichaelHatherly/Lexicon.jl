@@ -1,4 +1,4 @@
-using Lexicon, Docile
+using Lexicon, Docile, Lint
 using Base.Test
 
 # some basic tests
@@ -25,7 +25,10 @@ stringmime("text/plain", results)
 results = @query Docile.Documentation
 stringmime("text/plain", results)
 
-dir  = joinpath(tempdir(), randstring())
-file = joinpath(dir, "index.html")
-save(file, Lexicon; mathjax = true)
+dir = joinpath(tempdir(), randstring())
+f = joinpath(dir, "index.html")
+save(f, Lexicon; mathjax = true)
 rm(dir, recursive = true)
+
+# Lint the package.
+Lint.lintpkg("Lexicon")

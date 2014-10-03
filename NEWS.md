@@ -1,3 +1,8 @@
+### v0.0.4
+
+* Reinstate missing `manual` method.
+* Run Lint.jl on package to catch compatibility problems.
+
 ### v0.0.3
 
 * Add `query(f::Function, sig)` method with partial signature matching.

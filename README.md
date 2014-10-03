@@ -21,7 +21,7 @@ Pkg.add("Lexicon")
 ## About
 
 *Docile.jl* retains the documentation layer (`@doc`, `@docstrings`,
-`@tex_mstr`), while *Lexicon.jl* takes over the presentation of
+`@md_mstr`), while *Lexicon.jl* takes over the presentation of
 documentation stored by *Docile.jl*.
 
 *Lexicon.jl* separates the non-essential parts from *Docile.jl* so that
@@ -30,9 +30,9 @@ package load times are not impacted when documenting packages using
 
 ## Documentation
 
-Documentation for this package is available for the following versions:
+Module documentation for this package is available for the following versions:
 
-**Stable (0.0.3):**
+**Stable (0.0.4):**
 
 [`Lexicon`][docs-stable-url]
 

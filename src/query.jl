@@ -207,3 +207,6 @@ function parsequery(q)
         error("can't recognise input.")
     end
 end
+
+@doc "Show the manual pages associated with `modname` module." ->
+manual(modname::Module) = manual(documentation(modname))
