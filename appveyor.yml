@@ -4,8 +4,8 @@ environment:
   - JULIAVERSION: "stable/win32"
   - JULIAVERSION: "stable/win64"
   # Nightlies
-  - JULIAVERSION: "download/win32"
-  - JULIAVERSION: "download/win64"
+#  - JULIAVERSION: "download/win32"
+#  - JULIAVERSION: "download/win64"
 
 install:
 # Download most recent Julia Windows binary
