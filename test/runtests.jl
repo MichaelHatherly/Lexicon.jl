@@ -1,4 +1,4 @@
-using Lexicon, Docile, Lint
+using Lexicon, Docile
 using Base.Test
 
 # some basic tests
@@ -29,6 +29,3 @@ dir = joinpath(tempdir(), randstring())
 f = joinpath(dir, "index.html")
 save(f, Lexicon; mathjax = true)
 rm(dir, recursive = true)
-
-# Lint the package.
-Lint.lintpkg("Lexicon")
