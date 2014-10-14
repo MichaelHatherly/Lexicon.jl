@@ -1,7 +1,7 @@
 ## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 function writemime(io::IO, mime::MIME"text/plain", docs::Docs{:md})
-    writemime(io, mime, parsed(docs))    
+    writemime(io, mime, parsed(docs))
 end
 
 function writemime(io::IO, mime::MIME"text/plain", docs::Docs{:txt})

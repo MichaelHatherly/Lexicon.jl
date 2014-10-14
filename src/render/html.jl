@@ -1,7 +1,7 @@
 ## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 function writemime(io::IO, mime::MIME"text/html", docs::Docs{:md})
-    writemime(io, mime, parsed(docs))    
+    writemime(io, mime, parsed(docs))
 end
 
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
@@ -13,7 +13,7 @@ function save(file::String, mime::MIME"text/html", doc::Documentation; mathjax =
         info("writing documentation to $(file)")
         writemime(f, mime, doc; mathjax = mathjax)
     end
-    
+
     # copy static files
     src = joinpath(Pkg.dir("Lexicon"), "static")
     dst = joinpath(dirname(file), "static")
@@ -44,15 +44,15 @@ end
 function writemime(io::IO, mime::MIME"text/html", doc::Documentation; mathjax = false)
     header(io, mime, doc)
     writemime(io, mime, manual(doc))
-    
+
     index = Dict{Symbol, Any}()
     for (obj, entry) in entries(doc)
         addentry!(index, obj, entry)
     end
-    
+
     if !isempty(index)
         println(io, "<h1 id='module-reference'>Reference</h1>")
-    
+
         ents = Entries()
         wrap(io, "ul", "class='index'") do
             for k in CATEGORY_ORDER
@@ -115,43 +115,52 @@ function writemime(io::IO, mime::MIME"text/html", md::Meta)
     println(io, "<code>", md.content, "</code>")
 end
 
-function writemime(io::IO, ::MIME"text/html", m::Meta{:parameters})
-    for (k, v) in m.content
-        println(io, "<p><code>", k, ":</code>", v, "</p>")
+function writemime(io::IO, mime::MIME"text/html", m::Meta{:parameters})
+    wrap(io, "table") do
+        for (k, v) in m.content
+            wrap(io, "tr") do
+                wrap(io, "td") do
+                    println(io, "<code>", k, "</code>")
+                end
+                wrap(io, "td") do
+                    writemime(io, mime, Markdown.parse(v))
+                end
+            end
+        end
     end
 end
 
 function writemime(io::IO, ::MIME"text/html", m::Meta{:source})
     path = last(split(m.content[2], r"v[\d\.]+(/|\\)"))
-    print(io, "<code><a href='$(url(m))'>$(path):$(m.content[1])</a></code>")
+    print(io, "<a href='$(url(m))'>$(path):$(m.content[1])</a>")
 end
 
 function header(io::IO, ::MIME"text/html", doc::Documentation)
     println(io, """
     <!doctype html>
-    
+
     <meta charset="utf-8">
-    
+
     <title>$(doc.modname)</title>
-    
+
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.min.css">
-    
+
     <link rel="stylesheet" type="text/css" href="static/custom.css">
-    
+
     <h1 class='package-header'>$(doc.modname)</h1>
     """)
 end
 
 function footer(io::IO, ::MIME"text/html", doc::Documentation; mathjax = false)
     println(io, """
-    
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/mode/julia/julia.min.js"></script>
-    
+
     $(mathjax ? "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>" : "")
-    
+
     <script type="text/javascript" src="static/custom.js"></script>
     """)
 end
