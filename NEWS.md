@@ -1,3 +1,7 @@
+### v0.0.5
+
+* Correctly display `:parameter` metadata in HTML output.
+
 ### v0.0.4
 
 * Reinstate missing `manual` method.
