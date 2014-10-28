@@ -8,7 +8,7 @@ type Result{S <: Status}
     codeblock::String
     exception::Exception
     location::(Any, Int)
-    
+
     Result(codeblock, location) = new(codeblock, ErrorException(""), location)
     Result(codeblock, exception, location) = new(codeblock, exception, location)
 end
@@ -38,7 +38,7 @@ end
 
 type Results{S <: Status}
     results::Vector{Result{S}}
-    
+
     Results() = new(Results{S}[])
 end
 
@@ -56,7 +56,7 @@ type Summary
     passed::Results{Passed}
     failed::Results{Failed}
     skipped::Results{Skipped}
-    
+
     Summary(modname) = new(modname, Results{Passed}(), Results{Failed}(), Results{Skipped}())
 end
 
@@ -64,7 +64,7 @@ for (T, f, docs) in [(Passed, :passed, "passed"),
                      (Failed, :failed, "failed"),
                      (Skipped, :skipped, "were skipped during")]
     @eval begin
-        @doc "List codeblocks that $($docs) `doctest`ing." { :returns => (Results{$(T)},) } ->
+        @doc "List codeblocks that $($docs) `doctest`ing." [ :returns => (Results{$(T)},) ] ->
         $(f)(s::Summary) = s.$(f)
         push!(s::Summary, r::Result{$(T)}) = push!($(f)(s).results, r)
     end
@@ -80,7 +80,7 @@ function writemime(io::IO, mime::MIME"text/plain", s::Summary)
 
     npassed, nfailed, nskipped = map(length, (passed(s), failed(s), skipped(s)))
     total = npassed + nfailed + nskipped
-    
+
     println(io, "[doctest summary]\n")
     @printf(io, " * pass: %5d / %d\n", npassed, total)
     @printf(io, " * fail: %5d / %d\n", nfailed, total)
@@ -100,10 +100,10 @@ block.
 doctest(Lexicon)
 
 ```
-""" {
-    :parameters => {(:modname, "The module to try and test.")},
+""" [
+    :parameters => [(:modname, "The module to try and test.")],
     :returns => (Summary,)
-    } ->
+    ] ->
 function doctest(modname::Module)
     doc = documentation(modname)
     println("running doctest on $(modname)...")
