@@ -1,3 +1,7 @@
+### v0.0.6
+
+* Use new Docile syntax for `@docstrings` and `@doc` metadata.
+
 ### v0.0.5
 
 * Correctly display `:parameter` metadata in HTML output.
