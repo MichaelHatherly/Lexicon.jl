@@ -95,7 +95,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/doctest.jl#L106'>Lexicon/src/doctest.jl:106</a></td>
 </tr>
 </table>
 </div>
@@ -116,7 +116,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></td>
 </tr>
 </table>
 </div>
@@ -132,7 +132,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/query.jl#L211'>Lexicon/src/query.jl:211</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/query.jl#L220'>Lexicon/src/query.jl:220</a></td>
 </tr>
 </table>
 </div>
@@ -153,7 +153,7 @@
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></td>
 </tr>
 </table>
 </div>
@@ -182,7 +182,7 @@
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/query.jl#L141'>Lexicon/src/query.jl:141</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/query.jl#L141'>Lexicon/src/query.jl:141</a></td>
 </tr>
 </table>
 </div>
@@ -212,7 +212,7 @@ git subtree push --prefix doc/site origin gh-pages
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/render.jl#L46'>Lexicon/src/render.jl:46</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/render.jl#L46'>Lexicon/src/render.jl:46</a></td>
 </tr>
 </table>
 </div>
@@ -233,7 +233,7 @@ git subtree push --prefix doc/site origin gh-pages
 </tr>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/doctest.jl#L67'>Lexicon/src/doctest.jl:67</a></td>
 </tr>
 </table>
 </div>
@@ -249,7 +249,7 @@ git subtree push --prefix doc/site origin gh-pages
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/doctest.jl#L53'>Lexicon/src/doctest.jl:53</a></td>
 </tr>
 </table>
 </div>
@@ -261,6 +261,7 @@ git subtree push --prefix doc/site origin gh-pages
 </div>
 <div class='entry-body'>
 <p>Search through documentation of a particular package or globally. <code>@query</code> supports every type of object that <em>Docile.jl</em> can document with <code>@doc</code>.</p>
+<p><strong>Note:</strong> the functionality provided by <code>@query</code> is also available using <code>?</code> at the Julia REPL. It displays documentation from the standard Julia help system followed by package documentation from Docile.</p>
 <p>Qualifying searches with a module identifier narrows the searching to only the specified module. When no module is provided every loaded module containing docstrings is searched.</p>
 <p><strong>Examples:</strong></p>
 <p>In a similar way to <code>Base.@which</code> you can use <code>@query</code> to search for the documentation of a method that would be called with the given arguments.</p>
@@ -278,7 +279,7 @@ git subtree push --prefix doc/site origin gh-pages
 <table class='meta-table'>
 <tr >
 <td><strong>source:</strong></td><td >
-<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/0f271dfba5db81221deb6c6b45db2809b8c24b34/src/query.jl#L190'>Lexicon/src/query.jl:190</a></td>
+<a href='https://github.com/MichaelHatherly/Lexicon.jl/tree/b2bd45e8f3ac5c541f8de319c10472c9df789537/src/query.jl#L194'>Lexicon/src/query.jl:194</a></td>
 </tr>
 </table>
 </div>
