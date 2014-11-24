@@ -19,9 +19,6 @@ stringmime("text/plain", results)
 results = @query doctest(Lexicon)
 stringmime("text/plain", results)
 
-results = @query global Lexicon.__METADATA__
-stringmime("text/plain", results)
-
 results = @query Docile.Documentation
 stringmime("text/plain", results)
 

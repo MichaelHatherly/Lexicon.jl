@@ -18,4 +18,6 @@ include("query.jl")
 include("render.jl")
 include("doctest.jl")
 
+__init__() = setup_help() # Hook into the REPL's `?`.
+
 end # module

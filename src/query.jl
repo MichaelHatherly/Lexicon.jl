@@ -55,7 +55,7 @@ function _query!(res, mods, cats, object)
             for method in object.env
                 haskey(ents, method) && addentry!(res, method, ents[method])
             end
-        end   
+        end
     end
     res
 end
@@ -87,7 +87,7 @@ end
 
 # Module-qualified object querying. For macros and globals.
 function _query!(res, mods, cats, q, modules::Module...)
-    _query!(res, documented(modules...), cats, q)    
+    _query!(res, documented(modules...), cats, q)
 end
 
 @doc """
@@ -140,7 +140,7 @@ containing the text "Examples".
 
 """ ->
 function query(args...; categories = Symbol[])
-    _query!(Response(), documented(), categories, args...)    
+    _query!(Response(), documented(), categories, args...)
 end
 
 @doc """
@@ -148,6 +148,10 @@ end
 Search through documentation of a particular package or globally.
 `@query` supports every type of object that *Docile.jl* can document
 with `@doc`.
+
+**Note:** the functionality provided by `@query` is also available using `?` at the Julia
+REPL. It displays documentation from the standard Julia help system followed by package
+documentation from Docile.
 
 Qualifying searches with a module identifier narrows the searching to
 only the specified module. When no module is provided every loaded module
@@ -189,7 +193,12 @@ function/type queries as see above.
 
 """ ->
 macro query(q)
-    Expr(:call, :query, map(esc, parsequery(q))...)
+    # standard help doesn't support some of Lexicon's query syntax.
+    h = (isinteractive() && !isexpr(q, :global)) ? :(Base.Help.@help $(esc(q))) : :()
+    quote
+        $h
+        query($(map(esc, parsequery(q))...))
+    end
 end
 
 function parsequery(q)
@@ -210,3 +219,17 @@ end
 
 @doc "Show the manual pages associated with `modname` module." ->
 manual(modname::Module) = manual(documentation(modname))
+
+function setup_help()
+    # Some environments, such as IJulia & Juno don't have an active repl.
+    if isdefined(Base, :active_repl)
+        repl = Base.active_repl
+
+        julia_mode = repl.interface.modes[1]
+        help_mode  = repl.interface.modes[3]
+
+        help_mode.on_done = Base.REPL.respond(repl, julia_mode) do line
+            parse("Lexicon.@query $(line)", raise = false)
+        end
+    end
+end
