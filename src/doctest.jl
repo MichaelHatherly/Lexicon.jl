@@ -50,7 +50,6 @@ end
 
 length(rs::Results) = length(rs.results)
 
-@doc "Results produced from running `doctest` on a module." ->
 type Summary
     modname::Module
     passed::Results{Passed}
@@ -64,7 +63,6 @@ for (T, f, docs) in [(Passed, :passed, "passed"),
                      (Failed, :failed, "failed"),
                      (Skipped, :skipped, "were skipped during")]
     @eval begin
-        @doc meta("List codeblocks that $($docs) `doctest`ing.", returns = (Results{$(T)},)) ->
         $(f)(s::Summary) = s.$(f)
         push!(s::Summary, r::Result{$(T)}) = push!($(f)(s).results, r)
     end
@@ -86,24 +84,6 @@ function writemime(io::IO, mime::MIME"text/plain", s::Summary)
     @printf(io, " * fail: %5d / %d\n", nfailed, total)
     @printf(io, " * skip: %5d / %d\n", nskipped, total)
 end
-
-@doc meta(
-    """
-    Run code blocks in the docstrings of the specified module `modname` and return a
-    `Summary` of the results.
-
-    Code blocks may be skipped by adding an extra newline at the end of the block.
-
-    **Example:**
-
-    ```julia
-    doctest(Lexicon)
-
-    ```
-    """,
-
-    parameters = [(:modname, "The module to try and test.")],
-    returns    = (Summary,)) ->
 
 function doctest(modname::Module)
     doc = documentation(modname)

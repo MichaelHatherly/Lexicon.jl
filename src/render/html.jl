@@ -6,7 +6,7 @@ end
 
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
 
-function save(file::String, mime::MIME"text/html", doc::Documentation; mathjax = false)
+function save(file::String, mime::MIME"text/html", doc::Metadata; mathjax = false)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
@@ -41,9 +41,13 @@ function writemime(io::IO, mime::MIME"text/html", manual::Manual)
     end
 end
 
-function writemime(io::IO, mime::MIME"text/html", doc::Documentation; mathjax = false)
+function writemime(io::IO, mime::MIME"text/html", doc::Metadata; mathjax = false)
     header(io, mime, doc)
-    writemime(io, mime, manual(doc))
+
+    rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
+    for file in manual(doc)
+        writemime(io, mime, Markdown.parse(readall(joinpath(rootdir, file))))
+    end
 
     index = Dict{Symbol, Any}()
     for (obj, entry) in entries(doc)
@@ -87,7 +91,7 @@ end
 
 function writemime{category}(io::IO, mime::MIME"text/html", modname, obj, ent::Entry{category})
     wrap(io, "div", "class='entry'") do
-        objname = writeobj(obj)
+        objname = writeobj(obj, ent)
         wrap(io, "div", "id='$(objname)' class='entry-name category-$(category)'") do
             print(io, "<div class='category'>[$(category)] &mdash; </div> ")
             println(io, objname)
@@ -97,11 +101,11 @@ function writemime{category}(io::IO, mime::MIME"text/html", modname, obj, ent::E
             wrap(io, "div", "class='entry-meta'") do
                 println(io, "<strong>Details:</strong>")
                 wrap(io, "table", "class='meta-table'") do
-                    for k in sort(collect(keys(ent.meta)))
+                    for k in sort(collect(keys(ent.data)))
                         wrap(io, "tr") do
                             print(io, "<td><strong>", k, ":</strong></td>")
                             wrap(io, "td") do
-                                writemime(io, mime, Meta{k}(ent.meta[k]))
+                                writemime(io, mime, Meta{k}(ent.data[k]))
                             end
                         end
                     end
@@ -135,7 +139,7 @@ function writemime(io::IO, ::MIME"text/html", m::Meta{:source})
     print(io, "<a href='$(url(m))'>$(path):$(m.content[1])</a>")
 end
 
-function header(io::IO, ::MIME"text/html", doc::Documentation)
+function header(io::IO, ::MIME"text/html", doc::Metadata)
     println(io, """
     <!doctype html>
 
@@ -152,7 +156,7 @@ function header(io::IO, ::MIME"text/html", doc::Documentation)
     """)
 end
 
-function footer(io::IO, ::MIME"text/html", doc::Documentation; mathjax = false)
+function footer(io::IO, ::MIME"text/html", doc::Metadata; mathjax = false)
     println(io, """
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

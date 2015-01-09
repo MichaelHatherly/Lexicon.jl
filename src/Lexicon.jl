@@ -1,18 +1,39 @@
 module Lexicon
 
 import Markdown
-import AnsiColor: colorize
 
-import Docile.Interface: manual, parsedocs # extending
+import Docile.Interface:
 
-import Base: push!, length, writemime
-import Base.Meta: isexpr
+    parsedocs
 
-export @query, query, manual, save, doctest, passed, failed, skipped
+import Base:
 
-using Docile, Docile.Interface
+    length,
+    push!,
+    run,
+    writemime,
+    ==
 
-@docstrings(manual = ["../doc/manual.md"])
+using
+
+    AnsiColor,
+    Base.Meta,
+    Compat,
+    Docile,
+    Docile.Interface
+
+export
+
+    @query,
+    query,
+    save,
+
+    doctest,
+    failed,
+    passed,
+    skipped
+
+@document
 
 include("query.jl")
 include("render.jl")

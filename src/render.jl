@@ -1,10 +1,10 @@
-## Extending docs format support ––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+## Extending docs format support --------------------------------------------------------
 
 parsedocs(ds::Docs{:md}) = Markdown.parse(data(ds))
 
-## Common –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+## Common -------------------------------------------------------------------------------
 
-@doc md"""
+md"""
 Write the documentation stored in `modulename` to the specified `file`
 in the format guessed from the file's extension.
 
@@ -43,7 +43,7 @@ the contents of the `doc/site` folder will be pushed to the branch.
 The documentation will be available from
 `https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html`.
 
-""" ->
+"""
 function save(file::String, modulename::Module; mathjax = false)
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
     save(file, mime, documentation(modulename); mathjax = mathjax)
@@ -57,11 +57,16 @@ type Meta{keyword}
 end
 
 # Cleanup object signatures. Remove method location links.
-writeobj(any)       = string(any)
-writeobj(m::Method) = first(split(string(m), " at "))
+
+writeobj(any, entry)       = replace(string(any), ",", ", ")
+writeobj(m::Method, entry) = replace(first(split(string(m), " at ")), ",", ", ")
+
+function writeobj(f::Function, entry::Entry{:macro})
+    replace(string("@", metadata(entry)[:signature]), ",", ", ")
+end
 
 function addentry!{category}(index, obj, entry::Entry{category})
-    section, pair = get!(index, category, (String, Any)[]), (writeobj(obj), obj)
+    section, pair = get!(index, category, (String, Any)[]), (writeobj(obj, entry), obj)
     insert!(section, searchsortedlast(section, pair, by = x -> first(x)) + 1, pair)
 end
 
@@ -86,7 +91,7 @@ function url(m::Meta{:source})
     end
 end
 
-## Format-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+## Format-specific rendering ------------------------------------------------------------
 
 include("render/plain.jl")
 include("render/html.jl")

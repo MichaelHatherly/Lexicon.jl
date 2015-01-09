@@ -1,4 +1,4 @@
-## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+## Docs-specific rendering --------------------------------------------------------------
 
 function writemime(io::IO, mime::MIME"text/plain", docs::Docs{:md})
     writemime(io, mime, parsed(docs))
@@ -11,26 +11,67 @@ function writemime(io::IO, mime::MIME"text/plain", docs::Docs{:txt})
     end
 end
 
-## General plain-text rendering - REPL ––––––––––––––––––––––––––––––––––––––––––––––––––
+## General plain-text rendering - REPL --------------------------------------------------
 
-function writemime(io::IO, mime::MIME"text/plain", response::Response)
-    for cat in sort(collect(keys(response.categories)))
-        writemime(io, mime, response.categories[cat])
+function writemime(io::IO, mime::MIME"text/plain", qr::QueryResults)
+    single = length(qr.matches) ≡ 1
+    count = 1
+    msg = false
+    for (score, entries) in reverse!(sort(collect(qr.scores)))
+        for entry in entries
+            match = qr.matches[entry]
+            count, msg = writemime(io, mime, match, count, qr.query.index, single)
+        end
+    end
+    if msg && HELP_MESSAGE[1]
+        println(io, """
+
+        Note: To display documentation for a specific entry listed above append
+        the corresponding number to your previous query, ie:
+
+            help?> "help" 1""")
+        HELP_MESSAGE[1] = false
     end
 end
 
-function writemime(io::IO, mime::MIME"text/plain", ents::MatchingEntries)
-    for (ent, objs) in ents.entries
-        # Header and signature.
-        println(io, colorize(:blue, "\n[$(category(ent))]\n"))
-        for obj in sort(collect(objs); by = x -> string(x))
-            print(io, " > ", colorize(:white, join(fullname(modulename(ent)), ".") * "."))
-            println(io, colorize(:cyan, writeobj(obj)))
-        end
+const HELP_MESSAGE = [true]
 
-        # Main section of an entry's documentation.
-        writemime(io, mime, ent)
+function writemime(io::IO, mime::MIME"text/plain", m::Match, count, index, single)
+    cat = colorize(:blue, "\n[$(category(m.entry))]\n")
+    msg = false
+    if single
+        # Just one entry was found to match the query.
+        println(io, cat)
+        for object in sort(collect(m.objects); by = x -> string(x))
+            print_signature(io, object, m.entry)
+            count += 1
+        end
+        writemime(io, mime, m.entry)
+    elseif 0 < index
+        # Only show the nth entry from summary output.
+        for object in m.objects
+            if index == count
+                println(io, cat)
+                print_signature(io, object, m.entry)
+                writemime(io, mime, m.entry)
+            end
+            count += 1
+        end
+    else
+        # Display a summary of the entries that match a query.
+        for object in m.objects
+            print(io, colorize(:white, lpad(count, 3) * ": "))
+            print_signature(io, object, m.entry)
+            count += 1
+        end
+        msg = true
     end
+    count, msg
+end
+
+function print_signature(io::IO, object, entry)
+    print(io, colorize(:cyan, join(fullname(modulename(entry)), ".")), ".")
+    println(io, colorize(:white, writeobj(object, entry)))
 end
 
 function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
@@ -52,12 +93,5 @@ function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
         else
             println(io, "\t", k, ": ", v)
         end
-    end
-end
-
-function writemime(io::IO, mime::MIME"text/plain", manual::Manual)
-    for page in pages(manual)
-        println(io, colorize(:green, "File: "), file(page))
-        writemime(io, mime, docs(page))
     end
 end

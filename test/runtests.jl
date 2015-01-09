@@ -1,28 +1,22 @@
-using Lexicon, Docile
-using Base.Test
 
-# some basic tests
+### TODO: remove. Until Docile is tagged we need master here. ###
+Pkg.checkout("Docile")
 
-results   = doctest(Lexicon)
-formatted = stringmime("text/plain", results)
+module LexiconTests
 
-stringmime("text/plain", passed(results))
-stringmime("text/plain", failed(results))
-stringmime("text/plain", skipped(results))
+reload("Lexicon")
 
-results = @query ""
-stringmime("text/plain", results)
+using Docile
+@document
 
-results = @query @query
-stringmime("text/plain", results)
+using Docile.Interface, Lexicon, FactCheck
 
-results = @query doctest(Lexicon)
-stringmime("text/plain", results)
+import Lexicon: Query
 
-results = @query Docile.Documentation
-stringmime("text/plain", results)
+include("testcases.jl")
 
-dir = joinpath(tempdir(), randstring())
-f = joinpath(dir, "index.html")
-save(f, Lexicon; mathjax = true)
-rm(dir, recursive = true)
+include("facts/query-parsing.jl")
+include("facts/querying-results.jl")
+include("facts/rendering.jl")
+
+end

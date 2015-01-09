@@ -6,7 +6,7 @@ end
 
 ## General markdown rendering ------------------------–––––––––––––––––––––––––––––––––––
 
-function save(file::String, mime::MIME"text/md", doc::Documentation; mathjax = false)
+function save(file::String, mime::MIME"text/md", doc::Metadata; mathjax = false)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
@@ -32,9 +32,15 @@ function writemime(io::IO, mime::MIME"text/md", manual::Manual)
     end
 end
 
-function writemime(io::IO, mime::MIME"text/md", doc::Documentation; mathjax = false)
+function writemime(io::IO, mime::MIME"text/md", doc::Metadata; mathjax = false)
     header(io, mime, doc)
-    writemime(io, mime, manual(doc))
+
+    # Root may be a file or directory. Get the dir.
+    rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
+
+    for file in manual(doc)
+        println(io, readall(joinpath(rootdir, file)))
+    end
 
     index = Dict{Symbol, Any}()
     for (obj, entry) in entries(doc)
@@ -64,14 +70,16 @@ function writemime(io::IO, mime::MIME"text/md", ents::Entries)
 end
 
 function writemime{category}(io::IO, mime::MIME"text/md", modname, obj, ent::Entry{category})
-    objname = writeobj(obj)
+    objname = writeobj(obj, ent)
     ## print(io, "<div class='category'>[$(category)] &mdash; </div> ")
     println(io, "## $(objname)")
     writemime(io, mime, docs(ent))
     ## println(io, "**Details:**")
-    for k in sort(collect(keys(ent.meta)))
+    println(io)
+    for k in sort(collect(keys(ent.data)))
         println(io, "**", k, ":**")
-        writemime(io, mime, Meta{k}(ent.meta[k]))
+        writemime(io, mime, Meta{k}(ent.data[k]))
+        println(io)
     end
 end
 
@@ -91,12 +99,10 @@ function writemime(io::IO, ::MIME"text/md", m::Meta{:source})
     println(io, "[$(path):$(m.content[1])]($(url(m)))")
 end
 
-function header(io::IO, ::MIME"text/md", doc::Documentation)
+function header(io::IO, ::MIME"text/md", doc::Metadata)
     println(io, "# $(doc.modname)")
 end
 
-function footer(io::IO, ::MIME"text/md", doc::Documentation; mathjax = false)
+function footer(io::IO, ::MIME"text/md", doc::Metadata; mathjax = false)
     println(io, "")
 end
-
-
