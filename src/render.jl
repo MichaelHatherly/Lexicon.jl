@@ -90,3 +90,4 @@ end
 
 include("render/plain.jl")
 include("render/html.jl")
+include("render/md.jl")
