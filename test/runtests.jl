@@ -4,8 +4,6 @@ Pkg.checkout("Docile")
 
 module LexiconTests
 
-reload("Lexicon")
-
 using Docile
 @document
 
