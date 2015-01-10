@@ -96,12 +96,25 @@ objects(H"quote", ex)      = [ex.args[1], ex]
 
 objects(H".", ex) = [ex, ex.args[2]]
 
-objects(H"call", ex) = [:(@which $(ex))]
+objects(H"call", ex) = [:(which($(ex.args[1]), Lexicon.typesof($(ex.args[2:end])...)))]
 
 objects(H"macrocall", ex) =
     isexpr(ex.args[1], :(.)) ?
     [:(getfield($(modname(ex)), $(ex.args[1].args[2])))] :
     [ex.args[1]]
+
+# Hack around some weirdness in Base, TODO: report!
+function typesof(args...)
+    out = Any[]
+    for arg in args
+        if isa(arg, Type)
+            push!(out, Type{arg})
+        else
+            push!(out, typeof(arg))
+        end
+    end
+    tuple(out...)
+end
 
 macro help(args...)
     ex = (isinteractive() && length(args) ≡ 1) ? :(Base.Help.@help $(args[1])) : :()
