@@ -12,5 +12,6 @@ include("testcases.jl")
 include("facts/query-parsing.jl")
 include("facts/querying-results.jl")
 include("facts/rendering.jl")
+include("facts/filtering.jl")
 
 end
