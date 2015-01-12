@@ -23,6 +23,9 @@ const K = ()
 macro m()
 end
 
+"S"
+abstract S
+
 "T"
 type T
 end
@@ -57,6 +60,9 @@ const K = ()
 macro m()
 end
 
+"A.S"
+abstract S
+
 "A.T"
 type T
 end
@@ -90,6 +96,9 @@ const K = ()
 "A.B.@m"
 macro m()
 end
+
+"A.B.S"
+abstract S
 
 "A.B.T"
 type T

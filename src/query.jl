@@ -172,7 +172,7 @@ function append_result!(res, func::Function, meta)
 end
 
 function append_result!(res, dt::DataType, meta)
-    ms = Set(methods(mostgeneral(dt)))
+    ms = Set(wrap_non_iterables(methods(mostgeneral(dt))))
     for (object, entry) in entries(meta)
         if object ≡ dt
             push!(res, entry, object, 2)
@@ -185,6 +185,8 @@ end
 append_result!(res, other, meta) = nothing
 
 mostgeneral(T::DataType) = T{[tvar.ub for tvar in T.parameters]...}
+
+wrap_non_iterables(obj) = applicable(start, obj) ? obj : tuple(obj)
 
 typealias SimpleObject Union(Symbol, Method, Module)
 

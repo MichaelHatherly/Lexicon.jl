@@ -87,6 +87,13 @@ facts("Query parsing.") do
         @fact @query(A.T, 1)   => Query((A.T, :T), A, 1)
         @fact @query(A.B.T, 1) => Query((A.B.T, :T), A.B, 1)
 
+        @fact @query(S)     => Query((S, :S), 0)
+        @fact @query(A.S)   => Query((A.S, :S), A, 0)
+        @fact @query(A.B.S) => Query((A.B.S, :S), A.B, 0)
+
+        @fact @query(S, 1)     => Query((S, :S), 1)
+        @fact @query(A.S, 1)   => Query((A.S, :S), A, 1)
+        @fact @query(A.B.S, 1) => Query((A.B.S, :S), A.B, 1)
     end
 
     context("Globals.") do
