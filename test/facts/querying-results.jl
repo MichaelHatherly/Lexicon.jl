@@ -99,6 +99,14 @@ facts("Query results.") do
         test_query(@query(A.T, 1), "A.T")
         test_query(@query(A.B.T, 1), "A.B.T")
 
+        test_query(@query(S), "S")
+        test_query(@query(A.S), "A.S")
+        test_query(@query(A.B.S), "A.B.S")
+
+        test_query(@query(S, 1), "S")
+        test_query(@query(A.S, 1), "A.S")
+        test_query(@query(A.B.S, 1), "A.B.S")
+
     end
 
     context("Globals.") do
