@@ -1,11 +1,11 @@
-## Various methods for filtering and sorting Documentation
+## Various methods for filtering and sorting Metadata
 
 
 """
-Filter Documentation based on categories or file source
+Filter Metadata based on categories or file source
 
 ```julia
-Base.filter(docs::Documentation; categories = Symbol[], files = String[])
+Base.filter(docs::Metadata; categories = Symbol[], files = String[])
 ```
 
 **Arguments**
@@ -23,7 +23,7 @@ Base.filter(docs::Documentation; categories = Symbol[], files = String[])
 
 **Returns**
 
-* `::Documentation` : the filtered result
+* `::Metadata` : the filtered result
 
 **Example**
 
@@ -39,27 +39,27 @@ entries( filter(d, files = ["types.jl"]) )
 ```
 
 """
-function Base.filter(docs::Documentation; categories = Symbol[], files = String[])
-    entries = copy(docs.entries)
+function Base.filter(docs::Metadata; categories = Symbol[], files = String[])
+    result = copy(docs)
     if length(files) > 0
         filter!((k,v) -> any(x -> contains(v.data[:source][2], x), files),
-                entries)
+                result.entries)
     end
     if length(categories) > 0
         filter!((k,v) -> any(x -> category(v) == x, categories),
-                entries)
+                result.entries)
     end
-    Metadata(docs.modname, entries, docs.root, docs.files, docs.data, docs.loaded)
+    result
 end
 
 
 """
-Iterator type for Documentation Entries with sorting options
+Iterator type for Metadata Entries with sorting options
 
 **Constructors**
 
 ```julia
-EachEntry(docs::Documentation; order::Vector{Symbol} = [:category, :name, :source])
+EachEntry(docs::Metadata; order = [:category, :name, :source])
 ```
 
 **Arguments**
@@ -74,6 +74,11 @@ EachEntry(docs::Documentation; order::Vector{Symbol} = [:category, :name, :sourc
   * `:name` - name of Entries
   * `:source` - source location of Entries uses both the file path and
     line number
+
+In addition to symbols, items in `order` can be functions of the form
+`(x,y) = ...` where `x` is the documented item, and `y` is the
+Entry. The function should return a quantity to be compared when
+sorting.
 
 **Main methods**
 
@@ -94,27 +99,27 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 """
 type EachEntry
-    parent::Documentation
+    parent::Metadata
     kidx
 end
 
 
-function EachEntry(docs::Documentation; order::Vector{Symbol} = [:category, :name, :source])
-    ks = collect(keys(docs.entries))
-    vs = collect(values(docs.entries))
-    name = [writeobj(k, v) for (k, v) in docs.entries]
-    source = [v.data[:source] for v in values(docs.entries)]
-    category_ = [category(v) for v in values(docs.entries)]
-    ## unimplemented options:
-    # doctag = [isa(k, Type) && k <: DocTag for k in keys(docs.entries)]
-    # unexported = [?? for k in keys(docs.entries)]
-    d = [:name => name,    # various vectors for sorting
-         # :doctag => !doctag,
-         # :unexported => unexported,
-         :source => [(a[2], a[1]) for a in source],
-         :category => category_]
-    idx = sortperm(collect(zip([d[o] for o in order]...)))
-    EachEntry(docs, ks[idx])
+function EachEntry(docs::Metadata; order = [:category, :name, :source])
+    funmap = @compat Dict(:name => (k,v) -> writeobj(k,v),    # various vectors for sorting
+                          # :doctag => !doctag,
+                          # :unexported => unexported,
+                          :source => (k,v) -> reverse(v.data[:source]),
+                          :category => (k,v) -> indexin([category(v)], CATEGORY_ORDER)[1])
+    funs = [isa(o, Symbol) ? funmap[o] : o for o in order]
+    function lessthan(x,y)
+        for f in funs
+            f(x...) < f(y...) && return true
+            f(x...) > f(y...) && return false
+        end
+        return false
+    end
+    idx = sortperm(collect(docs.entries), lt = lessthan)
+    EachEntry(docs, collect(keys(docs.entries))[idx])
 end 
 
 Base.length(x::EachEntry) = length(x.kidx)
@@ -122,7 +127,3 @@ Base.start(x::EachEntry) = 1
 Base.done(x::EachEntry, state) = state == length(x.kidx)
 Base.next(x::EachEntry, state) = ((x.kidx[state], x.parent.entries[x.kidx[state]]), state + 1)
 
-## Another option to consider for sorting is to allow the user to pass
-## in an anonymous function that will produce an ordering vector.
-## Another option is to see if we can hook into the Base sorting
-## routines to do some of this for us.
