@@ -52,6 +52,42 @@ function Base.filter(docs::Metadata; categories = Symbol[], files = String[])
     result
 end
 
+"""
+Filter Metadata based on a function
+
+```julia
+Base.filter(f::Function, docs::Metadata)
+```
+
+**Arguments**
+
+* `f` : a function that filters Entries and returns a Bool; the
+  function signature should be `f(x::Entry)`.
+* `docs` : main input
+
+**Returns**
+
+* `::Metadata` : the filtered result
+
+**Example**
+
+```julia
+using Lexicon, Docile, Docile.Interface
+d = documentation(Docile);
+
+# Filter entries with categories of :macro and :type
+res = filter(d) do e
+    category(e) != :type
+end
+```
+
+"""
+function Base.filter(f::Function, docs::Metadata)
+    result = copy(docs)
+    filter!((k,v) -> f(v), result.entries)
+    result
+end
+
 
 """
 Iterator type for Metadata Entries with sorting options
@@ -107,7 +143,7 @@ end
 function EachEntry(docs::Metadata; order = [:category, :name, :source])
     funmap = @compat Dict(:name => (k,v) -> writeobj(k,v),    # various vectors for sorting
                           # :doctag => !doctag,
-                          # :unexported => unexported,
+                          :exported => (k,v) -> !exported(modulename(v), k),
                           :source => (k,v) -> reverse(v.data[:source]),
                           :category => (k,v) -> indexin([category(v)], CATEGORY_ORDER)[1])
     funs = [isa(o, Symbol) ? funmap[o] : o for o in order]
