@@ -70,7 +70,8 @@ function writemime(io::IO, mime::MIME"text/plain", m::Match, count, index, singl
 end
 
 function print_signature(io::IO, object, entry)
-    print(io, colorize(:cyan, join(fullname(modulename(entry)), ".")), ".")
+    color = isexported(modulename(entry), object) ? :green : :default
+    print(io, colorize(color, join(fullname(modulename(entry)), ".")), ".")
     println(io, colorize(:white, writeobj(object, entry)))
 end
 
