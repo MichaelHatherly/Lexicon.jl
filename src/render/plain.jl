@@ -60,7 +60,7 @@ function writemime(io::IO, mime::MIME"text/plain", m::Match, count, index, singl
     else
         # Display a summary of the entries that match a query.
         for object in m.objects
-            print(io, colorize(:white, lpad(count, 3) * ": "))
+            print(io, colorize(:default, lpad(count, 3) * ": "))
             print_signature(io, object, m.entry)
             count += 1
         end
@@ -72,7 +72,7 @@ end
 function print_signature(io::IO, object, entry)
     color = isexported(modulename(entry), object) ? :green : :default
     print(io, colorize(color, join(fullname(modulename(entry)), ".")), ".")
-    println(io, colorize(:white, writeobj(object, entry)))
+    println(io, colorize(:default, writeobj(object, entry)))
 end
 
 function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
