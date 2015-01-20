@@ -64,6 +64,8 @@ function push!(res::QueryResults, entry, object, score)
     push!(res.matches[entry], object)
 end
 
+push!(res::QueryResults, entry::Entry{:comment}, object, score) = res
+
 ## Construct a `Query` object.
 
 macro query(args...) esc(query(args...)) end
