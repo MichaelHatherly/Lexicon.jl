@@ -30,9 +30,7 @@ package load times are not impacted when documenting packages using
 
 ## Documentation
 
-Module documentation for this package is available here:
-
-[`Lexicon`][docs-url]
+*Lexicon.jl*-generated documentation is available [here][docs-url].
 
 [travis-img]: https://travis-ci.org/MichaelHatherly/Lexicon.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/MichaelHatherly/Lexicon.jl
