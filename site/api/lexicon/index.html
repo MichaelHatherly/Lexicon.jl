@@ -118,24 +118,25 @@ a <code>Summary</code> of the results.</p>
 <p>Code blocks may be skipped by adding an extra newline at the end of the block.</p>
 <p><strong>Example:</strong></p>
 <pre><code class="julia">doctest(Lexicon)
+
 </code></pre>
 
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/doctest.jl#L100">Lexicon/src/doctest.jl:100</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/doctest.jl#L101">Lexicon/src/doctest.jl:101</a></p>
 <hr />
 <h4 id="queryffunction-sigany">query(f::Function, sig::(Any..., ))</h4>
 <p>Search loaded documentation for all methods of a generic function <code>f</code> that match
 the provided signature <code>sig</code>. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L224">Lexicon/src/query.jl:224</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L224">Lexicon/src/query.jl:224</a></p>
 <hr />
 <h4 id="queryffunction-sigany-index">query(f::Function, sig::(Any..., ), index)</h4>
 <p>Search loaded documentation for all methods of a generic function <code>f</code> that match
 the provided signature <code>sig</code>. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L224">Lexicon/src/query.jl:224</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L224">Lexicon/src/query.jl:224</a></p>
 <hr />
 <h4 id="savefilestring-modulenamemodule">save(file::String, modulename::Module)</h4>
 <p>Write the documentation stored in <code>modulename</code> to the specified <code>file</code>
@@ -175,7 +176,7 @@ the contents of the <code>doc/site</code> folder will be pushed to the branch.</
 <p>The documentation will be available from
 <code>https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html</code>.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/render.jl#L58">Lexicon/src/render.jl:58</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/render.jl#L58">Lexicon/src/render.jl:58</a></p>
 <hr />
 <h4 id="queryargs">@query(args...)</h4>
 <p>Search through documentation of a particular package or globally. <code>@query</code>
@@ -230,18 +231,18 @@ julia&gt; foobar 2
 <p><strong>signature:</strong>
 query(args...)</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L151">Lexicon/src/query.jl:151</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L151">Lexicon/src/query.jl:151</a></p>
 <h2 id="internal">Internal</h2>
 <hr />
 <h4 id="calculate_scorequery-text-object">calculate_score(query, text, object)</h4>
 <p>Basic text importance scoring.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L247">Lexicon/src/query.jl:247</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L247">Lexicon/src/query.jl:247</a></p>
 <hr />
 <h4 id="match">Match</h4>
 <p>An entry and the set of all objects that are linked to it.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L43">Lexicon/src/query.jl:43</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L43">Lexicon/src/query.jl:43</a></p>
 <hr />
 <h4 id="query">Query</h4>
 <p>Holds the parsed user query.</p>
@@ -252,12 +253,12 @@ query(args...)</p>
 <li><code>index</code>:   1-based, for picking an individual entry to display out of a list.</li>
 </ul>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L23">Lexicon/src/query.jl:23</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L23">Lexicon/src/query.jl:23</a></p>
 <hr />
 <h4 id="queryresults">QueryResults</h4>
 <p>Stores the matching entries resulting from running a query.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L53">Lexicon/src/query.jl:53</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L53">Lexicon/src/query.jl:53</a></p>
 </div>
         </div>
 

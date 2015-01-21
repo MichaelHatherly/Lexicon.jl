@@ -13,11 +13,12 @@ Code blocks may be skipped by adding an extra newline at the end of the block.
 
 ```julia
 doctest(Lexicon)
+
 ```
 
 
 **source:**
-[Lexicon/src/doctest.jl:100](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/doctest.jl#L100)
+[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/doctest.jl#L101)
 
 ---
 
@@ -28,7 +29,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:224](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L224)
+[Lexicon/src/query.jl:224](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L224)
 
 ---
 
@@ -39,7 +40,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:224](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L224)
+[Lexicon/src/query.jl:224](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L224)
 
 ---
 
@@ -96,7 +97,7 @@ The documentation will be available from
 
 
 **source:**
-[Lexicon/src/render.jl:58](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/render.jl#L58)
+[Lexicon/src/render.jl:58](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/render.jl#L58)
 
 ---
 
@@ -172,7 +173,7 @@ julia> foobar 2
 query(args...)
 
 **source:**
-[Lexicon/src/query.jl:151](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L151)
+[Lexicon/src/query.jl:151](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L151)
 
 ## Internal
 ---
@@ -181,7 +182,7 @@ query(args...)
 Basic text importance scoring.
 
 **source:**
-[Lexicon/src/query.jl:247](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L247)
+[Lexicon/src/query.jl:247](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L247)
 
 ---
 
@@ -189,7 +190,7 @@ Basic text importance scoring.
 An entry and the set of all objects that are linked to it.
 
 **source:**
-[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L43)
+[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L43)
 
 ---
 
@@ -205,7 +206,7 @@ Holds the parsed user query.
 
 
 **source:**
-[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L23)
+[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L23)
 
 ---
 
@@ -213,6 +214,6 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 **source:**
-[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L53)
+[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L53)
 
 
