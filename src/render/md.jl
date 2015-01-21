@@ -64,15 +64,33 @@ function writemime(io::IO, mime::MIME"text/md", doc::Metadata; mathjax = false)
 end
 
 function writemime(io::IO, mime::MIME"text/md", ents::Entries)
+    exported = Entries()
+    internal = Entries()
+
     for (modname, obj, ent) in ents.entries
-        writemime(io, mime, modname, obj, ent)
+        isexported(modname, obj) ?
+            push!(exported, modname, obj, ent) :
+            push!(internal, modname, obj, ent)
+    end
+
+    if !isempty(exported.entries)
+        println(io, "## Exported")
+        for (modname, obj, ent) in exported.entries
+            writemime(io, mime, modname, obj, ent)
+        end
+    end
+    if !isempty(internal.entries)
+        println(io, "## Internal")
+        for (modname, obj, ent) in internal.entries
+            writemime(io, mime, modname, obj, ent)
+        end
     end
 end
 
 function writemime{category}(io::IO, mime::MIME"text/md", modname, obj, ent::Entry{category})
     objname = writeobj(obj, ent)
     ## print(io, "<div class='category'>[$(category)] &mdash; </div> ")
-    println(io, "## $(objname)")
+    println(io, "---\n\n#### $(objname)")
     writemime(io, mime, docs(ent))
     ## println(io, "**Details:**")
     println(io)

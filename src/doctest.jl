@@ -85,6 +85,18 @@ function writemime(io::IO, mime::MIME"text/plain", s::Summary)
     @printf(io, " * skip: %5d / %d\n", nskipped, total)
 end
 
+"""
+Run code blocks in the docstrings of the specified module `modname` and return
+a `Summary` of the results.
+
+Code blocks may be skipped by adding an extra newline at the end of the block.
+
+**Example:**
+
+```julia
+doctest(Lexicon)
+```
+"""
 function doctest(modname::Module)
     doc = documentation(modname)
     println("running doctest on $(modname)...")

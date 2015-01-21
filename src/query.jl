@@ -7,8 +7,19 @@ macro H_str(text)
     Expr(:(::), Expr(:call, :Union, heads...))
 end
 
+"Types that can be queried."
 typealias Queryable Union(Symbol, Expr, AbstractString)
 
+"""
+Holds the parsed user query.
+
+**Fields:**
+
+* `objects`: The objects that will be searched for in metadata.
+* `mods`:    Modules to be searched through for documentation.
+* `index`:   1-based, for picking an individual entry to display out of a list.
+
+"""
 type Query
     objects :: Tuple
     mods    :: Set{Module}
@@ -28,6 +39,7 @@ function (==)(a::Query, b::Query)
     res &= a.index == b.index
 end
 
+"An entry and the set of all objects that are linked to it."
 type Match
     entry::Entry
     objects::Set
@@ -37,6 +49,7 @@ end
 
 push!(match::Match, object) = push!(match.objects, object)
 
+"Stores the matching entries resulting from running a query."
 type QueryResults
     query   :: Query
     matches :: Dict{AbstractEntry, Match}
@@ -68,6 +81,73 @@ push!(res::QueryResults, entry::Entry{:comment}, object, score) = res
 
 ## Construct a `Query` object.
 
+"""
+Search through documentation of a particular package or globally. `@query`
+supports every type of object that *Docile.jl* can document with `@doc`.
+
+**Note:** the functionality provided by `@query` is also available using `?` at
+the Julia REPL. It displays documentation from the standard Julia help system
+followed by package documentation from Docile.
+
+Qualifying searches with a module identifier narrows the searching to only the
+specified module. When no module is provided every loaded module containing
+docstrings is searched.
+
+**Examples:**
+
+In a similar way to `Base.@which` you can use `@query` to search for the
+documentation of a method that would be called with the given arguments.
+
+```julia
+@query save("api/lexicon.md", Lexicon)
+@query Lexicon.doctest(Lexicon)
+```
+
+Full text searching is provided and looks through all text and code in
+docstrings, thus behaving in a similar way to `Base.apropos`.
+
+```julia
+@query "Examples"
+```
+
+Generic functions and types are supported directly by `@query`. As with
+method searches the module may be specified.
+
+```julia
+@query query
+@query Lexicon.query
+@query Lexicon.Summary
+```
+
+Searching for documented constants is also supported:
+
+```julia
+@query Lexicon.__METADATA__ # this won't show anything
+```
+
+**Selecting individual results**
+
+When several results are found for a given query only the signature of each is
+displayed in the REPL. The signatures are numbered starting from `1`. To view
+the full documentation for a particular signature listed rerun the previous
+query with the index of the desired signature as an additional argument.
+
+(Pressing the up arrow is the simplest way to get back to the previous query.)
+
+**Example:**
+
+```julia
+julia> foobar
+
+  1: foobar
+  2: foobar(x)
+  3: foobar(x, y)
+
+julia> foobar 2
+
+# docs for `foobar(x)` are displayed now.
+```
+"""
 macro query(args...) esc(query(args...)) end
 
 query(ex::Queryable, index = 0) = build((objects(ex), modname(ex), index)...)
@@ -136,6 +216,11 @@ function partial_signature_matching(f::Function, sig::Tuple)
     meths
 end
 
+"""
+Search loaded documentation for all methods of a generic function `f` that match
+the provided signature `sig`. Optionally, provide an index (1-based) to view an
+individual entry if several different ones are found.
+"""
 function query(f::Function, sig::Tuple, index = 0)
     methods = tuple(partial_signature_matching(f, sig)...)
     run(Query(methods, index))
@@ -158,7 +243,7 @@ function append_result!(res, query::AbstractString, meta)
     end
 end
 
-# Basic text importance scoring.
+"Basic text importance scoring."
 calculate_score(query, text, object) = length(split(string(object, text), query)) - 1
 
 # Generic function.

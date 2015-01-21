@@ -1,0 +1,6 @@
+site_name: Lexicon.jl
+theme: yeti
+pages:
+    - ['index.md', 'Introduction']
+    - ['manual.md', 'Manual', 'Overview']
+    - ['api/lexicon.md', 'API', 'Lexicon']

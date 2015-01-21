@@ -12,7 +12,17 @@ If MathJax support is required then the optional keyword argument
 `mathjax::Bool` may be given. MathJax uses `\(...\)` for in-line maths
 and `\[...\]` or `$$...$$` for display equations.
 
-Currently supported formats: `HTML`.
+Currently supported formats: `HTML`, and `markdown`.
+
+**MkDocs**
+
+Beginning with Lexicon 0.1 you can save documentation as pre-formatted
+markdown files which can then be post-processed using 3rd-party programs
+such as the static site generator [MkDocs](https://www.mkdocs.org).
+
+For details on how to build documentation using MkDocs please consult their
+detailed guides and the Docile and Lexicon packages. A more customized build
+process can be found in the Sims.jl package.
 
 **Example:**
 
@@ -20,7 +30,8 @@ The documentation for this package was created in the following manner.
 All commands are run from the top-level folder in the package.
 
 ```julia
-save("doc/site/master/index.html", Lexicon)
+save("docs/api/lexicon.md", Lexicon)
+run(`mkdocs build`)
 
 ```
 
@@ -32,7 +43,7 @@ changes to the `master` branch.
 git add .
 git commit -m "documentation changes"
 git push origin master
-git subtree push --prefix doc/site origin gh-pages
+git subtree push --prefix docs/build origin gh-pages
 
 ```
 
