@@ -30,15 +30,9 @@ package load times are not impacted when documenting packages using
 
 ## Documentation
 
-Module documentation for this package is available for the following versions:
+Module documentation for this package is available here:
 
-**Stable (0.0.7):**
-
-[`Lexicon`][docs-stable-url]
-
-**Master:**
-
-[`Lexicon`][docs-master-url]
+[`Lexicon`][docs-url]
 
 [travis-img]: https://travis-ci.org/MichaelHatherly/Lexicon.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/MichaelHatherly/Lexicon.jl
@@ -56,5 +50,4 @@ Module documentation for this package is available for the following versions:
 
 [issue-url]: https://github.com/MichaelHatherly/Docile.jl/issues/27
 
-[docs-stable-url]: https://michaelhatherly.github.io/Lexicon.jl/stable/index.html
-[docs-master-url]: https://michaelhatherly.github.io/Lexicon.jl/master/index.html
+[docs-url]: https://michaelhatherly.github.io/Lexicon.jl/index.html
