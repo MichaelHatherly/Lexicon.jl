@@ -1,7 +1,3 @@
-
-### TODO: remove. Until Docile is tagged we need master here. ###
-Pkg.checkout("Docile")
-
 module LexiconTests
 
 using Docile
