@@ -95,6 +95,7 @@ Code blocks may be skipped by adding an extra newline at the end of the block.
 
 ```julia
 doctest(Lexicon)
+
 ```
 """
 function doctest(modname::Module)
