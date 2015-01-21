@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+
+        <title>Lexicon - Lexicon.jl</title>
+
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../../css/prettify-1.0.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="../..">Lexicon.jl</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manual <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        <li >
+                            <a href="../../manual">Overview</a>
+                        </li>
+                    
+                    </ul>
+                </li>
+            
+            
+            
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">API <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        <li class="active">
+                            <a href=".">Lexicon</a>
+                        </li>
+                    
+                    </ul>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li >
+                    <a rel="next" href="../../manual">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li class="disabled">
+                    <a rel="prev" >
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#lexicon">Lexicon</a></li>
+        
+            <li><a href="#exported">Exported</a></li>
+        
+            <li><a href="#internal">Internal</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<h1 id="lexicon">Lexicon</h1>
+<h2 id="exported">Exported</h2>
+<hr />
+<h4 id="doctestmodnamemodule">doctest(modname::Module)</h4>
+<p>Run code blocks in the docstrings of the specified module <code>modname</code> and return
+a <code>Summary</code> of the results.</p>
+<p>Code blocks may be skipped by adding an extra newline at the end of the block.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="julia">doctest(Lexicon)
+</code></pre>
+
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/doctest.jl#L100">Lexicon/src/doctest.jl:100</a></p>
+<hr />
+<h4 id="queryffunction-sigany">query(f::Function, sig::(Any..., ))</h4>
+<p>Search loaded documentation for all methods of a generic function <code>f</code> that match
+the provided signature <code>sig</code>. Optionally, provide an index (1-based) to view an
+individual entry if several different ones are found.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L224">Lexicon/src/query.jl:224</a></p>
+<hr />
+<h4 id="queryffunction-sigany-index">query(f::Function, sig::(Any..., ), index)</h4>
+<p>Search loaded documentation for all methods of a generic function <code>f</code> that match
+the provided signature <code>sig</code>. Optionally, provide an index (1-based) to view an
+individual entry if several different ones are found.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L224">Lexicon/src/query.jl:224</a></p>
+<hr />
+<h4 id="savefilestring-modulenamemodule">save(file::String, modulename::Module)</h4>
+<p>Write the documentation stored in <code>modulename</code> to the specified <code>file</code>
+in the format guessed from the file's extension.</p>
+<p>If MathJax support is required then the optional keyword argument
+<code>mathjax::Bool</code> may be given. MathJax uses <code>\(...\)</code> for in-line maths
+and <code>\[...\]</code> or <code>$$...$$</code> for display equations.</p>
+<p>Currently supported formats: <code>HTML</code>, and <code>markdown</code>.</p>
+<p><strong>MkDocs</strong></p>
+<p>Beginning with Lexicon 0.1 you can save documentation as pre-formatted
+markdown files which can then be post-processed using 3rd-party programs
+such as the static site generator <a href="https://www.mkdocs.org">MkDocs</a>.</p>
+<p>For details on how to build documentation using MkDocs please consult their
+detailed guides and the Docile and Lexicon packages. A more customized build
+process can be found in the Sims.jl package.</p>
+<p><strong>Example:</strong></p>
+<p>The documentation for this package was created in the following manner.
+All commands are run from the top-level folder in the package.</p>
+<pre><code class="julia">save(&quot;docs/api/lexicon.md&quot;, Lexicon)
+run(`mkdocs build`)
+
+</code></pre>
+
+<p>From the command line, or using <code>run</code>, push the <code>doc/site</code> directory
+to the <code>gh-pages</code> branch on the package repository after pushing the
+changes to the <code>master</code> branch.</p>
+<pre><code>git add .
+git commit -m &quot;documentation changes&quot;
+git push origin master
+git subtree push --prefix docs/build origin gh-pages
+
+</code></pre>
+
+<p>If this is the first push to the branch then the site may take some time
+to become available. Subsequent updates should appear immediately. Only
+the contents of the <code>doc/site</code> folder will be pushed to the branch.</p>
+<p>The documentation will be available from
+<code>https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html</code>.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/render.jl#L58">Lexicon/src/render.jl:58</a></p>
+<hr />
+<h4 id="queryargs">@query(args...)</h4>
+<p>Search through documentation of a particular package or globally. <code>@query</code>
+supports every type of object that <em>Docile.jl</em> can document with <code>@doc</code>.</p>
+<p><strong>Note:</strong> the functionality provided by <code>@query</code> is also available using <code>?</code> at
+the Julia REPL. It displays documentation from the standard Julia help system
+followed by package documentation from Docile.</p>
+<p>Qualifying searches with a module identifier narrows the searching to only the
+specified module. When no module is provided every loaded module containing
+docstrings is searched.</p>
+<p><strong>Examples:</strong></p>
+<p>In a similar way to <code>Base.@which</code> you can use <code>@query</code> to search for the
+documentation of a method that would be called with the given arguments.</p>
+<pre><code class="julia">@query save(&quot;api/lexicon.md&quot;, Lexicon)
+@query Lexicon.doctest(Lexicon)
+</code></pre>
+
+<p>Full text searching is provided and looks through all text and code in
+docstrings, thus behaving in a similar way to <code>Base.apropos</code>.</p>
+<pre><code class="julia">@query &quot;Examples&quot;
+</code></pre>
+
+<p>Generic functions and types are supported directly by <code>@query</code>. As with
+method searches the module may be specified.</p>
+<pre><code class="julia">@query query
+@query Lexicon.query
+@query Lexicon.Summary
+</code></pre>
+
+<p>Searching for documented constants is also supported:</p>
+<pre><code class="julia">@query Lexicon.__METADATA__ # this won't show anything
+</code></pre>
+
+<p><strong>Selecting individual results</strong></p>
+<p>When several results are found for a given query only the signature of each is
+displayed in the REPL. The signatures are numbered starting from <code>1</code>. To view
+the full documentation for a particular signature listed rerun the previous
+query with the index of the desired signature as an additional argument.</p>
+<p>(Pressing the up arrow is the simplest way to get back to the previous query.)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="julia">julia&gt; foobar
+
+  1: foobar
+  2: foobar(x)
+  3: foobar(x, y)
+
+julia&gt; foobar 2
+
+# docs for `foobar(x)` are displayed now.
+</code></pre>
+
+<p><strong>signature:</strong>
+query(args...)</p>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L151">Lexicon/src/query.jl:151</a></p>
+<h2 id="internal">Internal</h2>
+<hr />
+<h4 id="calculate_scorequery-text-object">calculate_score(query, text, object)</h4>
+<p>Basic text importance scoring.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L247">Lexicon/src/query.jl:247</a></p>
+<hr />
+<h4 id="match">Match</h4>
+<p>An entry and the set of all objects that are linked to it.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L43">Lexicon/src/query.jl:43</a></p>
+<hr />
+<h4 id="query">Query</h4>
+<p>Holds the parsed user query.</p>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>objects</code>: The objects that will be searched for in metadata.</li>
+<li><code>mods</code>:    Modules to be searched through for documentation.</li>
+<li><code>index</code>:   1-based, for picking an individual entry to display out of a list.</li>
+</ul>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L23">Lexicon/src/query.jl:23</a></p>
+<hr />
+<h4 id="queryresults">QueryResults</h4>
+<p>Stores the matching entries resulting from running a query.</p>
+<p><strong>source:</strong>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/6a5154caa62f4b2278036b5a16ff3a300525ac79/src/query.jl#L53">Lexicon/src/query.jl:53</a></p>
+</div>
+        </div>
+
+        
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/prettify-1.0.min.js"></script>
+        <script src="../../js/base.js"></script>
+    </body>
+</html>
