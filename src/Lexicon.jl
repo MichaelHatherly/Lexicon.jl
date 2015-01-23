@@ -8,6 +8,7 @@ import Docile.Interface:
 
 import Base:
 
+    start, stop, next,
     length,
     push!,
     run,
@@ -31,13 +32,16 @@ export
     doctest,
     failed,
     passed,
-    skipped
+    skipped,
+    EachEntry
+
 
 @document
 
 include("query.jl")
 include("render.jl")
 include("doctest.jl")
+include("filtering.jl")
 
 __init__() = setup_help() # Hook into the REPL's `?`.
 
