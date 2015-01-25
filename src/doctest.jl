@@ -106,7 +106,9 @@ function doctest(modname::Module)
         isa(docs(entry), Docs{:md}) || continue # Markdown is the only supported format.
         count = 0
         for block in parsed(docs(entry)).content
-            if isa(block, Markdown.BlockCode)
+            # support older version of Markdown
+            Code = try Markdown.Code catch Markdown.BlockCode end
+            if isa(block, Code)
                 count += 1
                 try
                     if endswith(block.code, "\n") # skip code block with trailing newline
