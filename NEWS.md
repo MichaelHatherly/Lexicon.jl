@@ -1,3 +1,8 @@
+### v0.1.1
+
+* Add filtering and sorting methods for docstrings.
+* Fix compatibility issues with Julia 0.4-dev.
+
 ## v0.1.0
 
 * Add matkdown output.
