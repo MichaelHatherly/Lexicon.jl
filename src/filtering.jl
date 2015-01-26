@@ -4,10 +4,6 @@
 """
 Filter Metadata based on categories or file source
 
-```julia
-Base.filter(docs::Metadata; categories = Symbol[], files = String[])
-```
-
 **Arguments**
 
 * `docs` : main input
@@ -56,10 +52,6 @@ end
 """
 Filter Metadata based on a function
 
-```julia
-Base.filter(f::Function, docs::Metadata)
-```
-
 **Arguments**
 
 * `f` : a function that filters Entries and returns a Bool; the
@@ -97,6 +89,7 @@ Iterator type for Metadata Entries with sorting options
 
 ```julia
 EachEntry(docs::Metadata; order = [:category, :name, :source])
+
 ```
 
 **Arguments**
@@ -157,7 +150,7 @@ function EachEntry(docs::Metadata; order = [:category, :name, :source])
     end
     idx = sortperm(collect(docs.entries), lt = lessthan)
     EachEntry(docs, collect(keys(docs.entries))[idx])
-end 
+end
 
 Base.length(x::EachEntry) = length(x.kidx)
 Base.start(x::EachEntry) = 1

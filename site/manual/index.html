@@ -112,21 +112,64 @@
             <div class="col-md-9" role="main">
 
 <h3 id="viewing-documentation">Viewing Documentation</h3>
-<p>This package provides several ways to search and view documentation.</p>
-<p><code>query</code> and <code>@query</code> can be used to search for documented objects in modules
-that are <strong>currently</strong> loaded.</p>
-<p><code>manual</code> displays external documentation that doesn't belong to any
-particular object and is intended to be an overview of the entire
-package.</p>
-<p>To see examples of their use please consult the
-<a href="#module-reference">reference</a> section below.</p>
+<p>Lexicon hooks into the REPL's <code>?</code> mode (help-mode) once <code>using Lexicon</code> has been
+called from the REPL. Other environments, such as editors, are not currently
+supported.</p>
+<p>When searching for documentation press <code>?</code> to entry the help mode.</p>
+<p>Lexicon supports searching for functions, methods, macros, constants, modules,
+types, and plain text.</p>
+<p><strong>Examples:</strong></p>
+<p>Searching for a <code>Function</code> named <code>foobar</code> will show a list of documentation
+associated with it and any of it's <code>Method</code>s that are also documented.</p>
+<pre><code class="julia">help?&gt; foobar
+
+  1: foobar
+  2: foobar(x)
+  3: foobar(x, y)
+
+</code></pre>
+
+<p>To view the documentation for a specific entry rerun the previous query, using
+the up arrow to go back to the previously entered command, and append the index
+you would like to display.</p>
+<pre><code class="julia">help?&gt; foobar 2
+
+  # Docstring for `foobar(x)` ...
+
+</code></pre>
+
+<p>To display the documentation for <code>foobar(x)</code> directly use:</p>
+<pre><code class="julia">help?&gt; foobar(&quot;some value&quot;)
+
+  # Docstring for `foobar(x)` ...
+
+</code></pre>
+
+<p>To perform a full text search of all currently loaded modules use double quotes:</p>
+<pre><code class="julia">help?&gt; &quot;foobar&quot;
+
+  # List of results matching the search term &quot;foobar&quot; ...
+
+</code></pre>
+
+<p>Searching for macros, types, and constants works in the same way as for
+functions.</p>
+<p>To only search a specific module use the usual dot syntax:</p>
+<pre><code class="julia">help?&gt; Foobar.baz
+
+  # List of results matching `baz` in module `Foobar`.
+
+</code></pre>
+
 <h3 id="generating-documentation">Generating Documentation</h3>
-<p>Documentation may be exported using the provided <code>save</code> function. It
-currently supports HTML output which can be hosted on a package's
-<code>gh-pages</code> branch or any other hosting service.</p>
+<p>Documentation may be exported using the provided <code>save</code> function. It currently
+supports HTML and markdown output which can be hosted on a package's <code>gh-pages</code>
+branch or any other hosting service. See the documentation for <code>save</code> for
+further details.</p>
 <h3 id="doctests">Doctests</h3>
-<p><em>Lexicon.jl</em> includes a <code>doctest</code> function that runs code blocks in
-docstrings and generates summaries of the results.</p>
+<p><em>Lexicon.jl</em> includes a <code>doctest</code> function that runs code blocks in docstrings
+and generates summaries of the results. Code blocks can be skipped by adding an
+extra new line at the end of the block.</p>
 </div>
         </div>
 

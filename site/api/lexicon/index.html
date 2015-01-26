@@ -122,21 +122,21 @@ a <code>Summary</code> of the results.</p>
 </code></pre>
 
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/doctest.jl#L101">Lexicon/src/doctest.jl:101</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/doctest.jl#L101">Lexicon/src/doctest.jl:101</a></p>
 <hr />
 <h4 id="queryffunction-sigany">query(f::Function, sig::(Any..., ))</h4>
 <p>Search loaded documentation for all methods of a generic function <code>f</code> that match
 the provided signature <code>sig</code>. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L219">Lexicon/src/query.jl:219</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L184">Lexicon/src/query.jl:184</a></p>
 <hr />
 <h4 id="queryffunction-sigany-index">query(f::Function, sig::(Any..., ), index)</h4>
 <p>Search loaded documentation for all methods of a generic function <code>f</code> that match
 the provided signature <code>sig</code>. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L219">Lexicon/src/query.jl:219</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L184">Lexicon/src/query.jl:184</a></p>
 <hr />
 <h4 id="savefilestring-modulenamemodule">save(file::String, modulename::Module)</h4>
 <p>Write the documentation stored in <code>modulename</code> to the specified <code>file</code>
@@ -176,12 +176,13 @@ the contents of the <code>doc/site</code> folder will be pushed to the branch.</
 <p>The documentation will be available from
 <code>https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html</code>.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/render.jl#L58">Lexicon/src/render.jl:58</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/render.jl#L58">Lexicon/src/render.jl:58</a></p>
 <hr />
 <h4 id="eachentry">EachEntry</h4>
 <p>Iterator type for Metadata Entries with sorting options</p>
 <p><strong>Constructors</strong></p>
 <pre><code class="julia">EachEntry(docs::Metadata; order = [:category, :name, :source])
+
 </code></pre>
 
 <p><strong>Arguments</strong></p>
@@ -215,74 +216,45 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 </code></pre>
 
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L138">Lexicon/src/filtering.jl:138</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/filtering.jl#L131">Lexicon/src/filtering.jl:131</a></p>
 <hr />
 <h4 id="queryargs">@query(args...)</h4>
-<p>Search through documentation of a particular package or globally. <code>@query</code>
-supports every type of object that <em>Docile.jl</em> can document with <code>@doc</code>.</p>
-<p><strong>Note:</strong> the functionality provided by <code>@query</code> is also available using <code>?</code> at
-the Julia REPL. It displays documentation from the standard Julia help system
-followed by package documentation from Docile.</p>
-<p>Qualifying searches with a module identifier narrows the searching to only the
-specified module. When no module is provided every loaded module containing
-docstrings is searched.</p>
-<p><strong>Examples:</strong></p>
-<p>In a similar way to <code>Base.@which</code> you can use <code>@query</code> to search for the
-documentation of a method that would be called with the given arguments.</p>
-<pre><code class="julia">@query save(&quot;api/lexicon.md&quot;, Lexicon)
-@query Lexicon.doctest(Lexicon)
-</code></pre>
-
-<p>Full text searching is provided and looks through all text and code in
-docstrings, thus behaving in a similar way to <code>Base.apropos</code>.</p>
-<pre><code class="julia">@query &quot;Examples&quot;
-</code></pre>
-
-<p>Generic functions and types are supported directly by <code>@query</code>. As with
-method searches the module may be specified.</p>
-<pre><code class="julia">@query query
-@query Lexicon.query
-@query Lexicon.Summary
-</code></pre>
-
-<p>Searching for documented constants is also supported:</p>
-<pre><code class="julia">@query Lexicon.__METADATA__ # this won't show anything
-</code></pre>
-
-<p><strong>Selecting individual results</strong></p>
-<p>When several results are found for a given query only the signature of each is
-displayed in the REPL. The signatures are numbered starting from <code>1</code>. To view
-the full documentation for a particular signature listed rerun the previous
-query with the index of the desired signature as an additional argument.</p>
-<p>(Pressing the up arrow is the simplest way to get back to the previous query.)</p>
+<p>Create a <code>Query</code> object from the provided <code>args</code>. The resulting query can then be
+<code>run</code> to retrieve matching results from currently loaded documentation.</p>
+<p>This is a low-level interface. For everyday usage in the REPL rather use the
+built-in <code>?</code> mode, which Lexicon hooks into automatically.</p>
+<p>The first argument must be the expression to search for. Supported expressions
+include method calls, macros, constants, types, functions, and strings. An
+optional integer argument may be used to only show documentation from one of
+several results.</p>
 <p><strong>Example:</strong></p>
-<pre><code class="julia">julia&gt; foobar
+<pre><code class="julia">q = @query Lexicon.@query
+run(q)
+</code></pre>
 
-  1: foobar
-  2: foobar(x)
-  3: foobar(x, y)
+<pre><code class="julia">q = @query Lexicon.save 2
+run(q)
+</code></pre>
 
-julia&gt; foobar 2
-
-# docs for `foobar(x)` are displayed now.
+<p><strong>Note:</strong> When searching documentation for an operator (<code>+</code>, <code>-</code>, etc.) it should
+be enclosed in parentheses:</p>
+<pre><code class="julia">q = @query (+) 4
+run(q)
 </code></pre>
 
 <p><strong>signature:</strong>
 query(args...)</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L151">Lexicon/src/query.jl:151</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L116">Lexicon/src/query.jl:116</a></p>
 <h2 id="internal">Internal</h2>
 <hr />
 <h4 id="calculate_scorequery-text-object">calculate_score(query, text, object)</h4>
 <p>Basic text importance scoring.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L242">Lexicon/src/query.jl:242</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L207">Lexicon/src/query.jl:207</a></p>
 <hr />
 <h4 id="filterdocsmetadata">filter(docs::Metadata)</h4>
 <p>Filter Metadata based on categories or file source</p>
-<pre><code class="julia">Base.filter(docs::Metadata; categories = Symbol[], files = String[])
-</code></pre>
-
 <p><strong>Arguments</strong></p>
 <ul>
 <li><code>docs</code> : main input</li>
@@ -316,13 +288,10 @@ entries( filter(d, files = [&quot;types.jl&quot;]) )
 </code></pre>
 
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L43">Lexicon/src/filtering.jl:43</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/filtering.jl#L39">Lexicon/src/filtering.jl:39</a></p>
 <hr />
 <h4 id="filterffunction-docsmetadata">filter(f::Function, docs::Metadata)</h4>
 <p>Filter Metadata based on a function</p>
-<pre><code class="julia">Base.filter(f::Function, docs::Metadata)
-</code></pre>
-
 <p><strong>Arguments</strong></p>
 <ul>
 <li><code>f</code> : a function that filters Entries and returns a Bool; the
@@ -344,12 +313,12 @@ end
 </code></pre>
 
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L86">Lexicon/src/filtering.jl:86</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/filtering.jl#L78">Lexicon/src/filtering.jl:78</a></p>
 <hr />
 <h4 id="match">Match</h4>
 <p>An entry and the set of all objects that are linked to it.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L43">Lexicon/src/query.jl:43</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L43">Lexicon/src/query.jl:43</a></p>
 <hr />
 <h4 id="query">Query</h4>
 <p>Holds the parsed user query.</p>
@@ -360,12 +329,12 @@ end
 <li><code>index</code>:   1-based, for picking an individual entry to display out of a list.</li>
 </ul>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L23">Lexicon/src/query.jl:23</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L23">Lexicon/src/query.jl:23</a></p>
 <hr />
 <h4 id="queryresults">QueryResults</h4>
 <p>Stores the matching entries resulting from running a query.</p>
 <p><strong>source:</strong>
-<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L53">Lexicon/src/query.jl:53</a></p>
+<a href="https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L53">Lexicon/src/query.jl:53</a></p>
 </div>
         </div>
 

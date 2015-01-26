@@ -82,70 +82,35 @@ push!(res::QueryResults, entry::Entry{:comment}, object, score) = res
 ## Construct a `Query` object.
 
 """
-Search through documentation of a particular package or globally. `@query`
-supports every type of object that *Docile.jl* can document with `@doc`.
+Create a `Query` object from the provided `args`. The resulting query can then be
+`run` to retrieve matching results from currently loaded documentation.
 
-**Note:** the functionality provided by `@query` is also available using `?` at
-the Julia REPL. It displays documentation from the standard Julia help system
-followed by package documentation from Docile.
+This is a low-level interface. For everyday usage in the REPL rather use the
+built-in `?` mode, which Lexicon hooks into automatically.
 
-Qualifying searches with a module identifier narrows the searching to only the
-specified module. When no module is provided every loaded module containing
-docstrings is searched.
-
-**Examples:**
-
-In a similar way to `Base.@which` you can use `@query` to search for the
-documentation of a method that would be called with the given arguments.
-
-```julia
-@query save("api/lexicon.md", Lexicon)
-@query Lexicon.doctest(Lexicon)
-```
-
-Full text searching is provided and looks through all text and code in
-docstrings, thus behaving in a similar way to `Base.apropos`.
-
-```julia
-@query "Examples"
-```
-
-Generic functions and types are supported directly by `@query`. As with
-method searches the module may be specified.
-
-```julia
-@query query
-@query Lexicon.query
-@query Lexicon.Summary
-```
-
-Searching for documented constants is also supported:
-
-```julia
-@query Lexicon.__METADATA__ # this won't show anything
-```
-
-**Selecting individual results**
-
-When several results are found for a given query only the signature of each is
-displayed in the REPL. The signatures are numbered starting from `1`. To view
-the full documentation for a particular signature listed rerun the previous
-query with the index of the desired signature as an additional argument.
-
-(Pressing the up arrow is the simplest way to get back to the previous query.)
+The first argument must be the expression to search for. Supported expressions
+include method calls, macros, constants, types, functions, and strings. An
+optional integer argument may be used to only show documentation from one of
+several results.
 
 **Example:**
 
 ```julia
-julia> foobar
+q = @query Lexicon.@query
+run(q)
+```
 
-  1: foobar
-  2: foobar(x)
-  3: foobar(x, y)
+```julia
+q = @query Lexicon.save 2
+run(q)
+```
 
-julia> foobar 2
+**Note:** When searching documentation for an operator (`+`, `-`, etc.) it should
+be enclosed in parentheses:
 
-# docs for `foobar(x)` are displayed now.
+```julia
+q = @query (+) 4
+run(q)
 ```
 """
 macro query(args...) esc(query(args...)) end

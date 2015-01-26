@@ -18,7 +18,7 @@ doctest(Lexicon)
 
 
 **source:**
-[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/doctest.jl#L101)
+[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/doctest.jl#L101)
 
 ---
 
@@ -29,7 +29,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:219](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L219)
+[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L184)
 
 ---
 
@@ -40,7 +40,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:219](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L219)
+[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L184)
 
 ---
 
@@ -97,7 +97,7 @@ The documentation will be available from
 
 
 **source:**
-[Lexicon/src/render.jl:58](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/render.jl#L58)
+[Lexicon/src/render.jl:58](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/render.jl#L58)
 
 ---
 
@@ -108,6 +108,7 @@ Iterator type for Metadata Entries with sorting options
 
 ```julia
 EachEntry(docs::Metadata; order = [:category, :name, :source])
+
 ```
 
 **Arguments**
@@ -148,75 +149,40 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 
 **source:**
-[Lexicon/src/filtering.jl:138](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L138)
+[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/filtering.jl#L131)
 
 ---
 
 #### @query(args...)
-Search through documentation of a particular package or globally. `@query`
-supports every type of object that *Docile.jl* can document with `@doc`.
+Create a `Query` object from the provided `args`. The resulting query can then be
+`run` to retrieve matching results from currently loaded documentation.
 
-**Note:** the functionality provided by `@query` is also available using `?` at
-the Julia REPL. It displays documentation from the standard Julia help system
-followed by package documentation from Docile.
+This is a low-level interface. For everyday usage in the REPL rather use the
+built-in `?` mode, which Lexicon hooks into automatically.
 
-Qualifying searches with a module identifier narrows the searching to only the
-specified module. When no module is provided every loaded module containing
-docstrings is searched.
-
-**Examples:**
-
-In a similar way to `Base.@which` you can use `@query` to search for the
-documentation of a method that would be called with the given arguments.
-
-```julia
-@query save("api/lexicon.md", Lexicon)
-@query Lexicon.doctest(Lexicon)
-```
-
-Full text searching is provided and looks through all text and code in
-docstrings, thus behaving in a similar way to `Base.apropos`.
-
-```julia
-@query "Examples"
-```
-
-Generic functions and types are supported directly by `@query`. As with
-method searches the module may be specified.
-
-```julia
-@query query
-@query Lexicon.query
-@query Lexicon.Summary
-```
-
-Searching for documented constants is also supported:
-
-```julia
-@query Lexicon.__METADATA__ # this won't show anything
-```
-
-**Selecting individual results**
-
-When several results are found for a given query only the signature of each is
-displayed in the REPL. The signatures are numbered starting from `1`. To view
-the full documentation for a particular signature listed rerun the previous
-query with the index of the desired signature as an additional argument.
-
-(Pressing the up arrow is the simplest way to get back to the previous query.)
+The first argument must be the expression to search for. Supported expressions
+include method calls, macros, constants, types, functions, and strings. An
+optional integer argument may be used to only show documentation from one of
+several results.
 
 **Example:**
 
 ```julia
-julia> foobar
+q = @query Lexicon.@query
+run(q)
+```
 
-  1: foobar
-  2: foobar(x)
-  3: foobar(x, y)
+```julia
+q = @query Lexicon.save 2
+run(q)
+```
 
-julia> foobar 2
+**Note:** When searching documentation for an operator (`+`, `-`, etc.) it should
+be enclosed in parentheses:
 
-# docs for `foobar(x)` are displayed now.
+```julia
+q = @query (+) 4
+run(q)
 ```
 
 
@@ -224,7 +190,7 @@ julia> foobar 2
 query(args...)
 
 **source:**
-[Lexicon/src/query.jl:151](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L151)
+[Lexicon/src/query.jl:116](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L116)
 
 ## Internal
 ---
@@ -233,16 +199,12 @@ query(args...)
 Basic text importance scoring.
 
 **source:**
-[Lexicon/src/query.jl:242](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L242)
+[Lexicon/src/query.jl:207](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L207)
 
 ---
 
 #### filter(docs::Metadata)
 Filter Metadata based on categories or file source
-
-```julia
-Base.filter(docs::Metadata; categories = Symbol[], files = String[])
-```
 
 **Arguments**
 
@@ -278,16 +240,12 @@ entries( filter(d, files = ["types.jl"]) )
 
 
 **source:**
-[Lexicon/src/filtering.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L43)
+[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/filtering.jl#L39)
 
 ---
 
 #### filter(f::Function, docs::Metadata)
 Filter Metadata based on a function
-
-```julia
-Base.filter(f::Function, docs::Metadata)
-```
 
 **Arguments**
 
@@ -314,7 +272,7 @@ end
 
 
 **source:**
-[Lexicon/src/filtering.jl:86](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L86)
+[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/filtering.jl#L78)
 
 ---
 
@@ -322,7 +280,7 @@ end
 An entry and the set of all objects that are linked to it.
 
 **source:**
-[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L43)
+[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L43)
 
 ---
 
@@ -338,7 +296,7 @@ Holds the parsed user query.
 
 
 **source:**
-[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L23)
+[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L23)
 
 ---
 
@@ -346,6 +304,6 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 **source:**
-[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L53)
+[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/c76ed81fed84f83fa9a3c53d3afc31469aa2f163/src/query.jl#L53)
 
 
