@@ -18,7 +18,7 @@ doctest(Lexicon)
 
 
 **source:**
-[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/doctest.jl#L101)
+[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/doctest.jl#L101)
 
 ---
 
@@ -29,7 +29,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:224](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L224)
+[Lexicon/src/query.jl:219](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L219)
 
 ---
 
@@ -40,7 +40,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:224](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L224)
+[Lexicon/src/query.jl:219](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L219)
 
 ---
 
@@ -97,7 +97,58 @@ The documentation will be available from
 
 
 **source:**
-[Lexicon/src/render.jl:58](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/render.jl#L58)
+[Lexicon/src/render.jl:58](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/render.jl#L58)
+
+---
+
+#### EachEntry
+Iterator type for Metadata Entries with sorting options
+
+**Constructors**
+
+```julia
+EachEntry(docs::Metadata; order = [:category, :name, :source])
+```
+
+**Arguments**
+
+* `docs` : main input
+
+**Optional keyword arguments**
+
+* `order` : indicators of sorting order, given in priority, options include:
+  * `:category` - category of Entries
+  * `:exported` - whether the item is exported or unexported
+  * `:name` - name of Entries
+  * `:source` - source location of Entries uses both the file path and
+    line number
+
+In addition to symbols, items in `order` can be functions of the form
+`(x,y) = ...` where `x` is the documented item, and `y` is the
+Entry. The function should return a quantity to be compared when
+sorting.
+
+**Main methods**
+
+An iterable, supports `start`, `next`, and `done`. `next` returns a
+`(key, value)` pair where the `key` is the ObjectId key, and `value`
+is the Entry.
+
+**Example**
+
+```julia
+using Lexicon, Docile, Docile.Interface
+d = metadata(Docile);
+
+# Collect the source location of each Entry sorted by the default
+# (:category then :name then :source).
+res = [v.data[:source][2] for (k,v) in EachEntry(d)]
+```
+
+
+
+**source:**
+[Lexicon/src/filtering.jl:138](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L138)
 
 ---
 
@@ -173,7 +224,7 @@ julia> foobar 2
 query(args...)
 
 **source:**
-[Lexicon/src/query.jl:151](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L151)
+[Lexicon/src/query.jl:151](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L151)
 
 ## Internal
 ---
@@ -182,7 +233,88 @@ query(args...)
 Basic text importance scoring.
 
 **source:**
-[Lexicon/src/query.jl:247](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L247)
+[Lexicon/src/query.jl:242](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L242)
+
+---
+
+#### filter(docs::Metadata)
+Filter Metadata based on categories or file source
+
+```julia
+Base.filter(docs::Metadata; categories = Symbol[], files = String[])
+```
+
+**Arguments**
+
+* `docs` : main input
+
+**Optional keyword arguments**
+
+* `categories` : categories to include in the result; can include any
+  of [:module, :function, :method, :type, :macro, :global, :comment];
+  defaults to all but :comment
+
+* `files` : vector of file names where entries originated to include
+  in the result; full pathnames are searched; can include partial
+  paths; defaults to all
+
+**Returns**
+
+* `::Metadata` : the filtered result
+
+**Example**
+
+```julia
+using Lexicon, Docile, Docile.Interface
+d = metadata(Docile);
+
+# Filter entries with categories of :macro and :type
+entries( filter(d, categories = [:macro, :type]) )
+
+# Filter entries from the file types.jl
+entries( filter(d, files = ["types.jl"]) )
+```
+
+
+
+**source:**
+[Lexicon/src/filtering.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L43)
+
+---
+
+#### filter(f::Function, docs::Metadata)
+Filter Metadata based on a function
+
+```julia
+Base.filter(f::Function, docs::Metadata)
+```
+
+**Arguments**
+
+* `f` : a function that filters Entries and returns a Bool; the
+  function signature should be `f(x::Entry)`.
+* `docs` : main input
+
+**Returns**
+
+* `::Metadata` : the filtered result
+
+**Example**
+
+```julia
+using Lexicon, Docile, Docile.Interface
+d = metadata(Docile);
+
+# Filter entries with all categories except :type
+res = filter(d) do e
+    category(e) != :type
+end
+```
+
+
+
+**source:**
+[Lexicon/src/filtering.jl:86](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/filtering.jl#L86)
 
 ---
 
@@ -190,7 +322,7 @@ Basic text importance scoring.
 An entry and the set of all objects that are linked to it.
 
 **source:**
-[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L43)
+[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L43)
 
 ---
 
@@ -206,7 +338,7 @@ Holds the parsed user query.
 
 
 **source:**
-[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L23)
+[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L23)
 
 ---
 
@@ -214,6 +346,6 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 **source:**
-[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/74a73bec9ba2fd88580895d4fb6b29189030314e/src/query.jl#L53)
+[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/ef3170f9e98997e5884e2ffba00772be679e852f/src/query.jl#L53)
 
 
