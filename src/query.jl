@@ -152,7 +152,7 @@ macro query(args...) esc(query(args...)) end
 
 query(ex::Queryable, index = 0) = build((objects(ex), modname(ex), index)...)
 
-query(other...) = throw(ArgumentError("Invalid arguments: query($(other...))."))
+query(other...) = throw(ArgumentError("Invalid arguments: query($(join(other, ", ")))."))
 
 build(objects, mod, index) = :(Lexicon.Query(tuple($(objects...)), $(mod), $(index)))
 build(objects, ::Nothing, index) = :(Lexicon.Query(tuple($(objects...)), $(index)))
@@ -185,7 +185,7 @@ objects(H"macrocall", ex) =
     [:(getfield($(modname(ex)), $(ex.args[1].args[2])))] :
     [ex.args[1]]
 
-# Hack around some weirdness in Base, TODO: report!
+# Hack around some weirdness in Base.
 function typesof(args...)
     out = Any[]
     for arg in args
@@ -196,11 +196,6 @@ function typesof(args...)
         end
     end
     tuple(out...)
-end
-
-macro help(args...)
-    ex = (isinteractive() && length(args) ≡ 1) ? :(Base.Help.@help $(args[1])) : :()
-    :($(esc(ex)); println(); run($(esc(query(args...)))))
 end
 
 ## Running queries. ---------------------------------------------------------------------
@@ -283,16 +278,69 @@ function append_result!(res, object::SimpleObject, meta)
     end
 end
 
+const INDEXED = r"\s(\d+)$"
+
+if VERSION < v"0.4-"
+    function help(line)
+        ex  = ismatch(INDEXED, line) ? nothing : parse("Base.Help.@help $(line)", raise = false)
+        lex = parse("Lexicon.@query $(line)", raise = false)
+
+        quote
+            $(ex)
+            println()
+            run($(lex))
+        end
+    end
+else
+    function help(line)
+        sline = symbol(line)
+        iskey = isdefined(Base.Docs, :keywords) && haskey(Base.Docs.keywords, sline)
+
+        ex, lex =
+            # keywords can't be searched for in Lexicon.
+            if iskey
+                (:(Base.Docs.@repl $(sline)), nothing)
+            else
+                lex = :(run($(parse("Lexicon.@query $(line)", raise = false))))
+                # Base REPL doesn't support indexing query results.
+                if ismatch(INDEXED, line)
+                    (nothing, lex)
+                else
+                    (parse("Base.Docs.@repl $(line)", raise = false), lex)
+                end
+            end
+
+        # Check for string argument, not supported by base REPL. Call apropos.
+        if isexpr(ex, :macrocall)
+            ex =
+                if length(ex.args) ≡ 2 && isa(ex.args[2], AbstractString)
+                    :(Base.apropos($(ex.args[2])); println())
+                else
+                    result = gensym()
+                    quote
+                        $(result) = $(ex)
+                        $(result) ≡ nothing || display($(result))
+                    end
+                end
+        end
+
+        quote
+            try $(ex) catch end
+            $(lex)
+        end
+    end
+end
+
 function setup_help()
     # Some environments, such as IJulia & Juno don't have an active repl.
-    if isdefined(Base, :active_repl)
+    if isdefined(Base, :active_repl) && isa(Base.active_repl, Base.REPL.LineEditREPL)
         repl = Base.active_repl
 
         julia_mode = repl.interface.modes[1]
         help_mode  = repl.interface.modes[3]
 
         help_mode.on_done = Base.REPL.respond(repl, julia_mode) do line
-            parse("Lexicon.@help $(line)", raise = false)
+            Lexicon.help(line)
         end
     end
 end

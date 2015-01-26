@@ -147,4 +147,25 @@ facts("Query results.") do
         test_query(@query("A.B.g/1"), "A.B.g/1")
 
     end
+
+    context("REPL Help.") do
+
+        Lexicon.help("")
+        Lexicon.help("fft")
+        Lexicon.help("1")
+        Lexicon.help("foobar")
+        Lexicon.help("foobar 1")
+        Lexicon.help("Lexicon")
+        Lexicon.help("Docile.@doc")
+        Lexicon.help("Docile.Entry")
+        Lexicon.help("Docile.Entry 1")
+        Lexicon.help("Docile.Entry(\"...\")")
+
+        if VERSION < v"0.4-"
+            Lexicon.help("...")
+            Lexicon.help("do")
+        end
+
+    end
 end
+

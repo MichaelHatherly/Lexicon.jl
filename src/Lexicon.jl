@@ -8,7 +8,9 @@ import Docile.Interface:
 
 import Base:
 
-    start, stop, next,
+    start,
+    next,
+    done,
     length,
     push!,
     run,
