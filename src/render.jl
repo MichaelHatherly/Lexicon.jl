@@ -91,7 +91,7 @@ function url(m::Meta{:source})
         root = cd(d) do # dir=d confuses --show-toplevel, apparently
             Pkg.Git.readchomp(`rev-parse --show-toplevel`)
         end
-        if beginswith(file, root)
+        if startswith(file, root)
             commit = Pkg.Git.readchomp(`rev-parse HEAD`, dir=d)
             return "https://github.com/$u/tree/$commit/"*file[length(root)+2:end]*"#L$line"
         else

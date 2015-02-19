@@ -1,3 +1,7 @@
+### v0.1.2
+
+* Fix `beginswith`/`startswith` deprecation warnings.
+
 ### v0.1.1
 
 * Add filtering and sorting methods for docstrings.
