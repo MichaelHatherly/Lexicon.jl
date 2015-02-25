@@ -15,7 +15,7 @@ function save(file::String, mime::MIME"text/html", doc::Metadata; mathjax = fals
     end
 
     # copy static files
-    src = joinpath(Pkg.dir("Lexicon"), "static")
+    src = joinpath(dirname(@__FILE__), "..", "..", "static")
     dst = joinpath(dirname(file), "static")
     isdir(dst) || mkpath(dst)
     for file in readdir(src)
