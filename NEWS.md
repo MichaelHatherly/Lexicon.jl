@@ -1,3 +1,7 @@
+### v0.1.3
+
+* Use relative paths instead of `Pkg.dir()`.
+
 ### v0.1.2
 
 * Fix `beginswith`/`startswith` deprecation warnings.
