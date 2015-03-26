@@ -1,6 +1,10 @@
-site_name: Lexicon.jl
-theme: yeti
+site_name:           Lexicon.jl
+repo_url:            https://github.com/MichaelHatherly/Lexicon.jl
+site_description:    Julia package documentation generator.
+site_author:         Michael Hatherly
+theme:               readthedocs
+markdown_extensions: [tables, fenced_code]
 pages:
     - ['index.md', 'Introduction']
     - ['manual.md', 'Manual', 'Overview']
-    - ['api/lexicon.md', 'API', 'Lexicon']
+    - ['api/Lexicon.md', 'API', 'Lexicon']
