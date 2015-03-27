@@ -6,7 +6,8 @@ end
 
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
 
-function save(file::String, mime::MIME"text/html", doc::Metadata; mathjax = false)
+function save(file::String, mime::MIME"text/html", doc::Metadata; mathjax = false, include_internal = true)
+    include_internal || throw(ArgumentError("include_internal should be true for html"))
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
