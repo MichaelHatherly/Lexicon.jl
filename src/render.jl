@@ -12,6 +12,10 @@ If MathJax support is required then the optional keyword argument
 `mathjax::Bool` may be given. MathJax uses `\(...\)` for in-line maths
 and `\[...\]` or `$$...$$` for display equations.
 
+To exclude documentation for non-exported objects, the keyword argument
+`include_internal::Bool` should be set to `false`. This is only supported 
+for `markdown`.
+
 Currently supported formats: `HTML`, and `markdown`.
 
 **MkDocs**
@@ -55,9 +59,9 @@ The documentation will be available from
 `https://USER_NAME.github.io/PACKAGE_NAME/FILE_PATH.html`.
 
 """
-function save(file::String, modulename::Module; mathjax = false)
+function save(file::String, modulename::Module; mathjax = false, include_internal = true)
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
-    save(file, mime, documentation(modulename); mathjax = mathjax)
+    save(file, mime, documentation(modulename); mathjax = mathjax, include_internal = include_internal)
 end
 
 const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]

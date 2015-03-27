@@ -6,12 +6,12 @@ end
 
 ## General markdown rendering ------------------------–––––––––––––––––––––––––––––––––––
 
-function save(file::String, mime::MIME"text/md", doc::Metadata; mathjax = false)
+function save(file::String, mime::MIME"text/md", doc::Metadata; mathjax = false, include_internal = true)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
-        writemime(f, mime, doc; mathjax = mathjax)
+        writemime(f, mime, doc; mathjax = mathjax, include_internal = include_internal)
     end
 end
 
@@ -32,7 +32,7 @@ function writemime(io::IO, mime::MIME"text/md", manual::Manual)
     end
 end
 
-function writemime(io::IO, mime::MIME"text/md", doc::Metadata; mathjax = false)
+function writemime(io::IO, mime::MIME"text/md", doc::Metadata; mathjax = false, include_internal = true)
     header(io, mime, doc)
 
     # Root may be a file or directory. Get the dir.
@@ -58,19 +58,19 @@ function writemime(io::IO, mime::MIME"text/md", doc::Metadata; mathjax = false)
             end
         end
         println(io)
-        writemime(io, mime, ents)
+        writemime(io, mime, ents, include_internal = include_internal)
     end
     footer(io, mime, doc; mathjax = mathjax)
 end
 
-function writemime(io::IO, mime::MIME"text/md", ents::Entries)
+function writemime(io::IO, mime::MIME"text/md", ents::Entries; include_internal = true)
     exported = Entries()
     internal = Entries()
 
     for (modname, obj, ent) in ents.entries
         isexported(modname, obj) ?
             push!(exported, modname, obj, ent) :
-            push!(internal, modname, obj, ent)
+            include_internal && push!(internal, modname, obj, ent)
     end
 
     if !isempty(exported.entries)
