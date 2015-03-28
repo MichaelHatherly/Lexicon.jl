@@ -1,36 +1,46 @@
 # Lexicon
 
+**Documentation**
+
+[![Stable Documentation][stable-docs-img]][stable-docs-url]
+[![Latest Documentation][latest-docs-img]][latest-docs-url]
+
+**Builds**
+
 [![Build Status][travis-img]][travis-url]
 [![Build status][appveyor-img]][appveyor-url]
-[![Coverage Status][coveralls-img]][coveralls-url]
-[![Lexicon][pkgeval-img]][pkgeval-url]
 
-*Lexicon.jl* provides access to the documentation created by the `@doc`
-macro from [*Docile.jl*][docile-url]. It
-allows querying of package documentation from the Julia REPL and
-building HTML documentation.
+**Package Status**
+
+[![Coverage Status][coveralls-img]][coveralls-url]
+[![Docile][pkgeval-img]][pkgeval-url]
+
+## Overview
+
+*Lexicon* is a [Julia](http://www.julialang.org) package documentation generator
+and viewer.
+
+It provides access to the documentation created by the `@doc` macro from
+[*Docile*][docile-url]. *Lexicon* allows querying of package documentation from
+the Julia REPL and building standalone documentation that can be hosted on GitHub
+Pages or [Read the Docs](https://readthedocs.org/).
+
+*Lexicon* separates the non-essential parts from *Docile* so that
+package load times are not impacted when documenting packages using
+`@doc`. See [this issue][issue-url] for details regarding the split.
 
 ## Installation
 
-*Lexicon.jl* is available from `METADATA` and may be installed via:
+*Lexicon* is available from `METADATA` and may be installed via:
 
 ```julia
 Pkg.add("Lexicon")
 ```
 
-## About
+## Issues and Support
 
-*Docile.jl* retains the documentation layer (`@doc`, `@docstrings`,
-`@md_mstr`), while *Lexicon.jl* takes over the presentation of
-documentation stored by *Docile.jl*.
-
-*Lexicon.jl* separates the non-essential parts from *Docile.jl* so that
-package load times are not impacted when documenting packages using
-`@doc`. See [this issue][issue-url] for details regarding the change.
-
-## Documentation
-
-*Lexicon.jl*-generated documentation is available [here][docs-url].
+Please file any issues or feature requests you might have through the GitHub
+[issue tracker][issue-tracker].
 
 [travis-img]: https://travis-ci.org/MichaelHatherly/Lexicon.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/MichaelHatherly/Lexicon.jl
@@ -48,4 +58,10 @@ package load times are not impacted when documenting packages using
 
 [issue-url]: https://github.com/MichaelHatherly/Docile.jl/issues/27
 
-[docs-url]: https://michaelhatherly.github.io/Lexicon.jl/index.html
+[issue-tracker]: https://github.com/MichaelHatherly/Lexicon.jl/issues
+
+[latest-docs-img]: https://readthedocs.org/projects/lexiconjl/badge/?version=latest
+[stable-docs-img]: https://readthedocs.org/projects/lexiconjl/badge/?version=stable
+
+[latest-docs-url]: https://readthedocs.org/projects/lexiconjl/?badge=latest
+[stable-docs-url]: https://readthedocs.org/projects/lexiconjl/?badge=stable

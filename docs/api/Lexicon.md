@@ -18,7 +18,7 @@ doctest(Lexicon)
 
 
 **source:**
-[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/doctest.jl#L101)
+[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/doctest.jl#L101)
 
 ---
 
@@ -29,7 +29,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/query.jl#L184)
+[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L184)
 
 ---
 
@@ -40,11 +40,11 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/query.jl#L184)
+[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L184)
 
 ---
 
-#### save(file::String, modulename::Module)
+#### save(file::AbstractString, modulename::Module)
 Write the documentation stored in `modulename` to the specified `file`
 in the format guessed from the file's extension.
 
@@ -101,11 +101,11 @@ The documentation will be available from
 
 
 **source:**
-[Lexicon/src/render.jl:62](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/render.jl#L62)
+[Lexicon/src/render.jl:62](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/render.jl#L62)
 
 ---
 
-#### EachEntry
+#### Lexicon.EachEntry
 Iterator type for Metadata Entries with sorting options
 
 **Constructors**
@@ -153,7 +153,7 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 
 **source:**
-[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/filtering.jl#L131)
+[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/filtering.jl#L131)
 
 ---
 
@@ -194,7 +194,7 @@ run(q)
 query(args...)
 
 **source:**
-[Lexicon/src/query.jl:116](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/query.jl#L116)
+[Lexicon/src/query.jl:116](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L116)
 
 ## Internal
 ---
@@ -203,11 +203,11 @@ query(args...)
 Basic text importance scoring.
 
 **source:**
-[Lexicon/src/query.jl:207](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/query.jl#L207)
+[Lexicon/src/query.jl:207](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L207)
 
 ---
 
-#### filter(docs::Metadata)
+#### filter(docs::Docile.Metadata)
 Filter Metadata based on categories or file source
 
 **Arguments**
@@ -244,11 +244,11 @@ entries( filter(d, files = ["types.jl"]) )
 
 
 **source:**
-[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/filtering.jl#L39)
+[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/filtering.jl#L39)
 
 ---
 
-#### filter(f::Function, docs::Metadata)
+#### filter(f::Function, docs::Docile.Metadata)
 Filter Metadata based on a function
 
 **Arguments**
@@ -276,19 +276,19 @@ end
 
 
 **source:**
-[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/filtering.jl#L78)
+[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/filtering.jl#L78)
 
 ---
 
-#### Match
+#### Lexicon.Match
 An entry and the set of all objects that are linked to it.
 
 **source:**
-[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/query.jl#L43)
+[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L43)
 
 ---
 
-#### Query
+#### Lexicon.Query
 Holds the parsed user query.
 
 **Fields:**
@@ -300,14 +300,14 @@ Holds the parsed user query.
 
 
 **source:**
-[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/query.jl#L23)
+[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L23)
 
 ---
 
-#### QueryResults
+#### Lexicon.QueryResults
 Stores the matching entries resulting from running a query.
 
 **source:**
-[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/1a1fc56751c2a8900e3c7c4f41342ecf8a44513e/src/query.jl#L53)
+[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L53)
 
 
