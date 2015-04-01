@@ -34,7 +34,7 @@ The documentation for this package was created in the following manner.
 All commands are run from the top-level folder in the package.
 
 ```julia
-save("docs/api/lexicon.md", Lexicon)
+save("docs/api/Lexicon.md", Lexicon)
 run(`mkdocs build`)
 
 ```
