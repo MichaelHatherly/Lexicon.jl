@@ -45,7 +45,7 @@ Please file any issues or feature requests you might have through the GitHub
 [travis-img]: https://travis-ci.org/MichaelHatherly/Lexicon.jl.svg?branch=master
 [travis-url]: https://travis-ci.org/MichaelHatherly/Lexicon.jl
 
-[appveyor-img]: https://ci.appveyor.com/api/projects/status/qmuv67ku625ioiwc/branch/master
+[appveyor-img]: https://ci.appveyor.com/api/projects/status/qmuv67ku625ioiwc/branch/master?svg=true
 [appveyor-url]: https://ci.appveyor.com/project/MichaelHatherly/lexicon-jl/branch/master
 
 [coveralls-img]: https://img.shields.io/coveralls/MichaelHatherly/Lexicon.jl.svg
