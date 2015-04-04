@@ -1,6 +1,6 @@
-### v0.1.4dev
+### v0.1.4
 
-* Adds for `markdown` optional style configuration.
+* Add optional style configuration for markdown output. Contributed by [@peter1000](https://github.com/peter1000).
 
 ### v0.1.3
 
@@ -12,7 +12,7 @@
 
 ### v0.1.1
 
-* Add filtering and sorting methods for docstrings.
+* Add filtering and sorting methods for docstrings. Contributed by [@tshort](https://github.com/tshort).
 * Fix compatibility issues with Julia 0.4-dev.
 
 ## v0.1.0
