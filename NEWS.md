@@ -1,3 +1,7 @@
+### v0.1.4dev
+
+* Adds for `markdown` optional style configuration.
+
 ### v0.1.3
 
 * Use relative paths instead of `Pkg.dir()`.
