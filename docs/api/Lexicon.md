@@ -18,7 +18,7 @@ doctest(Lexicon)
 
 
 **source:**
-[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/doctest.jl#L101)
+[Lexicon.jl/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/doctest.jl#L101)
 
 ---
 
@@ -29,7 +29,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L184)
+[Lexicon.jl/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/query.jl#L184)
 
 ---
 
@@ -40,7 +40,7 @@ individual entry if several different ones are found.
 
 
 **source:**
-[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L184)
+[Lexicon.jl/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/query.jl#L184)
 
 ---
 
@@ -53,10 +53,46 @@ If MathJax support is required then the optional keyword argument
 and `\[...\]` or `$$...$$` for display equations.
 
 To exclude documentation for non-exported objects, the keyword argument
-`include_internal::Bool` should be set to `false`. This is only supported 
+`include_internal::Bool` should be set to `false`. This is only supported
 for `markdown`.
 
 Currently supported formats: `HTML`, and `markdown`.
+
+**Markdown optional configuration**
+
+The format `markdown` accepts an optional configurtion dictionary which can be used to adjust
+the style of defined items.
+
+* Below are the DEFAULT_MDSTYLE, HTAGS (Valid Header Tags), STYLETAGS (Valid Style Tags)
+
+```julia
+const DEFAULT_MDSTYLE = Dict{Symbol, ByteString}([
+  (:header         , "#"),
+  (:objname        , "####"),
+  (:meta           , "**"),
+  (:exported       , "##"),
+  (:internal       , "##"),
+])
+
+const HTAGS = ["#", "##", "###", "####", "#####", "######"]
+const STYLETAGS = ["", "*", "**"]
+```
+
+EXAMPLE USAGE:
+
+```julia
+using Lexicon
+const MDSTYLE = Dict{Symbol, ByteString}([
+  (:header         , "#"),
+  (:objname        , "###"),
+  (:meta           , "*"),
+  (:exported       , "##"),
+  (:internal       , "##"),
+])
+
+save("docs/api/Lexicon.md", Lexicon, MDSTYLE)
+
+```
 
 **MkDocs**
 
@@ -74,7 +110,8 @@ The documentation for this package was created in the following manner.
 All commands are run from the top-level folder in the package.
 
 ```julia
-save("docs/api/lexicon.md", Lexicon)
+using Lexicon
+save("docs/api/Lexicon.md", Lexicon)
 run(`mkdocs build`)
 
 ```
@@ -101,7 +138,7 @@ The documentation will be available from
 
 
 **source:**
-[Lexicon/src/render.jl:62](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/render.jl#L62)
+[Lexicon.jl/src/render.jl:99](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/render.jl#L99)
 
 ---
 
@@ -153,7 +190,7 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 
 **source:**
-[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/filtering.jl#L131)
+[Lexicon.jl/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/filtering.jl#L131)
 
 ---
 
@@ -194,7 +231,7 @@ run(q)
 query(args...)
 
 **source:**
-[Lexicon/src/query.jl:116](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L116)
+[Lexicon.jl/src/query.jl:116](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/query.jl#L116)
 
 ## Internal
 ---
@@ -203,7 +240,7 @@ query(args...)
 Basic text importance scoring.
 
 **source:**
-[Lexicon/src/query.jl:207](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L207)
+[Lexicon.jl/src/query.jl:207](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/query.jl#L207)
 
 ---
 
@@ -244,7 +281,7 @@ entries( filter(d, files = ["types.jl"]) )
 
 
 **source:**
-[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/filtering.jl#L39)
+[Lexicon.jl/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/filtering.jl#L39)
 
 ---
 
@@ -276,7 +313,7 @@ end
 
 
 **source:**
-[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/filtering.jl#L78)
+[Lexicon.jl/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/filtering.jl#L78)
 
 ---
 
@@ -284,7 +321,7 @@ end
 An entry and the set of all objects that are linked to it.
 
 **source:**
-[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L43)
+[Lexicon.jl/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/query.jl#L43)
 
 ---
 
@@ -300,7 +337,7 @@ Holds the parsed user query.
 
 
 **source:**
-[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L23)
+[Lexicon.jl/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/query.jl#L23)
 
 ---
 
@@ -308,6 +345,6 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 **source:**
-[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/e6ccf9f4a12e75fe062282c0756ff4a0bcd359e7/src/query.jl#L53)
+[Lexicon.jl/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/c93324609818b5fc2fcad1e8ee7005a9ccda8116/src/query.jl#L53)
 
 

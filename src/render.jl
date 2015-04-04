@@ -13,10 +13,46 @@ If MathJax support is required then the optional keyword argument
 and `\[...\]` or `$$...$$` for display equations.
 
 To exclude documentation for non-exported objects, the keyword argument
-`include_internal::Bool` should be set to `false`. This is only supported 
+`include_internal::Bool` should be set to `false`. This is only supported
 for `markdown`.
 
 Currently supported formats: `HTML`, and `markdown`.
+
+**Markdown optional configuration**
+
+The format `markdown` accepts an optional configurtion dictionary which can be used to adjust
+the style of defined items.
+
+* Below are the DEFAULT_MDSTYLE, HTAGS (Valid Header Tags), STYLETAGS (Valid Style Tags)
+
+```julia
+const DEFAULT_MDSTYLE = Dict{Symbol, ByteString}([
+  (:header         , "#"),
+  (:objname        , "####"),
+  (:meta           , "**"),
+  (:exported       , "##"),
+  (:internal       , "##"),
+])
+
+const HTAGS = ["#", "##", "###", "####", "#####", "######"]
+const STYLETAGS = ["", "*", "**"]
+```
+
+EXAMPLE USAGE:
+
+```julia
+using Lexicon
+const MDSTYLE = Dict{Symbol, ByteString}([
+  (:header         , "#"),
+  (:objname        , "###"),
+  (:meta           , "*"),
+  (:exported       , "##"),
+  (:internal       , "##"),
+])
+
+save("docs/api/Lexicon.md", Lexicon, MDSTYLE)
+
+```
 
 **MkDocs**
 
@@ -34,6 +70,7 @@ The documentation for this package was created in the following manner.
 All commands are run from the top-level folder in the package.
 
 ```julia
+using Lexicon
 save("docs/api/Lexicon.md", Lexicon)
 run(`mkdocs build`)
 
@@ -62,6 +99,12 @@ The documentation will be available from
 function save(file::String, modulename::Module; mathjax = false, include_internal = true)
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
     save(file, mime, documentation(modulename); mathjax = mathjax, include_internal = include_internal)
+end
+
+function save(file::String, modulename::Module, mdstyle::Dict{Symbol, ByteString}; mathjax = false, include_internal = true)
+    mime = MIME("text/$(strip(last(splitext(file)), '.'))")
+    mime != MIME("text/md") && error(" Customary `mdstyle` dictionaries are only supported for `markdown`: Got mime: $mime")
+    save(file, mime, documentation(modulename), mdstyle; mathjax = mathjax, include_internal = include_internal)
 end
 
 const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]
