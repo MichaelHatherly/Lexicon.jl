@@ -37,6 +37,11 @@ package load times are not impacted when documenting packages using
 Pkg.add("Lexicon")
 ```
 
+## Documentation
+
+Package documentation is available for the [stable][stable-docs-url] and
+[development][latest-docs-url] versions.
+
 ## Issues and Support
 
 Please file any issues or feature requests you might have through the GitHub
@@ -63,5 +68,5 @@ Please file any issues or feature requests you might have through the GitHub
 [latest-docs-img]: https://readthedocs.org/projects/lexiconjl/badge/?version=latest
 [stable-docs-img]: https://readthedocs.org/projects/lexiconjl/badge/?version=stable
 
-[latest-docs-url]: https://readthedocs.org/projects/lexiconjl/?badge=latest
-[stable-docs-url]: https://readthedocs.org/projects/lexiconjl/?badge=stable
+[latest-docs-url]: http://lexiconjl.readthedocs.org/en/latest/
+[stable-docs-url]: http://lexiconjl.readthedocs.org/en/stable/
