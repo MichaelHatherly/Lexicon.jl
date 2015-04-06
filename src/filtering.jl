@@ -11,7 +11,7 @@ Filter Metadata based on categories or file source
 **Optional keyword arguments**
 
 * `categories` : categories to include in the result; can include any
-  of [:module, :function, :method, :type, :macro, :global, :comment];
+  of [:module, :function, :method, :type, :typealias, :macro, :global, :comment];
   defaults to all but :comment
 
 * `files` : vector of file names where entries originated to include
