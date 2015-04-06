@@ -1,10 +1,10 @@
-## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+## Docs-specific rendering
 
 function writemime(io::IO, mime::MIME"text/md", docs::Docs{:md}, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
     println(io, docs.data)
 end
 
-## General markdown rendering ------------------------–––––––––––––––––––––––––––––––––––
+## General markdown rendering
 
 const DEFAULT_MDSTYLE = Dict{Symbol, ByteString}([
   (:header         , "#"),
@@ -78,10 +78,8 @@ function writemime(io::IO, mime::MIME"text/md", doc::Metadata, mdstyle::Dict{Sym
         ents = Entries()
         for k in CATEGORY_ORDER
             haskey(index, k) || continue
-            ## println(io, "## **$(k)s:**")
             for (s, obj) in index[k]
                 push!(ents, modulename(doc), obj, entries(doc)[obj])
-                ## println(io, "* [$(s)](#$(s))")
             end
         end
         println(io)
@@ -118,11 +116,9 @@ end
 function writemime{category}(io::IO, mime::MIME"text/md", modname, obj, ent::Entry{category},
                                     mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
     objname = writeobj(obj, ent)
-    ## print(io, "<div class='category'>[$(category)] &mdash; </div> ")
     println(io, "---\n")
     print_help(io, mdstyle[:objname], objname)
     writemime(io, mime, docs(ent), mdstyle)
-    ## println(io, "**Details:**")
     println(io)
     for k in sort(collect(keys(ent.data)))
         print_help(io, mdstyle[:meta], "$k:")

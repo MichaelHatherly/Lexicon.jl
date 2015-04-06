@@ -19,7 +19,6 @@ import Base:
 
 using
 
-    AnsiColor,
     Base.Meta,
     Compat,
     Docile,

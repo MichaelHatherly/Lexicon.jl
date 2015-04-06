@@ -96,3 +96,9 @@ function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
         end
     end
 end
+
+function colorize(color::Symbol, text::AbstractString)
+    buf = IOBuffer()
+    print_with_color(color, buf, text)
+    takebuf_string(buf)
+end

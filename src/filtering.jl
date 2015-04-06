@@ -135,10 +135,9 @@ end
 
 
 function EachEntry(docs::Metadata; order = [:category, :name, :source])
-    funmap = @compat Dict(:name => (k,v) -> writeobj(k,v),    # various vectors for sorting
-                          # :doctag => !doctag,
+    funmap = @compat Dict(:name     => (k,v) -> writeobj(k,v), # various vectors for sorting
                           :exported => (k,v) -> !exported(modulename(v), k),
-                          :source => (k,v) -> reverse(v.data[:source]),
+                          :source   => (k,v) -> reverse(v.data[:source]),
                           :category => (k,v) -> indexin([category(v)], CATEGORY_ORDER)[1])
     funs = [isa(o, Symbol) ? funmap[o] : o for o in order]
     function lessthan(x,y)
