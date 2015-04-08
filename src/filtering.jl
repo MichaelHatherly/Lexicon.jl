@@ -2,7 +2,7 @@
 
 
 """
-Filter Metadata based on categories or file source
+Filter Metadata based on categories or file source.
 
 **Arguments**
 
@@ -50,7 +50,7 @@ function Base.filter(docs::Metadata; categories = CATEGORY_ORDER, files = String
 end
 
 """
-Filter Metadata based on a function
+Filter Metadata based on a function.
 
 **Arguments**
 
@@ -83,7 +83,7 @@ end
 
 
 """
-Iterator type for Metadata Entries with sorting options
+Iterator type for Metadata Entries with sorting options.
 
 **Constructors**
 
@@ -155,4 +155,3 @@ Base.length(x::EachEntry) = length(x.kidx)
 Base.start(x::EachEntry) = 1
 Base.done(x::EachEntry, state) = state == length(x.kidx)
 Base.next(x::EachEntry, state) = ((x.kidx[state], x.parent.entries[x.kidx[state]]), state + 1)
-
