@@ -172,7 +172,7 @@ function push!(plmain::PLMain, modname::Module, obj, ent::Entry)
     isa(ent, Docile.Entry{:macro}) ? basename = Docile.Interface.macroname(ent) : basename = Docile.Interface.name(obj)
     modname = string(modname)
     relsourcepath = relpath(plmain.mdoutfile, dirname(plmain.genidxfile))
-    plentry = PLEntry(writeobj(obj, ent), "", split(docs(ent).data, '\n')[1], relsourcepath)
+    plentry = PLEntry(writeobj(obj, ent), "", split(data(docs(ent)), '\n')[1], relsourcepath)
 
     if modname in keys(plmain.data)
         if basename in keys(plmain.data[modname])
