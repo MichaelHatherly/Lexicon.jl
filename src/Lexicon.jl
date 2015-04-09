@@ -34,8 +34,10 @@ export
     failed,
     passed,
     skipped,
-    EachEntry
+    EachEntry,
 
+    startgenidx,
+    savegenidx
 
 @document
 

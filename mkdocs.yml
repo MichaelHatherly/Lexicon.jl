@@ -8,3 +8,4 @@ pages:
     - ['index.md', 'Introduction']
     - ['manual.md', 'Manual', 'Overview']
     - ['api/Lexicon.md', 'API', 'Lexicon']
+    - ['api/genindex.md', 'API', 'Index']

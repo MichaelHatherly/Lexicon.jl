@@ -3,6 +3,17 @@ using Docile, Lexicon
 const api_directory = "api"
 const modules = [Lexicon]
 
+"""
+Example of custom MDSTYLE.
+"""
+const MDSTYLE = Dict{Symbol, ByteString}([
+  (:header         , "#"),
+  (:objname        , "###"),
+  (:meta           , "**"),
+  (:exported       , "##"),
+  (:internal       , "##"),
+])
+
 cd(dirname(@__FILE__)) do
 
     # Run the doctests *before* we start to generate *any* documentation.
@@ -16,15 +27,19 @@ cd(dirname(@__FILE__)) do
     end
 
     # Generate and save the contents of docstrings as markdown files.
+    # Example of customary STYLE for API Index
+    plmain = startgenidx(joinpath(api_directory, "genindex.md"); headerstyle = "#", modnamestyle = "##")
     for m in modules
         filename = joinpath(api_directory, "$(module_name(m)).md")
         try
-            save(filename, m)
+            save(filename, m, plmain)
         catch err
             println(err)
             exit(1)
         end
     end
+    # To actually save the API Index to: `genindex.md`: If not index page is needed this can be skipped
+    savegenidx(plmain)
 
     # Add a reminder not to edit the generated files.
     open(joinpath(api_directory, "README.md"), "w") do f
