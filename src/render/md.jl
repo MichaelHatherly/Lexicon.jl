@@ -169,7 +169,7 @@ It adds any necessary dictionary keys.
 * PLEntry: Returns also the just prepared/added PLEntry.
 """
 function push!(plmain::PLMain, modname::Module, obj, ent::Entry)
-    isa(ent, Docile.Entry{:macro}) ? basename = Docile.Interface.macroname(ent) : basename = Docile.Interface.name(obj)
+    basename = isa(ent, Docile.Entry{:macro}) ? Docile.Interface.macroname(ent) : Docile.Interface.name(obj)
     modname = string(modname)
     relsourcepath = relpath(plmain.mdoutfile, dirname(plmain.genidxfile))
     plentry = PLEntry(writeobj(obj, ent), "", split(data(docs(ent)), '\n')[1], relsourcepath)
