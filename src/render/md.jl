@@ -295,7 +295,7 @@ function writemime{category}(io::IO, mime::MIME"text/md", modname, obj, ent::Ent
     objname = last_plentry.objname
     println(io, "---\n")
     
-    println(io, """<a id="$(last_plentry.idname)" class="lexiconanchor"></a>""")
+    println(io, """<a id="$(last_plentry.idname)" class="headerfix"></a>""")
     if permalink
         print_help(io, mdstyle[:objname], "$objname   [¶](#$(last_plentry.idname))")
     else

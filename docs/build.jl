@@ -4,7 +4,7 @@ const api_directory = "api"
 const modules = [Lexicon]
 
 """
-Example of customary MDSTYLE
+Example of custom MDSTYLE.
 """
 const MDSTYLE = Dict{Symbol, ByteString}([
   (:header         , "#"),

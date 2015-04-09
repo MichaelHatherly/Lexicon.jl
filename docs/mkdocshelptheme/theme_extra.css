@@ -1,9 +1,0 @@
-/*
- * Tweak the display permalinks below the top banner
- */
-.lexiconanchor:before {
-    content: "";
-    display: block;
-    margin-top: -75px;
-    height: 75px;
-}

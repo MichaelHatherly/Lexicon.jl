@@ -178,7 +178,8 @@ function partial_signature_matching(f::Function, sig::Tuple)
 end
 
 """
-Search for all methods of a generic function `f` that match the signature `sig`.
+Search loaded documentation for all methods of a generic function `f`
+that match the provided signature `sig`.
 Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.
 """

@@ -2,9 +2,8 @@
 
 * Add optional API-Index for markdown output. Contributed by [@peter1000](https://github.com/peter1000).
 * Add optional Permalink for markdown output. Contributed by [@peter1000](https://github.com/peter1000).
-* Add an example MkDocs theme: `mkdocshelptheme` to show how to use the `bootstrap` related themes.
 * Add some additional explanatory code comments / documentation.
-* Adjusted some documentation for the new API-Index. (Shorter first line ect..)
+* Adjusted some documentation for the new API-Index. (Shorter first line ect.)
 
 ### v0.1.4
 
