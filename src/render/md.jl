@@ -178,8 +178,7 @@ function push!(plmain::PLMain, modname::Module, obj, ent::Entry)
         if basename in keys(plmain.data[modname])
             idnum = length(plmain.data[modname][basename]) + 1
             plentry.idname = "$basename.$idnum"
-            temp_arr = plmain.data[modname][basename]
-            Base.push!(temp_arr, plentry)
+            Base.push!(plmain.data[modname][basename], plentry)
         else
             plentry.idname = "$basename.1"
             plmain.data[modname][basename] = [plentry]
