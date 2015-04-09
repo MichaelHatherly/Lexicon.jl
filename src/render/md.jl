@@ -65,16 +65,10 @@ relpath_ = relpath("/home/user/Downloads", pwd())
 """
 function relpath(path::ByteString, startpath::ByteString)
     pardir = ".."
-    if isabspath(path) && !contains(path, "/.")
-        path_arr = split(path, Base.path_separator_re)
-    else
-        path_arr = split(abspath(path), Base.path_separator_re)
-    end
-    if isabspath(startpath) && !contains(path, "/.")
-        start_arr = split(startpath, Base.path_separator_re)
-    else
-        start_arr = split(abspath(startpath), Base.path_separator_re)
-    end
+    path      = isabspath(path) &&      !contains(path, "/.") ? path      : abspath(path)
+    startpath = isabspath(startpath) && !contains(path, "/.") ? startpath : abspath(startpath)
+    path_arr  = split(path,      Base.path_separator_re)
+    start_arr = split(startpath, Base.path_separator_re)
 
     count = 0
     while count < min(length(path_arr), length(start_arr))
@@ -294,7 +288,7 @@ function writemime{category}(io::IO, mime::MIME"text/md", modname, obj, ent::Ent
     last_plentry = push!(plmain, modname, obj, ent)
     objname = last_plentry.objname
     println(io, "---\n")
-    
+
     println(io, """<a id="$(last_plentry.idname)" class="headerfix"></a>""")
     if permalink
         print_help(io, mdstyle[:objname], "$objname   [¶](#$(last_plentry.idname))")
