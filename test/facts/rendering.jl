@@ -37,10 +37,18 @@ facts("Rendering.") do
     end
 
     context("Saving static content.") do
-        for modname in (Lexicon, Docile, Docile.Interface), ft in ("md", "html")
+        for modname in (Lexicon, Docile, Docile.Interface)
             dir = joinpath(tempdir(), randstring())
-            f = joinpath(dir, "$(modname).$(ft)")
+            f = joinpath(dir, "$(modname).html")
             save(f, modname; mathjax = true)
+            rm(dir, recursive = true)
+        end
+        for modname in (Lexicon, Docile, Docile.Interface)
+            dir = joinpath(tempdir(), randstring())
+            f = joinpath(dir, "$(modname).md")
+            plmain = startgenidx(joinpath(dir, "genindex.md"); headerstyle = "#", modnamestyle = "##")
+            save(f, modname, plmain; mathjax = true)
+            savegenidx(plmain)
             rm(dir, recursive = true)
         end
     end
