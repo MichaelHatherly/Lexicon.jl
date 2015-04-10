@@ -1,43 +1,27 @@
 ## Docs-specific rendering
 
-function writemime(io::IO, mime::MIME"text/md", docs::Docs{:md}, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
+function writemime(io::IO, mime::MIME"text/md", docs::Docs{:md})
     println(io, docs.data)
 end
 
 ## General markdown rendering
-
-const DEFAULT_MDSTYLE = Dict{Symbol, ByteString}([
-  (:header         , "#"),
-  (:objname        , "####"),
-  (:meta           , "**"),
-  (:exported       , "##"),
-  (:internal       , "##"),
-])
 
 const HTAGS = ["#", "##", "###", "####", "#####", "######"]
 const STYLETAGS = ["", "*", "**"]
 
 print_help(io::IO, cv::ASCIIString, item) = cv in HTAGS ? println(io, "$cv $item") : println(io, cv, item, cv)
 
-function validate(mdstyle::Dict{Symbol, ByteString})
-    reg_keys = keys(DEFAULT_MDSTYLE)
-    length(keys(mdstyle)) != length(reg_keys) && error(
-            "`mdstyle` expected number of keys: $(length(reg_keys))  Got: $(length(keys(mdstyle)))")
-    vaild_tags = vcat(HTAGS,STYLETAGS)
-    for (k, v) in mdstyle
-        k in reg_keys || error("Invalid mdstyle key:  `$k`. Valid keys: [$(join(reg_keys, ", "))].")
-        v in vaild_tags || error("Invalid mdstyle value:  `$v`. Valid values: [$(join(vaild_tags, ", "))].")
+function save(file::String, mime::MIME"text/md", doc::Metadata, config::Dict{Symbol, Any})
+    # validate mdstyle
+    for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_exported, :mdstyle_internal]
+        config[k] in vcat(HTAGS,STYLETAGS) || error("""Invalid mdstyle value: config-item `$k -> $(config[k])`.
+                                                    Valid values: [$(join(vcat(HTAGS,STYLETAGS), ", "))].""")
     end
-end
-
-function save(file::String, mime::MIME"text/md", doc::Metadata, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE;
-                                                                                mathjax = false, include_internal = true)
-    validate(mdstyle)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
-        writemime(f, mime, doc, mdstyle; mathjax = mathjax, include_internal = include_internal)
+        writemime(f, mime, doc, config)
     end
 end
 
@@ -52,15 +36,14 @@ end
 
 length(ents::Entries) = length(ents.entries)
 
-function writemime(io::IO, mime::MIME"text/md", manual::Manual, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
+function writemime(io::IO, mime::MIME"text/md", manual::Manual)
     for page in pages(manual)
-        writemime(io, mime, docs(page), mdstyle)
+        writemime(io, mime, docs(page))
     end
 end
 
-function writemime(io::IO, mime::MIME"text/md", doc::Metadata, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE;
-                                                                                mathjax = false, include_internal = true)
-    header(io, mime, doc, mdstyle)
+function writemime(io::IO, mime::MIME"text/md", doc::Metadata, config::Dict{Symbol, Any})
+    header(io, mime, doc, config)
 
     # Root may be a file or directory. Get the dir.
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
@@ -83,71 +66,70 @@ function writemime(io::IO, mime::MIME"text/md", doc::Metadata, mdstyle::Dict{Sym
             end
         end
         println(io)
-        writemime(io, mime, ents, mdstyle; include_internal = include_internal)
+        writemime(io, mime, ents, config)
     end
-    footer(io, mime, doc; mathjax = mathjax)
+    footer(io, mime)
 end
 
-function writemime(io::IO, mime::MIME"text/md", ents::Entries,
-            mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE; include_internal = true)
+function writemime(io::IO, mime::MIME"text/md", ents::Entries, config::Dict{Symbol, Any})
     exported = Entries()
     internal = Entries()
 
     for (modname, obj, ent) in ents.entries
         isexported(modname, obj) ?
             push!(exported, modname, obj, ent) :
-            include_internal && push!(internal, modname, obj, ent)
+            config[:include_internal] && push!(internal, modname, obj, ent)
     end
 
     if !isempty(exported.entries)
-        print_help(io, mdstyle[:exported], "Exported")
+        print_help(io, config[:mdstyle_exported], "Exported")
         for (modname, obj, ent) in exported.entries
-            writemime(io, mime, modname, obj, ent, mdstyle)
+            writemime(io, mime, modname, obj, ent, config)
         end
     end
     if !isempty(internal.entries)
-        print_help(io, mdstyle[:internal], "Internal")
+        print_help(io, config[:mdstyle_internal], "Internal")
         for (modname, obj, ent) in internal.entries
-            writemime(io, mime, modname, obj, ent, mdstyle)
+            writemime(io, mime, modname, obj, ent, config)
         end
     end
 end
 
 function writemime{category}(io::IO, mime::MIME"text/md", modname, obj, ent::Entry{category},
-                                    mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
+                                                                    config::Dict{Symbol, Any})
     objname = writeobj(obj, ent)
     println(io, "---\n")
-    print_help(io, mdstyle[:objname], objname)
-    writemime(io, mime, docs(ent), mdstyle)
+    print_help(io, config[:mdstyle_objname], objname)
+    writemime(io, mime, docs(ent))
     println(io)
     for k in sort(collect(keys(ent.data)))
-        print_help(io, mdstyle[:meta], "$k:")
-        writemime(io, mime, Meta{k}(ent.data[k]), mdstyle)
+        print_help(io, config[:mdstyle_meta], "$k:")
+        writemime(io, mime, Meta{k}(ent.data[k]))
         println(io)
     end
 end
 
 
-function writemime(io::IO, mime::MIME"text/md", md::Meta, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
+function writemime(io::IO, mime::MIME"text/md", md::Meta)
     println(io, md.content)
 end
 
-function writemime(io::IO, mime::MIME"text/md", m::Meta{:parameters}, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
+function writemime(io::IO, mime::MIME"text/md", m::Meta{:parameters})
     for (k, v) in m.content
         println(io, k)
     end
-    writemime(io, mime, v, mdstyle)
+    writemime(io, mime, v)
 end
 
-function writemime(io::IO, ::MIME"text/md", m::Meta{:source}, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
+function writemime(io::IO, ::MIME"text/md", m::Meta{:source})
     path = last(split(m.content[2], r"v[\d\.]+(/|\\)"))
     println(io, "[$(path):$(m.content[1])]($(url(m)))")
 end
 
-function header(io::IO, ::MIME"text/md", doc::Metadata, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE)
-    print_help(io, mdstyle[:header], doc.modname)
+function header(io::IO, ::MIME"text/md", doc::Metadata, config::Dict{Symbol, Any})
+    print_help(io, config[:mdstyle_header], doc.modname)
 end
 
-function footer(io::IO, ::MIME"text/md", doc::Metadata, mdstyle::Dict{Symbol, ByteString} = DEFAULT_MDSTYLE; mathjax = false)
+function footer(io::IO, ::MIME"text/md")
     println(io, "")
 end
