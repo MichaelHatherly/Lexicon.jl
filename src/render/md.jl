@@ -5,21 +5,11 @@ function writemime(io::IO, mime::MIME"text/md", docs::Docs{:md})
 end
 
 ## General markdown rendering
-
-const HTAGS = ["#", "##", "###", "####", "#####", "######"]
-const STYLETAGS = ["", "*", "**"]
-
-print_help(io::IO, cv::ASCIIString, item) = cv in HTAGS              ?
+print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
                                             println(io, "$cv $item") :
                                             println(io, cv, item, cv)
 
 function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
-    # validate mdstyle
-    for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_exported, :mdstyle_internal]
-       getfield(config, k) in vcat(HTAGS,STYLETAGS) ||
-                            error("""Invalid mdstyle value: config-item `$k -> $(config[k])`.
-                                    Valid values: [$(join(vcat(HTAGS,STYLETAGS), ", "))].""")
-    end
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f

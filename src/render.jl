@@ -3,6 +3,8 @@
 parsedocs(ds::Docs{:md}) = Markdown.parse(data(ds))
 
 ## Common -------------------------------------------------------------------------------
+const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]
+const MDSTYLETAGS = ["", "*", "**"]
 
 type Config
     # General Options
@@ -36,6 +38,12 @@ type Config
             catch err
                 warn("Invalid setting: '$(k) = $(v)'. Error: $err")
             end
+        end
+        # Validations
+        for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_exported, :mdstyle_internal]
+           getfield(this, k) in vcat(MDHTAGS, MDSTYLETAGS) ||
+                                error("""Invalid mdstyle value: config-item `$k -> $(getfield(this, k))`.
+                                        Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")
         end
         return this
     end
