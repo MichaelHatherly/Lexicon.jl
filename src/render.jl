@@ -141,6 +141,7 @@ function save(file::String, modulename::Module; args...)
     save(file, mime, documentation(modulename), config)
 end
 
+
 const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]
 
 # Dispatch container for metadata display.
