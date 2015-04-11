@@ -9,7 +9,7 @@ print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
                                             println(io, "$cv $item") :
                                             println(io, cv, item, cv)
 
-function savemd(file::String, doc::Metadata, config::Config)
+function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
@@ -53,7 +53,6 @@ function writemd(io::IO, doc::Metadata, config::Config)
         println(io)
         writemd(io, ents, config)
     end
-    footermd(io)
 end
 
 function writemd(io::IO, ents::Entries, config::Config)
@@ -105,26 +104,3 @@ end
 function headermd(io::IO, doc::Metadata, config::Config)
     print_help(io, config.mdstyle_header, doc.modname)
 end
-
-function footermd(io::IO)
-    println(io, "")
-end
-
-
-#  =============== TODO: if no Problems arise delete this below
-#length(ents::Entries) = length(ents.entries)  # TODO: if no Problems arise delete this
-
-
-#function writemd(io::IO, mime::MIME"text/md", manual::Manual)
-#    println(""">>SEEMS IT GETS NOT CALLED: writemd(io::IO, mime::MIME"text/md", manual::Manual) is this done in line 36??""")
-#    for page in pages(manual)
-#        writemd(io, MIME("text/md"), docs(page))
-#    end
-#end
-#function writemd(io::IO, mime::MIME"text/md", m::Meta{:parameters})
-#    for (k, v) in m.content
-#        println(io, k)
-#    end
-#    println("""=====2 """, @which writemd(io, MIME("text/md"), v))
-#    writemd(io, MIME("text/md"), v)
-#end

@@ -137,9 +137,8 @@ The documentation will be available from
 """
 function save(file::String, modulename::Module; args...)
     config = Config(; args...)
-    strip(last(splitext(file)), '.') == "html"              ?
-        savehtml(file, documentation(modulename), config) :
-        savemd(file, documentation(modulename), config)
+    mime = MIME("text/$(strip(last(splitext(file)), '.'))")
+    save(file, mime, documentation(modulename), config)
 end
 
 

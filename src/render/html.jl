@@ -6,13 +6,13 @@ end
 
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
 
-function savehtml(file::String, doc::Metadata, config::Config)
+function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config)
     config.include_internal || throw(ArgumentError("`config` option `include_internal` must be true for html"))
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
-        writemime(f, MIME("text/html"), doc, config)
+        writemime(f, mime, doc, config)
     end
 
     # copy static files
