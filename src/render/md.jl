@@ -97,7 +97,7 @@ function writemd(io::IO, md::Meta)
     println(io, md.content)
 end
 
-function writemd(io::IO,  m::Meta{:source})
+function writemd(io::IO, m::Meta{:source})
     path = last(split(m.content[2], r"v[\d\.]+(/|\\)"))
     println(io, "[$(path):$(m.content[1])]($(url(m)))")
 end
