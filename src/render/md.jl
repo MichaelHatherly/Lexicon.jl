@@ -94,7 +94,6 @@ function writemd{category}(io::IO, modname, obj, ent::Entry{category}, config::C
 end
 
 function writemd(io::IO, md::Meta)
-    
     println(io, md.content)
 end
 
