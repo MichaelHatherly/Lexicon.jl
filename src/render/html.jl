@@ -1,7 +1,7 @@
 ## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-function writemime(io::IO, mime::MIME"text/html", docs::Docs{:md})
-    writemime(io, mime, parsed(docs))
+function writehtml(io::IO, docs::Docs{:md})
+    writemime(io, MIME("text/html"), parsed(docs))
 end
 
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
@@ -12,7 +12,7 @@ function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
-        writemime(f, mime, doc, config)
+        writehtml(f, doc, config)
     end
 
     # copy static files
@@ -34,20 +34,12 @@ function push!(ents::Entries, modulename::Module, obj, ent::Entry)
     push!(ents.entries, (modulename, obj, ent))
 end
 
-length(ents::Entries) = length(ents.entries)
-
-function writemime(io::IO, mime::MIME"text/html", manual::Manual)
-    for page in pages(manual)
-        writemime(io, mime, docs(page))
-    end
-end
-
-function writemime(io::IO, mime::MIME"text/html", doc::Metadata, config::Config)
-    header(io, mime, doc)
+function writehtml(io::IO, doc::Metadata, config::Config)
+    headerhtml(io, doc)
 
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
     for file in manual(doc)
-        writemime(io, mime, Markdown.parse(readall(joinpath(rootdir, file))))
+        writemime(io, MIME("text/html"), Markdown.parse(readall(joinpath(rootdir, file))))
     end
 
     index = Dict{Symbol, Any}()
@@ -77,20 +69,20 @@ function writemime(io::IO, mime::MIME"text/html", doc::Metadata, config::Config)
                 end
             end
         end
-        writemime(io, mime, ents)
+        writehtml(io,ents)
     end
-    footer(io, mime, doc, config)
+    footerhtml(io, doc, config)
 end
 
-function writemime(io::IO, mime::MIME"text/html", ents::Entries)
+function writehtml(io::IO, ents::Entries)
     wrap(io, "div", "class='entries'") do
         for (modname, obj, ent) in ents.entries
-            writemime(io, mime, modname, obj, ent)
+            writehtml(io, modname, obj, ent)
         end
     end
 end
 
-function writemime{category}(io::IO, mime::MIME"text/html", modname, obj, ent::Entry{category})
+function writehtml{category}(io::IO, modname, obj, ent::Entry{category})
     wrap(io, "div", "class='entry'") do
         objname = writeobj(obj, ent)
         wrap(io, "div", "id='$(objname)' class='entry-name category-$(category)'") do
@@ -98,7 +90,7 @@ function writemime{category}(io::IO, mime::MIME"text/html", modname, obj, ent::E
             println(io, objname)
         end
         wrap(io, "div", "class='entry-body'") do
-            writemime(io, mime, docs(ent))
+            writehtml(io, docs(ent))
             wrap(io, "div", "class='entry-meta'") do
                 println(io, "<strong>Details:</strong>")
                 wrap(io, "table", "class='meta-table'") do
@@ -106,7 +98,7 @@ function writemime{category}(io::IO, mime::MIME"text/html", modname, obj, ent::E
                         wrap(io, "tr") do
                             print(io, "<td><strong>", k, ":</strong></td>")
                             wrap(io, "td") do
-                                writemime(io, mime, Meta{k}(ent.data[k]))
+                                writehtml(io, Meta{k}(ent.data[k]))
                             end
                         end
                     end
@@ -116,7 +108,7 @@ function writemime{category}(io::IO, mime::MIME"text/html", modname, obj, ent::E
     end
 end
 
-function writemime(io::IO, mime::MIME"text/html", md::Meta)
+function writehtml(io::IO, md::Meta)
     println(io, "<code>", md.content, "</code>")
 end
 
@@ -128,19 +120,19 @@ function writemime(io::IO, mime::MIME"text/html", m::Meta{:parameters})
                     println(io, "<code>", k, "</code>")
                 end
                 wrap(io, "td") do
-                    writemime(io, mime, Markdown.parse(v))
+                    writemime(io, MIME("text/html"), Markdown.parse(v))
                 end
             end
         end
     end
 end
 
-function writemime(io::IO, ::MIME"text/html", m::Meta{:source})
+function writehtml(io::IO, m::Meta{:source})
     path = last(split(m.content[2], r"v[\d\.]+(/|\\)"))
     print(io, "<a href='$(url(m))'>$(path):$(m.content[1])</a>")
 end
 
-function header(io::IO, ::MIME"text/html", doc::Metadata)
+function headerhtml(io::IO, doc::Metadata)
     println(io, """
     <!doctype html>
 
@@ -157,7 +149,7 @@ function header(io::IO, ::MIME"text/html", doc::Metadata)
     """)
 end
 
-function footer(io::IO, ::MIME"text/html", doc::Metadata, config::Config)
+function footerhtml(io::IO, doc::Metadata, config::Config)
     println(io, """
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
