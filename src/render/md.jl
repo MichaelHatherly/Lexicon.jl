@@ -1,6 +1,6 @@
 ## Docs-specific rendering
 
-function writemime(io::IO, mime::MIME"text/md", docs::Docs{:md})
+function writemd(io::IO, docs::Docs{:md})
     println(io, docs.data)
 end
 
@@ -9,12 +9,12 @@ print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
                                             println(io, "$cv $item") :
                                             println(io, cv, item, cv)
 
-function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
+function savemd(file::String, doc::Metadata, config::Config)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
-        writemime(f, mime, doc, config)
+        writemd(f, doc, config)
     end
 end
 
@@ -27,16 +27,8 @@ function push!(ents::Entries, modulename::Module, obj, ent::Entry)
     push!(ents.entries, (modulename, obj, ent))
 end
 
-length(ents::Entries) = length(ents.entries)
-
-function writemime(io::IO, mime::MIME"text/md", manual::Manual)
-    for page in pages(manual)
-        writemime(io, mime, docs(page))
-    end
-end
-
-function writemime(io::IO, mime::MIME"text/md", doc::Metadata, config::Config)
-    header(io, mime, doc, config)
+function writemd(io::IO, doc::Metadata, config::Config)
+    headermd(io, doc, config)
 
     # Root may be a file or directory. Get the dir.
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
@@ -59,12 +51,12 @@ function writemime(io::IO, mime::MIME"text/md", doc::Metadata, config::Config)
             end
         end
         println(io)
-        writemime(io, mime, ents, config)
+        writemd(io, ents, config)
     end
-    footer(io, mime)
+    footermd(io)
 end
 
-function writemime(io::IO, mime::MIME"text/md", ents::Entries, config::Config)
+function writemd(io::IO, ents::Entries, config::Config)
     exported = Entries()
     internal = Entries()
 
@@ -77,51 +69,63 @@ function writemime(io::IO, mime::MIME"text/md", ents::Entries, config::Config)
     if !isempty(exported.entries)
         print_help(io, config.mdstyle_exported, "Exported")
         for (modname, obj, ent) in exported.entries
-            writemime(io, mime, modname, obj, ent, config)
+            writemd(io, modname, obj, ent, config)
         end
     end
     if !isempty(internal.entries)
         print_help(io, config.mdstyle_internal, "Internal")
         for (modname, obj, ent) in internal.entries
-            writemime(io, mime, modname, obj, ent, config)
+            writemd(io, modname, obj, ent, config)
         end
     end
 end
 
-function writemime{category}(io::IO, mime::MIME"text/md", modname, obj, ent::Entry{category},
-                                                                              config::Config)
+function writemd{category}(io::IO, modname, obj, ent::Entry{category}, config::Config)
     objname = writeobj(obj, ent)
     println(io, "---\n")
     print_help(io, config.mdstyle_objname, objname)
-    writemime(io, mime, docs(ent))
+    writemd(io, docs(ent))
     println(io)
     for k in sort(collect(keys(ent.data)))
         print_help(io, config.mdstyle_meta, "$k:")
-        writemime(io, mime, Meta{k}(ent.data[k]))
+        writemd(io, Meta{k}(ent.data[k]))
         println(io)
     end
 end
 
-function writemime(io::IO, mime::MIME"text/md", md::Meta)
+function writemd(io::IO, md::Meta)
+    
     println(io, md.content)
 end
 
-function writemime(io::IO, mime::MIME"text/md", m::Meta{:parameters})
-    for (k, v) in m.content
-        println(io, k)
-    end
-    writemime(io, mime, v)
-end
-
-function writemime(io::IO, ::MIME"text/md", m::Meta{:source})
+function writemd(io::IO,  m::Meta{:source})
     path = last(split(m.content[2], r"v[\d\.]+(/|\\)"))
     println(io, "[$(path):$(m.content[1])]($(url(m)))")
 end
 
-function header(io::IO, ::MIME"text/md", doc::Metadata, config::Config)
+function headermd(io::IO, doc::Metadata, config::Config)
     print_help(io, config.mdstyle_header, doc.modname)
 end
 
-function footer(io::IO, ::MIME"text/md")
+function footermd(io::IO)
     println(io, "")
 end
+
+
+#  =============== TODO: if no Problems arise delete this below
+#length(ents::Entries) = length(ents.entries)  # TODO: if no Problems arise delete this
+
+
+#function writemd(io::IO, mime::MIME"text/md", manual::Manual)
+#    println(""">>SEEMS IT GETS NOT CALLED: writemd(io::IO, mime::MIME"text/md", manual::Manual) is this done in line 36??""")
+#    for page in pages(manual)
+#        writemd(io, MIME("text/md"), docs(page))
+#    end
+#end
+#function writemd(io::IO, mime::MIME"text/md", m::Meta{:parameters})
+#    for (k, v) in m.content
+#        println(io, k)
+#    end
+#    println("""=====2 """, @which writemd(io, MIME("text/md"), v))
+#    writemd(io, MIME("text/md"), v)
+#end
