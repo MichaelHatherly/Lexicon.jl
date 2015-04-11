@@ -6,13 +6,13 @@ end
 
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
 
-function save(file::String, mime::MIME"text/html", doc::Metadata; mathjax = false, include_internal = true)
-    include_internal || throw(ArgumentError("include_internal should be true for html"))
+function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config)
+    config.include_internal || throw(ArgumentError("`config` option `include_internal` must be true for html"))
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
-        writemime(f, mime, doc; mathjax = mathjax)
+        writemime(f, mime, doc, config)
     end
 
     # copy static files
@@ -42,7 +42,7 @@ function writemime(io::IO, mime::MIME"text/html", manual::Manual)
     end
 end
 
-function writemime(io::IO, mime::MIME"text/html", doc::Metadata; mathjax = false)
+function writemime(io::IO, mime::MIME"text/html", doc::Metadata, config::Config)
     header(io, mime, doc)
 
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
@@ -79,7 +79,7 @@ function writemime(io::IO, mime::MIME"text/html", doc::Metadata; mathjax = false
         end
         writemime(io, mime, ents)
     end
-    footer(io, mime, doc; mathjax = mathjax)
+    footer(io, mime, doc, config)
 end
 
 function writemime(io::IO, mime::MIME"text/html", ents::Entries)
@@ -157,14 +157,14 @@ function header(io::IO, ::MIME"text/html", doc::Metadata)
     """)
 end
 
-function footer(io::IO, ::MIME"text/html", doc::Metadata; mathjax = false)
+function footer(io::IO, ::MIME"text/html", doc::Metadata, config::Config)
     println(io, """
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/mode/julia/julia.min.js"></script>
 
-    $(mathjax ? "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>" : "")
+    $(config.mathjax ? "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>" : "")
 
     <script type="text/javascript" src="static/custom.js"></script>
     """)
