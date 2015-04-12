@@ -98,6 +98,52 @@ function url(m::Meta{:source})
     end
 end
 
+## Utilities
+# Return the index of the last non-empty string value in "A" (determined by `!isempty(A[i])`).
+function findlast{S <: AbstractString}(A::Array{S,1})
+    i = length(A)
+    while i > 0
+        isempty(A[i]) || break
+        i -= 1
+    end
+    return i
+end
+
+# Return a relative filepath to path either from the current directory or from an optional start directory.
+# This is a path computation: the filesystem is not accessed to confirm the existence or nature of path or startpath.
+# Inspired by python's relpath
+function relpath(path::ByteString, startpath::ByteString = ".")
+    isempty(path) && throw(ArgumentError("`path` must be specified"))
+    isempty(startpath) && throw(ArgumentError("`startpath` must be specified"))
+    curdir = "."
+    pardir = ".."
+    path == startpath && return curdir
+
+    path_arr  = split(abspath(path),      Base.path_separator_re)
+    start_arr = split(abspath(startpath), Base.path_separator_re)
+
+    i = 0
+    while i < min(length(path_arr), length(start_arr))
+        i += 1
+        if path_arr[i] != start_arr[i]
+            i -= 1
+            break
+        end
+    end
+
+    pathpart = join(path_arr[i+1:findlast(path_arr)], Base.path_separator)
+    prefix_num = findlast(start_arr) - i - 1
+    if prefix_num >= 0
+        prefix = pardir * Base.path_separator
+        relpath_ = isempty(pathpart)                                      ?
+            (prefix^prefix_num) * pardir                                  :
+            (prefix^prefix_num) * pardir * Base.path_separator * pathpart
+    else
+        relpath_ = pathpart
+    end
+    return isempty(relpath_) ? curdir :  relpath_
+end
+
 ## Format-specific rendering ------------------------------------------------------------
 
 include("render/plain.jl")

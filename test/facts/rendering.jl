@@ -45,4 +45,78 @@ facts("Rendering.") do
         end
     end
 
+    context("Testin relpath.") do
+        filepaths = ["/home/user/.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+                        "/home/user/.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+                        "/home/user/.julia/v0.4/Docile/docs/api/Docile.md",
+                        "/home/user/dir_withendsep/",
+                        "/home/dir2_withendsep/",
+                        "/home/test.md",
+                        "/home",
+                        # Special cases
+                        "/",
+                        "/home///"
+                    ]
+        startpaths = ["/home/user/.julia/v0.4/Lexicon/docs/api/genindex.md",
+                        "/multi_docs/genindex.md",
+                        "/home/user/dir_withendsep/",
+                        "/home/dir2_withendsep/",
+                        "/home/test.md",
+                        "/home",
+                        # Special cases
+                        "/",
+                        "/home///"
+                    ]
+
+        # generated with python's relpath
+        relpath_expected_results = ["../Lexicon.md",
+            "../../home/user/.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+            "../.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+            "../user/.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+            "../user/.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+             "user/.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+            "home/user/.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+            "user/.julia/v0.4/Lexicon/docs/api/Lexicon.md",
+            "../lib/file1.md", "../../home/user/.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+            "../.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+            "../user/.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+            "../user/.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+            "user/.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+            "home/user/.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+             "user/.julia/v0.4/Lexicon/docs/api/lib/file1.md",
+            "../../../../Docile/docs/api/Docile.md",
+            "../../home/user/.julia/v0.4/Docile/docs/api/Docile.md",
+            "../.julia/v0.4/Docile/docs/api/Docile.md",
+            "../user/.julia/v0.4/Docile/docs/api/Docile.md",
+            "../user/.julia/v0.4/Docile/docs/api/Docile.md",
+            "user/.julia/v0.4/Docile/docs/api/Docile.md",
+            "home/user/.julia/v0.4/Docile/docs/api/Docile.md",
+            "user/.julia/v0.4/Docile/docs/api/Docile.md",
+            "../../../../../../dir_withendsep", "../../home/user/dir_withendsep", ".",
+            "../user/dir_withendsep", "../user/dir_withendsep", "user/dir_withendsep",
+            "home/user/dir_withendsep", "user/dir_withendsep",
+            "../../../../../../../dir2_withendsep", "../../home/dir2_withendsep",
+            "../../dir2_withendsep", ".", "../dir2_withendsep", "dir2_withendsep",
+            "home/dir2_withendsep", "dir2_withendsep", "../../../../../../../test.md",
+            "../../home/test.md", "../../test.md", "../test.md", ".", "test.md", "home/test.md",
+            "test.md", "../../../../../../..", "../../home", "../..", "..", "..", ".", "home",
+            ".", "../../../../../../../..", "../..", "../../..", "../..", "../..", "..", ".",
+            "..", "../../../../../../..", "../../home", "../..", "..", "..", ".", "home", "."
+            ]
+
+        idx = 0
+        for filep in filepaths
+            for startp in startpaths
+                res = Lexicon.relpath(filep, startp)
+                idx += 1
+                @fact res => relpath_expected_results[idx] "Excpected: $(relpath_expected_results[idx])"
+            end
+        end
+
+        # Additional cases
+        @fact_throws ArgumentError Lexicon.relpath("/home/user/dir_withendsep/", "")
+        @fact_throws ArgumentError Lexicon.relpath("", "/home/user/dir_withendsep/")
+
+    end
+
 end
