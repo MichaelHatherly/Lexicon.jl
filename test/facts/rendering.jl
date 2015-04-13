@@ -1,5 +1,6 @@
 facts("Rendering.") do
 
+    sep = Base.path_separator
     output = IOBuffer()
 
     context("Query output.") do
@@ -43,6 +44,90 @@ facts("Rendering.") do
             save(f, modname; mathjax = true)
             rm(dir, recursive = true)
         end
+    end
+
+    context("Testin relpath.") do
+        filepaths = [
+            "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+            "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+            "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "$(sep)home$(sep)user$(sep)dir_withendsep$(sep)",
+            "$(sep)home$(sep)dir2_withendsep$(sep)",
+            "$(sep)home$(sep)test.md",
+            "$(sep)home",
+            # Special cases
+            "$(sep)",
+            "$(sep)home$(sep)$(sep)$(sep)"
+        ]
+
+        startpaths = [
+            "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)genindex.md",
+            "$(sep)multi_docs$(sep)genindex.md",
+            "$(sep)home$(sep)user$(sep)dir_withendsep$(sep)",
+            "$(sep)home$(sep)dir2_withendsep$(sep)",
+            "$(sep)home$(sep)test.md",
+            "$(sep)home",
+            # Special cases
+            "$(sep)",
+            "$(sep)home$(sep)$(sep)$(sep)"
+        ]
+
+        # generated with python's relpath
+        relpath_expected_results = [
+            "..$(sep)Lexicon.md",
+            "..$(sep)..$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+            "..$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+            "..$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+            "..$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+             "user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+            "home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+            "user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
+            "..$(sep)lib$(sep)file1.md",
+            "..$(sep)..$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+            "..$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+            "..$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+            "..$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+            "user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+            "home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+             "user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
+            "..$(sep)..$(sep)..$(sep)..$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "..$(sep)..$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "..$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "..$(sep)user$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "..$(sep)user$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "user$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "home$(sep)user$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "user$(sep).julia$(sep)v0.4$(sep)Docile$(sep)docs$(sep)api$(sep)Docile.md",
+            "..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)dir_withendsep",
+            "..$(sep)..$(sep)home$(sep)user$(sep)dir_withendsep", ".", "..$(sep)user$(sep)dir_withendsep",
+            "..$(sep)user$(sep)dir_withendsep", "user$(sep)dir_withendsep",
+            "home$(sep)user$(sep)dir_withendsep", "user$(sep)dir_withendsep",
+            "..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)dir2_withendsep",
+            "..$(sep)..$(sep)home$(sep)dir2_withendsep", "..$(sep)..$(sep)dir2_withendsep", ".",
+            "..$(sep)dir2_withendsep", "dir2_withendsep", "home$(sep)dir2_withendsep", "dir2_withendsep",
+            "..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)test.md",
+            "..$(sep)..$(sep)home$(sep)test.md", "..$(sep)..$(sep)test.md", "..$(sep)test.md", ".",
+            "test.md", "home$(sep)test.md", "test.md", "..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..",
+            "..$(sep)..$(sep)home", "..$(sep)..", "..", "..", ".", "home", ".",
+            "..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..", "..$(sep)..",
+            "..$(sep)..$(sep)..", "..$(sep)..", "..$(sep)..", "..", ".", "..",
+            "..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..$(sep)..", "..$(sep)..$(sep)home",
+            "..$(sep)..", "..", "..", ".", "home", "."
+        ]
+
+        idx = 0
+        for filep in filepaths
+            for startp in startpaths
+                res = Lexicon.relpath(filep, startp)
+                idx += 1
+                @fact res => relpath_expected_results[idx] "Excpected: $(relpath_expected_results[idx])"
+            end
+        end
+
+        # Additional cases
+        @fact_throws ArgumentError Lexicon.relpath("$(sep)home$(sep)user$(sep)dir_withendsep$(sep)", "")
+        @fact_throws ArgumentError Lexicon.relpath("", "$(sep)home$(sep)user$(sep)dir_withendsep$(sep)")
+
     end
 
 end
