@@ -29,6 +29,7 @@ export
     @query,
     query,
     save,
+    savegenindex,
 
     doctest,
     failed,

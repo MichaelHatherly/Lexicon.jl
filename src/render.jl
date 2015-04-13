@@ -17,6 +17,7 @@ type Config
     mdstyle_meta     :: ASCIIString
     mdstyle_exported :: ASCIIString
     mdstyle_internal :: ASCIIString
+    md_genindex      :: Bool
 
     const fields   = fieldnames(Config)
     const defaults = Dict{Symbol, Any}([
@@ -26,7 +27,8 @@ type Config
         (:mdstyle_objname  , "###"),
         (:mdstyle_meta     , "*"),
         (:mdstyle_exported , "##"),
-        (:mdstyle_internal , "##")
+        (:mdstyle_internal , "##"),
+        (:md_genindex      , true)
         ])
 
     function Config(; args...)
@@ -54,6 +56,21 @@ function save(file::String, modulename::Module; args...)
     config = Config(; args...)
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
     save(file, mime, documentation(modulename), config)
+end
+
+file"docs/savegenindex.md"
+function savegenindex(file::String; headerstyle::ASCIIString = "#",
+            modnamestyle::ASCIIString = "##", categorystyle::ASCIIString = "###")
+    # Validations
+    for (k, v) in [("headerstyle", headerstyle), ("modnamestyle", modnamestyle), 
+                                                ("categorystyle", categorystyle)]
+        v in vcat(MDHTAGS, MDSTYLETAGS) || 
+                    error("""Invalid mdstyle value: savegenindex-item `$k -> $v`.
+                            Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")
+    end
+    mime = MIME("text/$(strip(last(splitext(file)), '.'))")
+    savegenindex(file, mime; headerstyle = headerstyle, modnamestyle = modnamestyle, 
+                                                        categorystyle = categorystyle)
 end
 
 const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]
