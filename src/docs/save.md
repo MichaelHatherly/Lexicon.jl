@@ -27,6 +27,10 @@ characters or 0 to 2 `*` characters.
 * `mdstyle_exported` (default: `"##"`):  style for the "exported" documentation header.
 * `mdstyle_internal` (default: "##"):    style for the "internal" documentation header.
 
+* `md_genindex`      (default: `true`):  to disable markdown *API-Index Page* generation
+  the keyword argument `md_genindex = false` should be set.
+  To actually save the *API-Index* one has to use the `savegenindex` function.
+
 Any option can be user adjusted by passing keyword arguments to the `save` method.
 
 **Example:**

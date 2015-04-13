@@ -25,6 +25,11 @@ function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config
     end
 end
 
+function savegenindex(file::String, mime::MIME"text/html"; headerstyle::ASCIIString = "#",
+                        modnamestyle::ASCIIString = "##", categorystyle::ASCIIString = "###")
+    error("The html format does currently not support saving of separate API-Index pages.)")
+end
+
 type Entries
     entries::Vector{(Module, Any, Entry)}
 end

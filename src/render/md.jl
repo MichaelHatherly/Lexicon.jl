@@ -10,12 +10,37 @@ print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
                                             println(io, cv, item, cv)
 
 function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
+    config.md_genindex && push!(MainAnchorRef.docfilepath, abspath(file))
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
         writemd(f, doc, config)
     end
+end
+
+function savegenindex(file::String, mime::MIME"text/md"; headerstyle::ASCIIString = "#",
+                    modnamestyle::ASCIIString = "##", categorystyle::ASCIIString = "###")
+    # Write the index file.
+    isfile(file) || mkpath(dirname(file))
+    open(file, "w") do f
+        info("writing API-Index to $(file)")
+        writemd_idx(f)
+    end
+    clears_main_anchor_ref(MainAnchorRef)
+end
+
+# Collects Data needed for Anchor/LinkReferece
+type AnchorRef
+    docfilepath::Vector{String}
+
+    AnchorRef() = new(Vector{String}([]))
+end
+
+const MainAnchorRef = AnchorRef()
+
+function clears_main_anchor_ref(anchor_ref::AnchorRef)
+    anchor_ref.docfilepath = Vector{String}([])
 end
 
 type Entries
@@ -103,4 +128,10 @@ end
 
 function headermd(io::IO, doc::Metadata, config::Config)
     print_help(io, config.mdstyle_header, doc.modname)
+end
+
+## API-Index ----------------------------------------------------------------------------
+
+function writemd_idx(io::IO)
+    println(io, "This is still Work In Process")
 end
