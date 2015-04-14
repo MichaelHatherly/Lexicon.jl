@@ -47,7 +47,7 @@ function writemd(io::IO, doc::Metadata, config::Config)
 
     if !isempty(index)
         ents = Entries()
-        for k in CATEGORY_ORDER
+        for k in config.category_order
             haskey(index, k) || continue
             for (s, obj) in index[k]
                 push!(ents, modulename(doc), obj, entries(doc)[obj])
