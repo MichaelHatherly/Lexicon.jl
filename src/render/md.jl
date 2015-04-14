@@ -18,15 +18,6 @@ function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
     end
 end
 
-type Entries
-    entries::Vector{(Module, Any, Entry)}
-end
-Entries() = Entries((Module, Any, Entry)[])
-
-function push!(ents::Entries, modulename::Module, obj, ent::Entry)
-    push!(ents.entries, (modulename, obj, ent))
-end
-
 function writemd(io::IO, doc::Metadata, config::Config)
     headermd(io, doc, config)
 

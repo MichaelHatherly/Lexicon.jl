@@ -25,15 +25,6 @@ function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config
     end
 end
 
-type Entries
-    entries::Vector{(Module, Any, Entry)}
-end
-Entries() = Entries((Module, Any, Entry)[])
-
-function push!(ents::Entries, modulename::Module, obj, ent::Entry)
-    push!(ents.entries, (modulename, obj, ent))
-end
-
 function writehtml(io::IO, doc::Metadata, config::Config)
     headerhtml(io, doc)
 
