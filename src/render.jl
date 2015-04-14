@@ -59,6 +59,15 @@ function save(file::String, modulename::Module; args...)
     save(file, mime, documentation(modulename), config)
 end
 
+type Entries
+    entries::Vector{(Module, Any, Entry)}
+end
+Entries() = Entries((Module, Any, Entry)[])
+
+function push!(ents::Entries, modulename::Module, obj, ent::Entry)
+    push!(ents.entries, (modulename, obj, ent))
+end
+
 # Dispatch container for metadata display.
 type Meta{keyword}
     content
