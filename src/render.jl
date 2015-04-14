@@ -8,6 +8,7 @@ const MDSTYLETAGS = ["", "*", "**"]
 
 type Config
     # General Options
+    category_order   :: Vector{Symbol}
     include_internal :: Bool
     # Html only Options
     mathjax          :: Bool
@@ -20,6 +21,8 @@ type Config
 
     const fields   = fieldnames(Config)
     const defaults = Dict{Symbol, Any}([
+        (:category_order   , [:module, :function, :method, :type, :typealias, :macro, :global,
+                                                                                    :comment]),
         (:include_internal , true),
         (:mathjax          , false),
         (:mdstyle_header   , "#"),
@@ -56,7 +59,14 @@ function save(file::String, modulename::Module; args...)
     save(file, mime, documentation(modulename), config)
 end
 
-const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]
+type Entries
+    entries::Vector{(Module, Any, Entry)}
+end
+Entries() = Entries((Module, Any, Entry)[])
+
+function push!(ents::Entries, modulename::Module, obj, ent::Entry)
+    push!(ents.entries, (modulename, obj, ent))
+end
 
 # Dispatch container for metadata display.
 type Meta{keyword}

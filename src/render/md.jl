@@ -5,9 +5,12 @@ function writemd(io::IO, docs::Docs{:md})
 end
 
 ## General markdown rendering
-print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
-                                            println(io, "$cv $item") :
-                                            println(io, cv, item, cv)
+
+# println_mdstyle: noneH_addnewline add a new line if mdstyle is not a H1-6 but italic, bold, or normal
+function println_mdstyle(io::IO, mdstyle::ASCIIString, item, noneH_addnewline = true)
+    mdstyle in MDHTAGS  ? println(io, "$mdstyle $item") : (println(io, "$mdstyle$item$mdstyle");
+                                                          noneH_addnewline && println(io, "\n"))
+end
 
 function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
     # Write the main file.
@@ -16,15 +19,6 @@ function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
         info("writing documentation to $(file)")
         writemd(f, doc, config)
     end
-end
-
-type Entries
-    entries::Vector{(Module, Any, Entry)}
-end
-Entries() = Entries((Module, Any, Entry)[])
-
-function push!(ents::Entries, modulename::Module, obj, ent::Entry)
-    push!(ents.entries, (modulename, obj, ent))
 end
 
 function writemd(io::IO, doc::Metadata, config::Config)
@@ -44,7 +38,7 @@ function writemd(io::IO, doc::Metadata, config::Config)
 
     if !isempty(index)
         ents = Entries()
-        for k in CATEGORY_ORDER
+        for k in config.category_order
             haskey(index, k) || continue
             for (s, obj) in index[k]
                 push!(ents, modulename(doc), obj, entries(doc)[obj])
@@ -66,13 +60,13 @@ function writemd(io::IO, ents::Entries, config::Config)
     end
 
     if !isempty(exported.entries)
-        print_help(io, config.mdstyle_exported, "Exported")
+        println_mdstyle(io, config.mdstyle_exported, "Exported")
         for (modname, obj, ent) in exported.entries
             writemd(io, modname, obj, ent, config)
         end
     end
     if !isempty(internal.entries)
-        print_help(io, config.mdstyle_internal, "Internal")
+        println_mdstyle(io, config.mdstyle_internal, "Internal")
         for (modname, obj, ent) in internal.entries
             writemd(io, modname, obj, ent, config)
         end
@@ -82,11 +76,11 @@ end
 function writemd{category}(io::IO, modname, obj, ent::Entry{category}, config::Config)
     objname = writeobj(obj, ent)
     println(io, "---\n")
-    print_help(io, config.mdstyle_objname, objname)
+    println_mdstyle(io, config.mdstyle_objname, objname)
     writemd(io, docs(ent))
     println(io)
     for k in sort(collect(keys(ent.data)))
-        print_help(io, config.mdstyle_meta, "$k:")
+        println_mdstyle(io, config.mdstyle_meta, "$k:", false)
         writemd(io, Meta{k}(ent.data[k]))
         println(io)
     end
@@ -102,5 +96,5 @@ function writemd(io::IO, m::Meta{:source})
 end
 
 function headermd(io::IO, doc::Metadata, config::Config)
-    print_help(io, config.mdstyle_header, doc.modname)
+    println_mdstyle(io, config.mdstyle_header, doc.modname)
 end
