@@ -52,7 +52,7 @@ function writehtml(io::IO, doc::Metadata, config::Config)
 
         ents = Entries()
         wrap(io, "ul", "class='index'") do
-            for k in CATEGORY_ORDER
+            for k in config.category_order
                 haskey(index, k) || continue
                 wrap(io, "li") do
                     println(io, "<strong>$(k)s:</strong>")

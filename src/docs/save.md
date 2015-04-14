@@ -6,6 +6,8 @@ are `HTML` and `markdown`.
 
 *General Options*
 
+* `category_order` (default: `:module, :function, :method, :type, :typealias, :macro, :global, :comment`)
+  Categories  to include in the output in the defined order.
 * `include_internal` (default: `true`): To exclude documentation for non-exported objects,
   the keyword argument `include_internal = false` should be set. This is only supported for
   `markdown`.

@@ -1,5 +1,6 @@
 ## Various methods for filtering and sorting Metadata
 
+const CATEGORY_ORDER = [:module, :function, :method, :type, :typealias, :macro, :global]
 
 """
 Filter Metadata based on categories or file source
