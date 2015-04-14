@@ -25,12 +25,12 @@ function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config
     end
 end
 
-type Entries
+type EntriesHtml
     entries::Vector{(Module, Any, Entry)}
 end
-Entries() = Entries((Module, Any, Entry)[])
+EntriesHtml() = EntriesHtml((Module, Any, Entry)[])
 
-function push!(ents::Entries, modulename::Module, obj, ent::Entry)
+function push!(ents::EntriesHtml, modulename::Module, obj, ent::Entry)
     push!(ents.entries, (modulename, obj, ent))
 end
 
@@ -50,7 +50,7 @@ function writehtml(io::IO, doc::Metadata, config::Config)
     if !isempty(index)
         println(io, "<h1 id='module-reference'>Reference</h1>")
 
-        ents = Entries()
+        ents = EntriesHtml()
         wrap(io, "ul", "class='index'") do
             for k in CATEGORY_ORDER
                 haskey(index, k) || continue
@@ -74,7 +74,7 @@ function writehtml(io::IO, doc::Metadata, config::Config)
     footerhtml(io, doc, config)
 end
 
-function writehtml(io::IO, ents::Entries)
+function writehtml(io::IO, ents::EntriesHtml)
     wrap(io, "div", "class='entries'") do
         for (modname, obj, ent) in ents.entries
             writehtml(io, modname, obj, ent)

@@ -18,13 +18,14 @@ function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
     end
 end
 
-type Entries
-    entries::Vector{(Module, Any, Entry)}
+type EntriesMD
+    exported::Vector{(Module, Any, Entry)}
+    internal::Vector{(Module, Any, Entry)}
 end
-Entries() = Entries((Module, Any, Entry)[])
+EntriesMD() = EntriesMD((Module, Any, Entry)[], (Module, Any, Entry)[])
 
-function push!(ents::Entries, modulename::Module, obj, ent::Entry)
-    push!(ents.entries, (modulename, obj, ent))
+function push!(entries::Vector{(Module, Any, Entry)}, modulename::Module, obj, ent::Entry)
+    push!(entries, (modulename, obj, ent))
 end
 
 function writemd(io::IO, doc::Metadata, config::Config)
@@ -43,11 +44,14 @@ function writemd(io::IO, doc::Metadata, config::Config)
     end
 
     if !isempty(index)
-        ents = Entries()
+        ents = EntriesMD()
         for k in CATEGORY_ORDER
             haskey(index, k) || continue
             for (s, obj) in index[k]
-                push!(ents, modulename(doc), obj, entries(doc)[obj])
+                modname = modulename(doc)
+                isexported(modname, obj)                                  ?
+                    push!(ents.exported, modname, obj, entries(doc)[obj]) :
+                    config.include_internal && push!(ents.internal, modname, obj, entries(doc)[obj])
             end
         end
         println(io)
@@ -55,25 +59,16 @@ function writemd(io::IO, doc::Metadata, config::Config)
     end
 end
 
-function writemd(io::IO, ents::Entries, config::Config)
-    exported = Entries()
-    internal = Entries()
-
-    for (modname, obj, ent) in ents.entries
-        isexported(modname, obj) ?
-            push!(exported, modname, obj, ent) :
-            config.include_internal && push!(internal, modname, obj, ent)
-    end
-
-    if !isempty(exported.entries)
+function writemd(io::IO, ents::EntriesMD, config::Config)
+    if !isempty(ents.exported)
         print_help(io, config.mdstyle_exported, "Exported")
-        for (modname, obj, ent) in exported.entries
+        for (modname, obj, ent) in ents.exported
             writemd(io, modname, obj, ent, config)
         end
     end
-    if !isempty(internal.entries)
+    if !isempty(ents.internal)
         print_help(io, config.mdstyle_internal, "Internal")
-        for (modname, obj, ent) in internal.entries
+        for (modname, obj, ent) in ents.internal
             writemd(io, modname, obj, ent, config)
         end
     end
