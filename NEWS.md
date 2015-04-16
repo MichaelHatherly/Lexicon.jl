@@ -1,3 +1,19 @@
+### v0.1.5
+
+Contributed by [@peter1000](https://github.com/peter1000)
+
+* Add additional output filtering based on category.
+* Add optional output grouping by category.
+* Add optional API-Index pages for markdown output.
+* Add optional Permalink for markdown output.
+* Adjusted some documentation for the new API-Index. (Shorter first line ect.)
+* Code reduction / simplification.
+* Trimmed most code lines to 100 chars where possible.
+* Adds `examples` older with
+    
+    * join_multiple_modules
+    * fixheader_css_mkdocs
+
 ### v0.1.4
 
 * Add optional style configuration for markdown output. Contributed by [@peter1000](https://github.com/peter1000).
@@ -17,7 +33,7 @@
 
 ## v0.1.0
 
-* Add matkdown output.
+* Add markdown output.
 * New package documentation using MkDocs.
 * Rework query system.
     * Search globals without prepending `global` to query.

@@ -7,7 +7,8 @@ end
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
 
 function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config)
-    config.include_internal || throw(ArgumentError("`config` option `include_internal` must be true for html"))
+    config.include_internal ||
+            throw(ArgumentError("`config` option `include_internal` must be true for html"))
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
@@ -25,12 +26,12 @@ function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config
     end
 end
 
-type Entries
+type EntriesHtml
     entries::Vector{(Module, Any, Entry)}
 end
-Entries() = Entries((Module, Any, Entry)[])
+EntriesHtml() = EntriesHtml((Module, Any, Entry)[])
 
-function push!(ents::Entries, modulename::Module, obj, ent::Entry)
+function push!(ents::EntriesHtml, modulename::Module, obj, ent::Entry)
     push!(ents.entries, (modulename, obj, ent))
 end
 
@@ -50,9 +51,9 @@ function writehtml(io::IO, doc::Metadata, config::Config)
     if !isempty(index)
         println(io, "<h1 id='module-reference'>Reference</h1>")
 
-        ents = Entries()
+        ents = EntriesHtml()
         wrap(io, "ul", "class='index'") do
-            for k in CATEGORY_ORDER
+            for k in config.category_order
                 haskey(index, k) || continue
                 wrap(io, "li") do
                     println(io, "<strong>$(k)s:</strong>")
@@ -74,7 +75,7 @@ function writehtml(io::IO, doc::Metadata, config::Config)
     footerhtml(io, doc, config)
 end
 
-function writehtml(io::IO, ents::Entries)
+function writehtml(io::IO, ents::EntriesHtml)
     wrap(io, "div", "class='entries'") do
         for (modname, obj, ent) in ents.entries
             writehtml(io, modname, obj, ent)
@@ -166,4 +167,10 @@ function wrap(fn::Function, io::IO, tag::String, attributes::String = "")
     println(io, "<", tag, " ", attributes, ">")
     fn()
     println(io, "</", tag, ">")
+end
+
+## API-Index ----------------------------------------------------------------------------
+
+function savegenindex(file::String, mime::MIME"text/html", config::Config)
+    error("The html format does currently not support saving of separate API-Index pages.)")
 end

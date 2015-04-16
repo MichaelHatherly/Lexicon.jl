@@ -82,8 +82,9 @@ push!(res::QueryResults, entry::Entry{:comment}, object, score) = res
 ## Construct a `Query` object.
 
 """
-Create a `Query` object from the provided `args`. The resulting query can then be
-`run` to retrieve matching results from currently loaded documentation.
+Create a `Query` object from the provided `args`.
+The resulting query can then be `run` to retrieve matching results from currently loaded
+documentation.
 
 This is a low-level interface. For everyday usage in the REPL rather use the
 built-in `?` mode, which Lexicon hooks into automatically.
@@ -177,8 +178,8 @@ function partial_signature_matching(f::Function, sig::Tuple)
 end
 
 """
-Search loaded documentation for all methods of a generic function `f` that match
-the provided signature `sig`. Optionally, provide an index (1-based) to view an
+Search loaded documentation for all methods of a generic function `f`
+that match the provided signature `sig`. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.
 """
 function query(f::Function, sig::Tuple, index = 0)

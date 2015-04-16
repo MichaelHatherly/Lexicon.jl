@@ -5,28 +5,38 @@ parsedocs(ds::Docs{:md}) = Markdown.parse(data(ds))
 ## Common -------------------------------------------------------------------------------
 const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]
 const MDSTYLETAGS = ["", "*", "**"]
+const MD_SUBHEADER_OPTIONS = [:SKIP, :SIMPLE, :CATEGORY]
 
 type Config
-    # General Options
-    include_internal :: Bool
-    # Html only Options
-    mathjax          :: Bool
-    # MarkDown only Options
-    mdstyle_header   :: ASCIIString
-    mdstyle_objname  :: ASCIIString
-    mdstyle_meta     :: ASCIIString
-    mdstyle_exported :: ASCIIString
-    mdstyle_internal :: ASCIIString
+    category_order         :: Vector{Symbol}
+    include_internal       :: Bool
+    mathjax                :: Bool
+    mdstyle_header         :: ASCIIString
+    mdstyle_objname        :: ASCIIString
+    mdstyle_meta           :: ASCIIString
+    mdstyle_subheader      :: ASCIIString
+    mdstyle_genindex_mod   :: ASCIIString
+    md_subheader           :: Symbol
+    md_genindex            :: Bool
+    md_genindex_modprefix  :: ByteString
+    md_permalink           :: Bool
 
     const fields   = fieldnames(Config)
+
     const defaults = Dict{Symbol, Any}([
-        (:include_internal , true),
-        (:mathjax          , false),
-        (:mdstyle_header   , "#"),
-        (:mdstyle_objname  , "###"),
-        (:mdstyle_meta     , "*"),
-        (:mdstyle_exported , "##"),
-        (:mdstyle_internal , "##")
+        (:category_order         , [:module, :function, :method, :type, :typealias, :macro, :global,
+                                                                                         :comment]),
+        (:include_internal       , true),
+        (:mathjax                , false),
+        (:mdstyle_header         , "#"),
+        (:mdstyle_objname        , "####"),
+        (:mdstyle_meta           , "*"),
+        (:mdstyle_subheader      , "##"),
+        (:mdstyle_genindex_mod   , "##"),
+        (:md_subheader           , :SIMPLE),
+        (:md_genindex            , true),
+        (:md_genindex_modprefix  , "MODULE: "),
+        (:md_permalink           , true)
         ])
 
     function Config(; args...)
@@ -34,29 +44,60 @@ type Config
         for (k, v) in merge(defaults, Dict(args))
             try
                 k in fields ? setfield!(this, k, v) : warn("Invalid setting: '$(k) = $(v)'.")
-            # e.g. catch TypeError
-            catch err
+            catch err # e.g. TypeError
                 warn("Invalid setting: '$(k) = $(v)'. Error: $err")
             end
         end
-        # Validations
-        for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_exported, :mdstyle_internal]
-           getfield(this, k) in vcat(MDHTAGS, MDSTYLETAGS) ||
-                                error("""Invalid mdstyle value: config-item `$k -> $(getfield(this, k))`.
-                                        Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")
+
+        for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_subheader,
+                                                                    :mdstyle_genindex_mod]
+            getfield(this, k) in vcat(MDHTAGS, MDSTYLETAGS) ||
+                    error("""Invalid mdstyle : config-item `$k -> $(getfield(this, k))`.
+                          Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")
         end
+
+        getfield(this, :md_subheader) in MD_SUBHEADER_OPTIONS ||
+                    error("""Invalid md_subheader : config-item `$k -> $(getfield(this, k))`.
+                          Valid values: $MD_SUBHEADER_OPTIONS.""")
         return this
     end
+end
+
+function update_config(config::Config; args...)
+    const fields   = fieldnames(Config)
+    for (k, v) in Dict(args)
+        try
+            k in fields ? setfield!(config, k, v) : warn("Invalid setting: '$(k) = $(v)'.")
+        catch err # e.g. TypeError
+            warn("Invalid setting: '$(k) = $(v)'. Error: $err")
+        end
+    end
+
+    for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_subheader,
+                                                                :mdstyle_genindex_mod]
+        getfield(config, k) in vcat(MDHTAGS, MDSTYLETAGS) ||
+                error("""Invalid mdstyle : config-item `$k -> $(getfield(config, k))`.
+                      Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")
+
+        getfield(config, :md_subheader) in MD_SUBHEADER_OPTIONS ||
+                    error("""Invalid md_subheader : config-item `$k -> $(getfield(config, k))`.
+                          Valid values: $MD_SUBHEADER_OPTIONS.""")
+    end
+    return config
 end
 
 file"docs/save.md"
 function save(file::String, modulename::Module; args...)
     config = Config(; args...)
-    mime = MIME("text/$(strip(last(splitext(file)), '.'))")
-    save(file, mime, documentation(modulename), config)
+    save(file, MIME("text/$(strip(last(splitext(file)), '.'))"), documentation(modulename), config)
+    return config
 end
 
-const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]
+file"docs/savegenindex.md"
+function savegenindex(file::String, config::Config; args...)
+    update_config(config; args...)
+    savegenindex(file, MIME("text/$(strip(last(splitext(file)), '.'))"), config)
+end
 
 # Dispatch container for metadata display.
 type Meta{keyword}
@@ -100,7 +141,7 @@ end
 
 ## Utilities
 if VERSION < v"0.4-"
-    # returns the index of the previous element for which the function returns true, or zero if it never does
+    # returns the index of the previous element for which the function returns true, or zero.
     function findprev(testf::Function, A, start)
         for i = start:-1:1
             testf(A[i]) && return i
@@ -110,11 +151,9 @@ if VERSION < v"0.4-"
     findlast(testf::Function, A) = findprev(testf, A, length(A))
 end
 
-# Return a relative filepath to path either from the current directory or from an optional start directory.
-# This is a path computation: the filesystem is not accessed to confirm the existence or nature of path or startpath.
 # Inspired by python's relpath
 function relpath(path::ByteString, startpath::ByteString = ".")
-    isempty(path) && throw(ArgumentError("`path` must be specified"))
+    isempty(path)      && throw(ArgumentError("`path` must be specified"))
     isempty(startpath) && throw(ArgumentError("`startpath` must be specified"))
     curdir = "."
     pardir = ".."
@@ -136,13 +175,13 @@ function relpath(path::ByteString, startpath::ByteString = ".")
     prefix_num = findlast(x -> !isempty(x), start_arr) - i - 1
     if prefix_num >= 0
         prefix = pardir * Base.path_separator
-        relpath_ = isempty(pathpart)                                      ?
-            (prefix^prefix_num) * pardir                                  :
-            (prefix^prefix_num) * pardir * Base.path_separator * pathpart
+        relpath_ = isempty(pathpart)                                          ?
+                (prefix^prefix_num) * pardir                                  :
+                (prefix^prefix_num) * pardir * Base.path_separator * pathpart
     else
         relpath_ = pathpart
     end
-    return isempty(relpath_) ? curdir :  relpath_
+    return isempty(relpath_) ? curdir : relpath_
 end
 
 ## Format-specific rendering ------------------------------------------------------------

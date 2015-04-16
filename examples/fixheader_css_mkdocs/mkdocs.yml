@@ -1,0 +1,9 @@
+site_name: Multi-Pkg API
+theme:               bootstrap
+markdown_extensions: [tables, fenced_code]
+pages:
+    - ['index.md', 'Introduction']
+    - ['Docile/Docile.md', 'API', 'Docile']
+    - ['Docile/Interface.md', 'API', 'Docile.Interface']
+    - ['Lexicon/Lexicon.md', 'API', 'Lexicon']
+    - ['api_index/genindex.md', 'API', 'Index']

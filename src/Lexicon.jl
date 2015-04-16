@@ -29,13 +29,13 @@ export
     @query,
     query,
     save,
+    savegenindex,
 
     doctest,
     failed,
     passed,
     skipped,
     EachEntry
-
 
 @document
 

@@ -1,0 +1,6 @@
+.lexicon_definition:before {
+    content: "";
+    display: block;
+    margin-top: -75px;
+    height: 75px;
+}
