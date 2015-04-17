@@ -1,3 +1,7 @@
+### v0.1.5
+
+* Fix for tuple changes in julia.
+
 ### v0.1.4
 
 * Add optional style configuration for markdown output. Contributed by [@peter1000](https://github.com/peter1000).
