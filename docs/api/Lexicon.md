@@ -18,29 +18,29 @@ doctest(Lexicon)
 
 
 *source:*
-[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/doctest.jl#L101)
+[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/doctest.jl#L101)
 
 ---
 
-### query(f::Function, sig::(Any..., ))
+### query(f::Function, sig)
 Search loaded documentation for all methods of a generic function `f` that match
 the provided signature `sig`. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.
 
 
 *source:*
-[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/query.jl#L184)
+[Lexicon/src/query.jl:149](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/query.jl#L149)
 
 ---
 
-### query(f::Function, sig::(Any..., ), index)
+### query(f::Function, sig, index)
 Search loaded documentation for all methods of a generic function `f` that match
 the provided signature `sig`. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.
 
 
 *source:*
-[Lexicon/src/query.jl:184](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/query.jl#L184)
+[Lexicon/src/query.jl:149](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/query.jl#L149)
 
 ---
 
@@ -127,7 +127,7 @@ The documentation will be available from
 
 
 *source:*
-[Lexicon/src/render.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/render.jl#L53)
+[Lexicon/src/render.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/render.jl#L53)
 
 ---
 
@@ -179,7 +179,7 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 
 *source:*
-[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/filtering.jl#L131)
+[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/filtering.jl#L131)
 
 ---
 
@@ -220,7 +220,7 @@ run(q)
 query(args...)
 
 *source:*
-[Lexicon/src/query.jl:116](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/query.jl#L116)
+[Lexicon/src/query.jl:97](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/query.jl#L97)
 
 ## Internal
 ---
@@ -229,7 +229,7 @@ query(args...)
 Basic text importance scoring.
 
 *source:*
-[Lexicon/src/query.jl:207](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/query.jl#L207)
+[Lexicon/src/query.jl:170](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/query.jl#L170)
 
 ---
 
@@ -270,7 +270,7 @@ entries( filter(d, files = ["types.jl"]) )
 
 
 *source:*
-[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/filtering.jl#L39)
+[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/filtering.jl#L39)
 
 ---
 
@@ -302,7 +302,7 @@ end
 
 
 *source:*
-[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/filtering.jl#L78)
+[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/filtering.jl#L78)
 
 ---
 
@@ -310,7 +310,7 @@ end
 An entry and the set of all objects that are linked to it.
 
 *source:*
-[Lexicon/src/query.jl:43](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/query.jl#L43)
+[Lexicon/src/query.jl:32](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/query.jl#L32)
 
 ---
 
@@ -324,9 +324,8 @@ Holds the parsed user query.
 * `index`:   1-based, for picking an individual entry to display out of a list.
 
 
-
 *source:*
-[Lexicon/src/query.jl:23](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/query.jl#L23)
+[Lexicon/src/query.jl:13](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/query.jl#L13)
 
 ---
 
@@ -334,5 +333,5 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 *source:*
-[Lexicon/src/query.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/69c4638bf8646d8060a7b664ee8281a286dc1009/src/query.jl#L53)
+[Lexicon/src/query.jl:42](https://github.com/MichaelHatherly/Lexicon.jl/tree/40ed22533ebad791ea76635cdb204cb2df330f93/src/query.jl#L42)
 

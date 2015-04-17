@@ -73,7 +73,7 @@ function writeobj(f::Function, entry::Entry{:macro})
 end
 
 function addentry!{category}(index, obj, entry::Entry{category})
-    section, pair = get!(index, category, (String, Any)[]), (writeobj(obj, entry), obj)
+    section, pair = get!(index, category, Docile.tup(String, Any)[]), (writeobj(obj, entry), obj)
     insert!(section, searchsortedlast(section, pair, by = x -> first(x)) + 1, pair)
 end
 

@@ -1,12 +1,3 @@
-## Query parsing. -----------------------------------------------------------------------
-
-immutable Head{S} end
-
-macro H_str(text)
-    heads = [Head{symbol(t)} for t in split(text, ", ")]
-    Expr(:(::), Expr(:call, :Union, heads...))
-end
-
 "Types that can be queried."
 typealias Queryable Union(Symbol, Expr, AbstractString)
 
@@ -18,36 +9,34 @@ Holds the parsed user query.
 * `objects`: The objects that will be searched for in metadata.
 * `mods`:    Modules to be searched through for documentation.
 * `index`:   1-based, for picking an individual entry to display out of a list.
-
 """
 type Query
-    objects :: Tuple
-    mods    :: Set{Module}
+    objects :: Vector
+    modules :: Set{Module}
     index   :: Int
 
     Query(objects, modname, index) = new(objects, Set([modname]), index)
     Query(objects, index)          = new(objects, documented(), index)
 end
 
-# Needed for testing.
 function (==)(a::Query, b::Query)
     res = length(a.objects) == length(b.objects)
     for (x, y) in zip(a.objects, b.objects)
         res &= x == y
     end
-    res &= isempty(setdiff(a.mods, b.mods))
+    res &= isempty(setdiff(a.modules, b.modules))
     res &= a.index == b.index
 end
 
 "An entry and the set of all objects that are linked to it."
 type Match
-    entry::Entry
-    objects::Set
+    entry   :: Entry
+    objects :: Set
 
     Match(entry) = new(entry, Set())
 end
 
-push!(match::Match, object) = push!(match.objects, object)
+Base.push!(match::Match, object) = push!(match.objects, object)
 
 "Stores the matching entries resulting from running a query."
 type QueryResults
@@ -55,16 +44,10 @@ type QueryResults
     matches :: Dict{AbstractEntry, Match}
     scores  :: Dict{Float64, Set{AbstractEntry}}
 
-    QueryResults(query) = new(
-        query,
-        Dict{AbstractEntry, Match}(),
-        Dict{Float64, Set{AbstractEntry}}()
-        )
+    QueryResults(query) = new(query, Dict(), Dict())
 end
 
-length(res::QueryResults) = sum([length(m.objects) for m in values(res.matches)])
-
-function push!(res::QueryResults, entry, object, score)
+function Base.push!(res::QueryResults, entry, object, score)
     score ≡ 0 && return
     if !haskey(res.matches, entry)
         res.matches[entry] = Match(entry)
@@ -77,9 +60,7 @@ function push!(res::QueryResults, entry, object, score)
     push!(res.matches[entry], object)
 end
 
-push!(res::QueryResults, entry::Entry{:comment}, object, score) = res
-
-## Construct a `Query` object.
+Base.push!(res::QueryResults, entry::Entry{:comment}, object, score) = res
 
 """
 Create a `Query` object from the provided `args`. The resulting query can then be
@@ -115,25 +96,24 @@ run(q)
 """
 macro query(args...) esc(query(args...)) end
 
-query(ex::Queryable, index = 0) = build((objects(ex), modname(ex), index)...)
+query(ex::Queryable, index = 0) = build(objects(ex), modname(ex), index)
+query(other...) = throw(ArgumentError("Invalid arguments: query($(join(other, ", "))."))
 
-query(other...) = throw(ArgumentError("Invalid arguments: query($(join(other, ", ")))."))
+build(objects, mod, index)       = :(Lexicon.Query([$(objects...)], $(mod), $(index)))
+build(objects, ::Nothing, index) = :(Lexicon.Query([$(objects...)], $(index)))
 
-build(objects, mod, index) = :(Lexicon.Query(tuple($(objects...)), $(mod), $(index)))
-build(objects, ::Nothing, index) = :(Lexicon.Query(tuple($(objects...)), $(index)))
+immutable Head{S} end
 
-## Get a module name from an expression or `nothing`.
+macro H_str(text)
+    heads = [Head{symbol(t)} for t in split(text, ", ")]
+    Expr(:(::), Expr(:call, :Union, heads...))
+end
 
 modname(ex::Expr) = modname(Head{ex.head}(), ex)
+modname(other)    = nothing
 
-modname(other) = nothing
-
-modname(H"call", ex) = modname(ex.args[1])
-modname(H"macrocall", ex) = modname(ex.args[1])
-
-modname(H".", ex) = ex.args[1]
-
-## Get the objects contained in an expression.
+modname(H"call, macrocall", ex) = modname(ex.args[1])
+modname(H".", ex)               = ex.args[1]
 
 objects(ex::Expr) = objects(Head{ex.head}(), ex)
 
@@ -143,37 +123,22 @@ objects(H"quote", ex)      = [ex.args[1], ex]
 
 objects(H".", ex) = [ex, ex.args[2]]
 
-objects(H"call", ex) = [:(which($(ex.args[1]), Lexicon.typesof($(ex.args[2:end])...)))]
+objects(H"call", ex) = [:(@which($(ex)))]
 
 objects(H"macrocall", ex) =
     isexpr(ex.args[1], :(.)) ?
     [:(getfield($(modname(ex)), $(ex.args[1].args[2])))] :
     [ex.args[1]]
 
-# Hack around some weirdness in Base.
-function typesof(args...)
-    out = Any[]
-    for arg in args
-        if isa(arg, Type)
-            push!(out, Type{arg})
-        else
-            push!(out, typeof(arg))
-        end
-    end
-    tuple(out...)
-end
-
-## Running queries. ---------------------------------------------------------------------
-
-function partial_signature_matching(f::Function, sig::Tuple)
-    meths = Set{Method}()
-    for method in f.env
-        msig = method.sig
+function partial_signature_matching(f::Function, sig)
+    ms = Set{Method}()
+    for m in f.env
+        msig = tuple(Docile.tuple_collect(m.sig)...)
         for n = 1:length(msig)
-            isequal(typeintersect(msig[1:n], sig), None) || push!(meths, method)
+            isequal(typeintersect(msig[1:n], sig), Union()) || push!(ms, m)
         end
     end
-    meths
+    ms
 end
 
 """
@@ -181,21 +146,19 @@ Search loaded documentation for all methods of a generic function `f` that match
 the provided signature `sig`. Optionally, provide an index (1-based) to view an
 individual entry if several different ones are found.
 """
-function query(f::Function, sig::Tuple, index = 0)
-    methods = tuple(partial_signature_matching(f, sig)...)
-    run(Query(methods, index))
+function query(f::Function, sig, index = 0)
+    ms = collect(partial_signature_matching(f, sig))
+    run(Query(ms, index))
 end
 
-# For each object in a query search every specified module for it's documentation.
 function run(query::Query)
     res = QueryResults(query)
-    for modname in query.mods, object in query.objects
+    for modname in query.modules, object in query.objects
         isdocumented(modname) && append_result!(res, object, metadata(modname))
     end
     res
 end
 
-# Full text search.
 function append_result!(res, query::AbstractString, meta)
     for (object, entry) in entries(meta)
         score = calculate_score(query, data(docs(entry)), writeobj(object, entry))
@@ -206,9 +169,8 @@ end
 "Basic text importance scoring."
 calculate_score(query, text, object) = length(split(string(object, text), query)) - 1
 
-# Generic function.
 function append_result!(res, func::Function, meta)
-    ms = isgeneric(func) ? Set(methods(func)) : Set{Method}() # Handle macros.
+    ms = isgeneric(func) ? Set(methods(func)) : Set{Method}()
     for (object, entry) in entries(meta)
         if object ≡ func
             push!(res, entry, object, 2)
@@ -233,7 +195,7 @@ append_result!(res, other, meta) = nothing
 
 mostgeneral(T::DataType) = T{[tvar.ub for tvar in T.parameters]...}
 
-wrap_non_iterables(obj) = applicable(start, obj) ? obj : tuple(obj)
+wrap_non_iterables(obj) = applicable(start, obj) ? obj : [obj]
 
 typealias SimpleObject Union(Symbol, Method, Module)
 

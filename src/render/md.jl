@@ -19,9 +19,9 @@ function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
 end
 
 type Entries
-    entries::Vector{(Module, Any, Entry)}
+    entries::Vector{Docile.tup(Module, Any, Entry)}
 end
-Entries() = Entries((Module, Any, Entry)[])
+Entries() = Entries(Docile.tup(Module, Any, Entry)[])
 
 function push!(ents::Entries, modulename::Module, obj, ent::Entry)
     push!(ents.entries, (modulename, obj, ent))
