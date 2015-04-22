@@ -1,3 +1,7 @@
+### v0.1.6
+
+* Fix error in `save`.
+
 ### v0.1.5
 
 * Fix for tuple changes in julia.
