@@ -56,6 +56,15 @@ function save(file::String, modulename::Module; args...)
     save(file, mime, documentation(modulename), config)
 end
 
+type Entries
+    entries::Vector{@compat(Tuple{Module, Any, AbstractEntry})}
+end
+Entries() = Entries(@compat(Tuple{Module, Any, AbstractEntry})[])
+
+function push!(ents::Entries, modulename::Module, obj, ent::AbstractEntry)
+    push!(ents.entries, (modulename, obj, ent))
+end
+
 const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]
 
 # Dispatch container for metadata display.
@@ -73,7 +82,7 @@ function writeobj(f::Function, entry::Entry{:macro})
 end
 
 function addentry!{category}(index, obj, entry::Entry{category})
-    section, pair = get!(index, category, Docile.tup(String, Any)[]), (writeobj(obj, entry), obj)
+    section, pair = get!(index, category, @compat(Tuple{AbstractString, Any})[]), (writeobj(obj, entry), obj)
     insert!(section, searchsortedlast(section, pair, by = x -> first(x)) + 1, pair)
 end
 

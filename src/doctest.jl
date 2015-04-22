@@ -7,7 +7,7 @@ type Skipped <: Status end
 type Result{S <: Status}
     codeblock::String
     exception::Exception
-    location::Docile.tup(Any, Int)
+    location::@compat(Tuple{Any, Int})
 
     Result(codeblock, location) = new(codeblock, ErrorException(""), location)
     Result(codeblock, exception, location) = new(codeblock, exception, location)
