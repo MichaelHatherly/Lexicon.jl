@@ -39,6 +39,7 @@ export
 
 @document
 
+include("compat.jl")
 include("query.jl")
 include("render.jl")
 include("doctest.jl")

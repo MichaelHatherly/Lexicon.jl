@@ -18,7 +18,7 @@ doctest(Lexicon)
 
 
 *source:*
-[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/doctest.jl#L101)
+[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/doctest.jl#L101)
 
 ---
 
@@ -29,7 +29,7 @@ individual entry if several different ones are found.
 
 
 *source:*
-[Lexicon/src/query.jl:149](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/query.jl#L149)
+[Lexicon/src/query.jl:149](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/query.jl#L149)
 
 ---
 
@@ -40,7 +40,7 @@ individual entry if several different ones are found.
 
 
 *source:*
-[Lexicon/src/query.jl:149](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/query.jl#L149)
+[Lexicon/src/query.jl:149](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/query.jl#L149)
 
 ---
 
@@ -127,7 +127,7 @@ The documentation will be available from
 
 
 *source:*
-[Lexicon/src/render.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/render.jl#L53)
+[Lexicon/src/render.jl:53](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/render.jl#L53)
 
 ---
 
@@ -179,7 +179,7 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 
 *source:*
-[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/filtering.jl#L131)
+[Lexicon/src/filtering.jl:131](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/filtering.jl#L131)
 
 ---
 
@@ -220,7 +220,7 @@ run(q)
 query(args...)
 
 *source:*
-[Lexicon/src/query.jl:97](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/query.jl#L97)
+[Lexicon/src/query.jl:97](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/query.jl#L97)
 
 ## Internal
 ---
@@ -229,7 +229,7 @@ query(args...)
 Basic text importance scoring.
 
 *source:*
-[Lexicon/src/query.jl:170](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/query.jl#L170)
+[Lexicon/src/query.jl:170](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/query.jl#L170)
 
 ---
 
@@ -270,7 +270,7 @@ entries( filter(d, files = ["types.jl"]) )
 
 
 *source:*
-[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/filtering.jl#L39)
+[Lexicon/src/filtering.jl:39](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/filtering.jl#L39)
 
 ---
 
@@ -302,7 +302,7 @@ end
 
 
 *source:*
-[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/filtering.jl#L78)
+[Lexicon/src/filtering.jl:78](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/filtering.jl#L78)
 
 ---
 
@@ -310,7 +310,7 @@ end
 An entry and the set of all objects that are linked to it.
 
 *source:*
-[Lexicon/src/query.jl:32](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/query.jl#L32)
+[Lexicon/src/query.jl:32](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/query.jl#L32)
 
 ---
 
@@ -325,7 +325,7 @@ Holds the parsed user query.
 
 
 *source:*
-[Lexicon/src/query.jl:13](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/query.jl#L13)
+[Lexicon/src/query.jl:13](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/query.jl#L13)
 
 ---
 
@@ -333,5 +333,5 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 *source:*
-[Lexicon/src/query.jl:42](https://github.com/MichaelHatherly/Lexicon.jl/tree/b2844bda56f5c5614de092abe30d3267d64dc694/src/query.jl#L42)
+[Lexicon/src/query.jl:42](https://github.com/MichaelHatherly/Lexicon.jl/tree/3ca10e759a19946a63e448dd5aee5cadea06726c/src/query.jl#L42)
 
