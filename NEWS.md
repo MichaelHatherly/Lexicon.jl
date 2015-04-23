@@ -25,7 +25,7 @@
 
 ## v0.1.0
 
-* Add matkdown output.
+* Add markdown output.
 * New package documentation using MkDocs.
 * Rework query system.
     * Search globals without prepending `global` to query.
