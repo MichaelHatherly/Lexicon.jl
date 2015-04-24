@@ -1,6 +1,6 @@
 ## Docs-specific rendering
 
-function writemd(io::IO, docs::Docs{:md})
+function writemd(io::IO, docs::Docile.Interface.Docs{:md})
     println(io, docs.data)
 end
 

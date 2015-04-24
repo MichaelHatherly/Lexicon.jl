@@ -1,6 +1,6 @@
 ## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-function writehtml(io::IO, docs::Docs{:md})
+function writehtml(io::IO, docs::Docile.Interface.Docs{:md})
     writemime(io, MIME("text/html"), parsed(docs))
 end
 

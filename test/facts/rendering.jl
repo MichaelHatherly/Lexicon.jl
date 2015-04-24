@@ -12,8 +12,8 @@ facts("Rendering.") do
         writemime(output, MIME"text/plain"(), run(@query("",4)))
         writemime(output, MIME"text/plain"(), run(@query("",5)))
 
-        writemime(output, MIME"text/plain"(), run(@query(@doc())))
-        writemime(output, MIME"text/plain"(), run(@query(Docile.@doc())))
+        writemime(output, MIME"text/plain"(), run(@query(@document())))
+        writemime(output, MIME"text/plain"(), run(@query(Docile.@document())))
 
         writemime(output, MIME"text/plain"(), run(@query(Docile.meta())))
 

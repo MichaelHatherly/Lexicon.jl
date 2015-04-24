@@ -1,10 +1,10 @@
 ## Docs-specific rendering --------------------------------------------------------------
 
-function writemime(io::IO, mime::MIME"text/plain", docs::Docs{:md})
+function writemime(io::IO, mime::MIME"text/plain", docs::Docile.Interface.Docs{:md})
     writemime(io, mime, parsed(docs))
 end
 
-function writemime(io::IO, mime::MIME"text/plain", docs::Docs{:txt})
+function writemime(io::IO, mime::MIME"text/plain", docs::Docile.Interface.Docs{:txt})
     println(io)
     for line in split(parsed(docs), "\n")
         println(io, "  ", line)

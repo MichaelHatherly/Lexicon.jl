@@ -1,6 +1,6 @@
 ## Extending docs format support --------------------------------------------------------
 
-parsedocs(ds::Docs{:md}) = Markdown.parse(data(ds))
+parsedocs(ds::Docile.Interface.Docs{:md}) = Markdown.parse(data(ds))
 
 ## Common -------------------------------------------------------------------------------
 const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]

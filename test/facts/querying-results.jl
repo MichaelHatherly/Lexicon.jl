@@ -156,7 +156,7 @@ facts("Query results.") do
         Lexicon.help("foobar")
         Lexicon.help("foobar 1")
         Lexicon.help("Lexicon")
-        Lexicon.help("Docile.@doc")
+        Lexicon.help("Docile.@document")
         Lexicon.help("Docile.Entry")
         Lexicon.help("Docile.Entry 1")
         Lexicon.help("Docile.Entry(\"...\")")
