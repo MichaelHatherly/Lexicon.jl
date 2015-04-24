@@ -1,3 +1,7 @@
+### v0.1.8
+
+* Fix for `html` not passing validation issue #65.
+
 ### v0.1.7
 
 * Fix for changes in import behaviour.

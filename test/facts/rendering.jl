@@ -47,7 +47,7 @@ facts("Rendering.") do
     end
 
     if VERSION < v"0.4.0-dev+4393"
-        context("Testin relpath.") do
+        context("Testing relpath.") do
             filepaths = [
                 "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
                 "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",

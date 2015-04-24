@@ -7,11 +7,9 @@ const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]
 const MDSTYLETAGS = ["", "*", "**"]
 
 type Config
-    # General Options
+    category_order   :: Vector{Symbol}
     include_internal :: Bool
-    # Html only Options
     mathjax          :: Bool
-    # MarkDown only Options
     mdstyle_header   :: ASCIIString
     mdstyle_objname  :: ASCIIString
     mdstyle_meta     :: ASCIIString
@@ -20,6 +18,8 @@ type Config
 
     const fields   = fieldnames(Config)
     const defaults = Dict{Symbol, Any}([
+        (:category_order    , [:module, :function, :method, :type,
+                               :typealias, :macro, :global, :comment]),
         (:include_internal , true),
         (:mathjax          , false),
         (:mdstyle_header   , "#"),
@@ -55,17 +55,6 @@ function save(file::String, modulename::Module; args...)
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
     save(file, mime, documentation(modulename), config)
 end
-
-type Entries
-    entries::Vector{@compat(Tuple{Module, Any, AbstractEntry})}
-end
-Entries() = Entries(@compat(Tuple{Module, Any, AbstractEntry})[])
-
-function push!(ents::Entries, modulename::Module, obj, ent::AbstractEntry)
-    push!(ents.entries, (modulename, obj, ent))
-end
-
-const CATEGORY_ORDER = [:module, :function, :method, :type, :macro, :global]
 
 # Dispatch container for metadata display.
 type Meta{keyword}

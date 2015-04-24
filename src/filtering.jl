@@ -1,8 +1,9 @@
 ## Various methods for filtering and sorting Metadata
 
+const CATEGORY_ORDER = [:module, :function, :method, :type, :typealias, :macro, :global]
 
 """
-Filter Metadata based on categories or file source
+Filter Metadata based on categories or file source.
 
 **Arguments**
 
@@ -39,18 +40,16 @@ entries( filter(d, files = ["types.jl"]) )
 function Base.filter(docs::Metadata; categories = CATEGORY_ORDER, files = String[])
     result = copy(docs)
     if length(files) > 0
-        filter!((k,v) -> any(x -> contains(v.data[:source][2], x), files),
-                result.entries)
+        filter!((k,v) -> any(x -> contains(v.data[:source][2], x), files), result.entries)
     end
     if length(categories) > 0
-        filter!((k,v) -> any(x -> category(v) == x, categories),
-                result.entries)
+        filter!((k,v) -> any(x -> category(v) == x, categories), result.entries)
     end
     result
 end
 
 """
-Filter Metadata based on a function
+Filter Metadata based on a function.
 
 **Arguments**
 
@@ -83,7 +82,7 @@ end
 
 
 """
-Iterator type for Metadata Entries with sorting options
+Iterator type for Metadata Entries with sorting options.
 
 **Constructors**
 
@@ -155,4 +154,3 @@ Base.length(x::EachEntry) = length(x.kidx)
 Base.start(x::EachEntry) = 1
 Base.done(x::EachEntry, state) = state == length(x.kidx)
 Base.next(x::EachEntry, state) = ((x.kidx[state], x.parent.entries[x.kidx[state]]), state + 1)
-

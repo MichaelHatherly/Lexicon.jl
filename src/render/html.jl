@@ -6,8 +6,9 @@ end
 
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
 
-function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config)
-    config.include_internal || throw(ArgumentError("`config` option `include_internal` must be true for html"))
+function save(file::AbstractString, mime::MIME"text/html", doc::Metadata, config::Config)
+    config.include_internal ||
+            throw(ArgumentError("`config` option `include_internal` must be true for html"))
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
@@ -23,6 +24,15 @@ function save(file::String, mime::MIME"text/html", doc::Metadata, config::Config
         info("copying $(file) to $(dst)")
         cp(joinpath(src, file), joinpath(dst, file))
     end
+end
+
+type EntriesHtml
+    entries::Vector{@compat(Tuple{Module, Any, AbstractEntry})}
+end
+EntriesHtml() = EntriesHtml(@compat(Tuple{Module, Any, AbstractEntry})[])
+
+function push!(ents::EntriesHtml, modulename::Module, obj, ent::AbstractEntry)
+    push!(ents.entries, (modulename, obj, ent))
 end
 
 function writehtml(io::IO, doc::Metadata, config::Config)
@@ -41,9 +51,9 @@ function writehtml(io::IO, doc::Metadata, config::Config)
     if !isempty(index)
         println(io, "<h1 id='module-reference'>Reference</h1>")
 
-        ents = Entries()
+        ents = EntriesHtml()
         wrap(io, "ul", "class='index'") do
-            for k in CATEGORY_ORDER
+            for k in config.category_order
                 haskey(index, k) || continue
                 wrap(io, "li") do
                     println(io, "<strong>$(k)s:</strong>")
@@ -53,7 +63,8 @@ function writehtml(io::IO, doc::Metadata, config::Config)
                         for (s, obj) in index[k]
                             push!(ents, modulename(doc), obj, entries(doc)[obj])
                             wrap(io, "li") do
-                                print(io, "<a href='#$(s)'>", s, "</a>")
+                                href = string(k, "_", generate_html_id(s))
+                                print(io, "<a href='#$(href)'>", s, "</a>")
                             end
                         end
                     end
@@ -65,7 +76,7 @@ function writehtml(io::IO, doc::Metadata, config::Config)
     footerhtml(io, doc, config)
 end
 
-function writehtml(io::IO, ents::Entries)
+function writehtml(io::IO, ents::EntriesHtml)
     wrap(io, "div", "class='entries'") do
         for (modname, obj, ent) in ents.entries
             writehtml(io, modname, obj, ent)
@@ -76,7 +87,8 @@ end
 function writehtml{category}(io::IO, modname, obj, ent::Entry{category})
     wrap(io, "div", "class='entry'") do
         objname = writeobj(obj, ent)
-        wrap(io, "div", "id='$(objname)' class='entry-name category-$(category)'") do
+        idname = "$(category)_" * generate_html_id(objname)
+        wrap(io, "div", "id='$(idname)' class='entry-name category-$(category)'") do
             print(io, "<div class='category'>[$(category)] &mdash; </div> ")
             println(io, objname)
         end
@@ -153,8 +165,40 @@ function footerhtml(io::IO, doc::Metadata, config::Config)
     """)
 end
 
-function wrap(fn::Function, io::IO, tag::String, attributes::String = "")
+function wrap(fn::Function, io::IO, tag::AbstractString, attributes::AbstractString = "")
     println(io, "<", tag, " ", attributes, ">")
     fn()
     println(io, "</", tag, ">")
+end
+
+## Utils
+
+# Convert's a string to a valid html id
+function generate_html_id(s::AbstractString)
+    # http://www.w3.org/TR/html4/types.html#type-id
+    # ID tokens must begin with a letter ([A-Za-z]) and may be followed by any number of letters,
+    # digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods (".").
+    valid_chars = Set(Char['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                           'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                           'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                           'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                           '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                           '-', '_', ':', '.'])
+
+    replace_chars = Set(Char[' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',',
+                             '/', ';', '<', '=', '>', '?', '@', '[', ']', '^', '`', '{',
+                             '¦', '}', '~'])
+    io = IOBuffer()
+    for c in s
+        if c in valid_chars
+            write(io, lowercase(string(c)))
+        elseif c in replace_chars
+            write(io, "_")
+        else
+            write(io, string(Int(c)))
+        end
+    end
+    # Note: In our case no need to check for begins with letter or is empty
+    #  we prepend always the category
+    return takebuf_string(io)
 end
