@@ -1,3 +1,7 @@
+### v0.1.7
+
+* Fix for changes in import behaviour.
+
 ### v0.1.6
 
 * Fix error in `save`.
