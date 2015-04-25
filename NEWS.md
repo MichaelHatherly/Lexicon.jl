@@ -1,5 +1,7 @@
 ### v0.1.8
 
+* Update for new behaviour of `cp` in Julia 0.4.
+* Refactoring of header / footer rendering code.
 * Fix for `html` not passing validation issue #65.
 
 ### v0.1.7
