@@ -5,50 +5,64 @@ parsedocs(ds::Docile.Interface.Docs{:md}) = Markdown.parse(data(ds))
 ## Common -------------------------------------------------------------------------------
 const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]
 const MDSTYLETAGS = ["", "*", "**"]
+const MD_SUBHEADER_OPTIONS = [:skip, :simple, :category]
 
+"Main configuration use a separate file for documentation of options or keep the info in save ?????"
 type Config
-    category_order   :: Vector{Symbol}
-    include_internal :: Bool
-    mathjax          :: Bool
-    mdstyle_header   :: ASCIIString
-    mdstyle_objname  :: ASCIIString
-    mdstyle_meta     :: ASCIIString
-    mdstyle_exported :: ASCIIString
-    mdstyle_internal :: ASCIIString
+    category_order         :: Vector{Symbol}
+    include_internal       :: Bool
+    mathjax                :: Bool
+    mdstyle_header         :: ASCIIString
+    mdstyle_objname        :: ASCIIString
+    mdstyle_meta           :: ASCIIString
+    mdstyle_subheader      :: ASCIIString
+    mdstyle_genindex_mod   :: ASCIIString
+    md_subheader           :: Symbol
+    md_genindex_modprefix  :: ByteString
+    md_permalink           :: Bool
 
-    const fields   = fieldnames(Config)
     const defaults = Dict{Symbol, Any}([
-        (:category_order    , [:module, :function, :method, :type,
-                               :typealias, :macro, :global, :comment]),
-        (:include_internal , true),
-        (:mathjax          , false),
-        (:mdstyle_header   , "#"),
-        (:mdstyle_objname  , "###"),
-        (:mdstyle_meta     , "*"),
-        (:mdstyle_exported , "##"),
-        (:mdstyle_internal , "##")
+        (:category_order         , [:module, :function, :method, :type,
+                                    :typealias, :macro, :global, :comment]),
+        (:include_internal       , true),
+        (:mathjax                , false),
+        (:mdstyle_header         , "#"),
+        (:mdstyle_objname        , "####"),
+        (:mdstyle_meta           , "*"),
+        (:mdstyle_subheader      , "##"),
+        (:mdstyle_genindex_mod   , "##"),
+        (:md_subheader           , :simple),
+        (:md_genindex_modprefix  , "MODULE: "),
+        (:md_permalink           , true)
         ])
 
     function Config(; args...)
-        this = new()
-        for (k, v) in merge(defaults, Dict(args))
-            try
-                k in fields ? setfield!(this, k, v) : warn("Invalid setting: '$(k) = $(v)'.")
-            # e.g. catch TypeError
-            catch err
-                warn("Invalid setting: '$(k) = $(v)'. Error: $err")
-            end
-        end
-        # Validations
-        for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_exported, :mdstyle_internal]
-           getfield(this, k) in vcat(MDHTAGS, MDSTYLETAGS) ||
-                                error("""Invalid mdstyle value: config-item `$k -> $(getfield(this, k))`.
-                                        Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")
-        end
-        return this
+        return update_config!(new(), merge(defaults, Dict(args)))
     end
 end
 
+function update_config!(config::Config, args::Dict)
+    const fields = fieldnames(Config)
+    for (k, v) in args
+        try
+            k in fields ? setfield!(config, k, v) : warn("Invalid setting: '$(k) = $(v)'.")
+        catch err # e.g. TypeError
+            warn("Invalid setting: '$(k) = $(v)'. Error: $err")
+        end
+    end
+
+    for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_subheader,
+                                                                :mdstyle_genindex_mod]
+        getfield(config, k) in vcat(MDHTAGS, MDSTYLETAGS) ||
+                error("""Invalid mdstyle : config-item `$k -> $(getfield(config, k))`.
+                      Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")
+
+        config.md_subheader in MD_SUBHEADER_OPTIONS ||
+                    error("""Invalid md_subheader : config-item `$k -> $(getfield(config, k))`.
+                          Valid values: $MD_SUBHEADER_OPTIONS.""")
+    end
+    return config
+end
 
 type Entries
     entries::Vector{@compat(Tuple{Module, Any, AbstractEntry})}
@@ -59,17 +73,28 @@ function push!(ents::Entries, modulename::Module, obj, ent::AbstractEntry)
     push!(ents.entries, (modulename, obj, ent))
 end
 
+type Index
+    entries::Vector{Entries}
+end
+Index() = Index(Vector{Entries}[])
+
+function update!(index::Index, ents::Entries)
+    push!(index.entries, ents)
+end
+
 file"docs/save.md"
-function save(file::AbstractString, modulename::Module; args...)
-    config = Config(; args...)
+function save(file::AbstractString, modulename::Module, config::Config; args...)
+    isempty(args) || update_config!(deepcopy(config), Dict(args))
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
-    save(file, mime, documentation(modulename), config)
+    index_entries = save(file, mime, documentation(modulename), config)
+    return index_entries
 end
 
 """
 Saves an *API-Index* to `file`.
 """
-function save(file::String, index_entries::Vector, config::Config; args...)
+function save(file::AbstractString, index_entries::Vector, config::Config; args...)
+    isempty(args) || update_config!(deepcopy(config), Dict(args))
     save(file, MIME("text/$(strip(last(splitext(file)), '.'))"), index_entries, config)
 end
 

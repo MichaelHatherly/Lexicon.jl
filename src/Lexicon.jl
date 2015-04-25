@@ -29,13 +29,15 @@ export
     @query,
     query,
     save,
+    update!,
 
     doctest,
     failed,
     passed,
     skipped,
     EachEntry,
-    Config
+    Config,
+    Index
 
 
 @document
