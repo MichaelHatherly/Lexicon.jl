@@ -86,8 +86,8 @@ function writemime(io::IO, mime::MIME"text/plain", s::Summary)
 end
 
 """
-Run code blocks in the docstrings of the specified module `modname` and return
-a `Summary` of the results.
+Run code blocks in the docstrings of the specified module `modname`.
+Returns a `Summary` of the results.
 
 Code blocks may be skipped by adding an extra newline at the end of the block.
 
