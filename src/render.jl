@@ -56,6 +56,40 @@ function save(file::AbstractString, modulename::Module; args...)
     save(file, mime, documentation(modulename), config)
 end
 
+# Convert's a string to a valid html id
+function generate_html_id(s::AbstractString)
+    # http://www.w3.org/TR/html4/types.html#type-id
+    # ID tokens must begin with a letter ([A-Za-z]) and may be followed by any number of letters,
+    # digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods (".").
+    valid_chars = Set(Char['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                           'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                           'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                           'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                           '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                           '-', '_', ':', '.'])
+
+    replace_chars = Set(Char[' ', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',',
+                             '/', ';', '<', '=', '>', '?', '@', '[', ']', '^', '`', '{',
+                             '¦', '}', '~'])
+    skip_chars = Set(Char['!'])
+
+    io = IOBuffer()
+    for c in s
+        if c in skip_chars
+            continue
+        elseif c in valid_chars
+            write(io, lowercase(string(c)))
+        elseif c in replace_chars
+            write(io, "_")
+        else
+            write(io, string(Int(c)))
+        end
+    end
+    # Note: In our case no need to check for begins with letter or is empty
+    #  we prepend always the category
+    return takebuf_string(io)
+end
+
 # Dispatch container for metadata display.
 type Meta{keyword}
     content
