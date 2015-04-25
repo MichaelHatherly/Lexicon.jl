@@ -9,12 +9,13 @@ end
 function save(file::AbstractString, mime::MIME"text/html", doc::Metadata, config::Config)
     config.include_internal ||
             throw(ArgumentError("`config` option `include_internal` must be true for html"))
+    ents = EntriesHtml()
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
         headerhtml(f, doc, config)
-        writehtml(f, doc, config)
+        ents = writehtml(f, doc, ents, config)
         footerhtml(f, doc, config)
     end
 
@@ -26,6 +27,7 @@ function save(file::AbstractString, mime::MIME"text/html", doc::Metadata, config
         info("copying $(file) to $(dst)")
         cp(joinpath(src, file), joinpath(dst, file); remove_destination=true)
     end
+    return ents
 end
 
 type EntriesHtml
@@ -37,9 +39,7 @@ function push!(ents::EntriesHtml, modulename::Module, obj, ent::AbstractEntry)
     push!(ents.entries, (modulename, obj, ent))
 end
 
-function writehtml(io::IO, doc::Metadata, config::Config)
-
-
+function writehtml(io::IO, doc::Metadata, ents::EntriesHtml, config::Config)
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
     for file in manual(doc)
         writemime(io, MIME("text/html"), Markdown.parse(readall(joinpath(rootdir, file))))
@@ -52,8 +52,6 @@ function writehtml(io::IO, doc::Metadata, config::Config)
 
     if !isempty(index)
         println(io, "<h1 id='module-reference'>Reference</h1>")
-
-        ents = EntriesHtml()
         wrap(io, "ul", "class='index'") do
             for k in config.category_order
                 haskey(index, k) || continue
@@ -75,6 +73,7 @@ function writehtml(io::IO, doc::Metadata, config::Config)
         end
         writehtml(io,ents)
     end
+    return ents
 end
 
 function writehtml(io::IO, ents::EntriesHtml)
@@ -170,4 +169,10 @@ function wrap(fn::Function, io::IO, tag::AbstractString, attributes::AbstractStr
     println(io, "<", tag, " ", attributes, ">")
     fn()
     println(io, "</", tag, ">")
+end
+
+### API-Index ----------------------------------------------------------------------------
+
+function save(file::AbstractString, mime::MIME"text/html", index_entries::Vector, c::Config)
+    throw(ArgumentError("The html format does currently not support saving of separate API-Index pages.)"))
 end

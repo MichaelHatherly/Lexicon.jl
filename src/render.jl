@@ -66,6 +66,13 @@ function save(file::AbstractString, modulename::Module; args...)
     save(file, mime, documentation(modulename), config)
 end
 
+"""
+Saves an *API-Index* to `file`.
+"""
+function save(file::String, index_entries::Vector, config::Config; args...)
+    save(file, MIME("text/$(strip(last(splitext(file)), '.'))"), index_entries, config)
+end
+
 # Convert's a string to a valid html id
 function generate_html_id(s::AbstractString)
     # http://www.w3.org/TR/html4/types.html#type-id

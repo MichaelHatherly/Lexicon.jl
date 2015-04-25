@@ -10,16 +10,18 @@ print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
                                             println(io, cv, item, cv)
 
 function save(file::AbstractString, mime::MIME"text/md", doc::Metadata, config::Config)
+    ents = Entries()
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
         headermd(f, doc, config)
-        writemd(f, doc, config)
+        ents = writemd(f, doc, ents, config)
     end
+    return ents
 end
 
-function writemd(io::IO, doc::Metadata, config::Config)
+function writemd(io::IO, doc::Metadata, ents::Entries, config::Config)
     # Root may be a file or directory. Get the dir.
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
 
@@ -33,7 +35,6 @@ function writemd(io::IO, doc::Metadata, config::Config)
     end
 
     if !isempty(index)
-        ents = Entries()
         for k in config.category_order
             haskey(index, k) || continue
             for (s, obj) in index[k]
@@ -43,6 +44,7 @@ function writemd(io::IO, doc::Metadata, config::Config)
         println(io)
         writemd(io, ents, config)
     end
+    return ents
 end
 
 function writemd(io::IO, ents::Entries, config::Config)
@@ -93,4 +95,10 @@ end
 
 function headermd(io::IO, doc::Metadata, config::Config)
     print_help(io, config.mdstyle_header, doc.modname)
+end
+
+### API-Index ----------------------------------------------------------------------------
+
+function save(file::AbstractString, mime::MIME"text/md", index_entries::Vector, c::Config)
+    throw(ArgumentError("The markdown format does currently not support saving of separate API-Index pages.)"))
 end
