@@ -22,7 +22,7 @@ function save(file::AbstractString, mime::MIME"text/html", doc::Metadata, config
     isdir(dst) || mkpath(dst)
     for file in readdir(src)
         info("copying $(file) to $(dst)")
-        cp(joinpath(src, file), joinpath(dst, file))
+        cp(joinpath(src, file), joinpath(dst, file); remove_destination=true)
     end
 end
 
