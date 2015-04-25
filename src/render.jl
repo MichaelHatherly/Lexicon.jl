@@ -49,6 +49,16 @@ type Config
     end
 end
 
+
+type Entries
+    entries::Vector{@compat(Tuple{Module, Any, AbstractEntry})}
+end
+Entries() = Entries(@compat(Tuple{Module, Any, AbstractEntry})[])
+
+function push!(ents::Entries, modulename::Module, obj, ent::AbstractEntry)
+    push!(ents.entries, (modulename, obj, ent))
+end
+
 file"docs/save.md"
 function save(file::AbstractString, modulename::Module; args...)
     config = Config(; args...)
