@@ -50,7 +50,7 @@ type Config
 end
 
 file"docs/save.md"
-function save(file::String, modulename::Module; args...)
+function save(file::AbstractString, modulename::Module; args...)
     config = Config(; args...)
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
     save(file, mime, documentation(modulename), config)

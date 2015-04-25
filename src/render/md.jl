@@ -9,7 +9,7 @@ print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
                                             println(io, "$cv $item") :
                                             println(io, cv, item, cv)
 
-function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
+function save(file::AbstractString, mime::MIME"text/md", doc::Metadata, config::Config)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
