@@ -13,7 +13,9 @@ function save(file::AbstractString, mime::MIME"text/html", doc::Metadata, config
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
+        headerhtml(f, doc, config)
         writehtml(f, doc, config)
+        footerhtml(f, doc, config)
     end
 
     # copy static files
@@ -36,7 +38,7 @@ function push!(ents::EntriesHtml, modulename::Module, obj, ent::AbstractEntry)
 end
 
 function writehtml(io::IO, doc::Metadata, config::Config)
-    headerhtml(io, doc)
+
 
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
     for file in manual(doc)
@@ -73,7 +75,6 @@ function writehtml(io::IO, doc::Metadata, config::Config)
         end
         writehtml(io,ents)
     end
-    footerhtml(io, doc, config)
 end
 
 function writehtml(io::IO, ents::EntriesHtml)
@@ -135,7 +136,7 @@ function writehtml(io::IO, m::Meta{:source})
     print(io, "<a href='$(url(m))'>$(path):$(m.content[1])</a>")
 end
 
-function headerhtml(io::IO, doc::Metadata)
+function headerhtml(io::IO, doc::Metadata, config::Config)
     println(io, """
     <!doctype html>
 

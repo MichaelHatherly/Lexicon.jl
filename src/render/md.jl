@@ -14,13 +14,12 @@ function save(file::AbstractString, mime::MIME"text/md", doc::Metadata, config::
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
+        headermd(f, doc, config)
         writemd(f, doc, config)
     end
 end
 
 function writemd(io::IO, doc::Metadata, config::Config)
-    headermd(io, doc, config)
-
     # Root may be a file or directory. Get the dir.
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
 
