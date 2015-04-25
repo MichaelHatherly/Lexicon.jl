@@ -18,6 +18,15 @@ function save(file::String, mime::MIME"text/md", doc::Metadata, config::Config)
     end
 end
 
+type EntriesMD
+    entries::Vector{@compat(Tuple{Module, Any, AbstractEntry})}
+end
+EntriesMD() = EntriesMD(@compat(Tuple{Module, Any, AbstractEntry})[])
+
+function push!(ents::EntriesMD, modulename::Module, obj, ent::AbstractEntry)
+    push!(ents.entries, (modulename, obj, ent))
+end
+
 function writemd(io::IO, doc::Metadata, config::Config)
     headermd(io, doc, config)
 
@@ -34,8 +43,8 @@ function writemd(io::IO, doc::Metadata, config::Config)
     end
 
     if !isempty(index)
-        ents = Entries()
-        for k in CATEGORY_ORDER
+        ents = EntriesMD()
+        for k in config.category_order
             haskey(index, k) || continue
             for (s, obj) in index[k]
                 push!(ents, modulename(doc), obj, entries(doc)[obj])
@@ -46,9 +55,9 @@ function writemd(io::IO, doc::Metadata, config::Config)
     end
 end
 
-function writemd(io::IO, ents::Entries, config::Config)
-    exported = Entries()
-    internal = Entries()
+function writemd(io::IO, ents::EntriesMD, config::Config)
+    exported = EntriesMD()
+    internal = EntriesMD()
 
     for (modname, obj, ent) in ents.entries
         isexported(modname, obj) ?
