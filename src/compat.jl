@@ -46,3 +46,49 @@ if VERSION < v"0.4.0-dev+4393"
         return isempty(relpath_) ? curdir :  relpath_
     end
 end
+
+if VERSION < v"0.4.0-dev+4499"
+    function cptree(src::AbstractString, dst::AbstractString; remove_destination::Bool=false,
+                                                                 follow_symlinks::Bool=false)
+        isdir(src) || throw(ArgumentError("'$src' is not a directory. Use `cp(src, dst)`"))
+        if ispath(dst)
+            if remove_destination
+                rm(dst; recursive=true)
+            else
+                throw(ArgumentError(string("'$dst' exists. `remove_destination=true` ",
+                                           "is required to remove '$dst' before copying.")))
+            end
+        end
+        mkdir(dst)
+        for name in readdir(src)
+            srcname = joinpath(src, name)
+            if !follow_symlinks && islink(srcname)
+                symlink(readlink(srcname), joinpath(dst, name))
+            elseif isdir(srcname)
+                cptree(srcname, joinpath(dst, name); remove_destination=remove_destination,
+                                                     follow_symlinks=follow_symlinks)
+            else
+                Base.FS.sendfile(srcname, joinpath(dst, name))
+            end
+        end
+    end
+
+    function cp(src::AbstractString, dst::AbstractString; remove_destination::Bool=false,
+                                                             follow_symlinks::Bool=false)
+        if ispath(dst)
+            if remove_destination
+                rm(dst; recursive=true)
+            else
+                throw(ArgumentError(string("'$dst' exists. `remove_destination=true` ",
+                                           "is required to remove '$dst' before copying.")))
+            end
+        end
+        if !follow_symlinks && islink(src)
+            symlink(readlink(src), dst)
+        elseif isdir(src)
+            cptree(src, dst; remove_destination=remove_destination, follow_symlinks=follow_symlinks)
+        else
+            Base.FS.sendfile(src, dst)
+        end
+    end
+end
