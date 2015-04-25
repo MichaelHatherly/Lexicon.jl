@@ -34,7 +34,8 @@ export
     failed,
     passed,
     skipped,
-    EachEntry
+    EachEntry,
+    Config
 
 
 @document
