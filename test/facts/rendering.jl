@@ -38,10 +38,16 @@ facts("Rendering.") do
     end
 
     context("Saving static content.") do
+        index  = Index()
+        config = Config(include_internal = true)
         for modname in (Lexicon, Docile, Docile.Interface), ft in ("md", "html")
             dir = joinpath(tempdir(), randstring())
             f = joinpath(dir, "$(modname).$(ft)")
-            save(f, modname; mathjax = true)
+            save(f, modname, config; mathjax = true)
+            # TODO: update is not implemented for html
+            #update!(index, save("$(mod).md", mod, config))
+            # TODO: save index not implemented yet
+            #save(joinpath(dir, "index_$(modname).$(ft)"), index, config)
             rm(dir, recursive = true)
         end
     end

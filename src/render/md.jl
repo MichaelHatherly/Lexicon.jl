@@ -58,13 +58,13 @@ function writemd(io::IO, ents::Entries, config::Config)
     end
 
     if !isempty(exported.entries)
-        print_help(io, config.mdstyle_exported, "Exported")
+        print_help(io, config.mdstyle_subheader, "Exported")
         for (modname, obj, ent) in exported.entries
             writemd(io, modname, obj, ent, config)
         end
     end
     if !isempty(internal.entries)
-        print_help(io, config.mdstyle_internal, "Internal")
+        print_help(io, config.mdstyle_subheader, "Internal")
         for (modname, obj, ent) in internal.entries
             writemd(io, modname, obj, ent, config)
         end
