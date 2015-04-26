@@ -121,4 +121,21 @@ save("docs/api/Lexicon.md", Lexicon; md_permalink = false, mathjax = true);
 
 *3. API-Index `save` method*
 
-The *API-Index* `save` method works similar to the above *Document `save` method*
+The configuration settings for the *API-Index* `save` method works similar to the above
+*Document `save` method*
+
+```
+using Lexicon
+index = Index([save("docs/api/Lexicon.md", Lexicon)]);
+
+# 1.
+config = Config(md_subheader = :category)
+save("docs/api/index.md", index, config);
+
+# 2. using the default supplied Config
+save("docs/api/index.md", index; md_subheader = :category);
+
+# 3. using all defaults
+save("docs/api/index.md", index);
+
+```
