@@ -87,6 +87,8 @@ Iterator type for Metadata Entries with sorting options.
 **Constructors**
 
 ```julia
+using Lexicon, Docile, Docile.Interface
+docs = metadata(Docile);
 EachEntry(docs::Metadata; order = [:category, :name, :source])
 
 ```
