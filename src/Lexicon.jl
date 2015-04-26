@@ -4,7 +4,9 @@ import Markdown
 
 import Docile.Interface:
 
-    parsedocs
+    parsedocs,
+    macroname,
+    name
 
 import Base:
 
@@ -29,13 +31,15 @@ export
     @query,
     query,
     save,
+    update!,
 
     doctest,
     failed,
     passed,
     skipped,
     EachEntry,
-    Config
+    Config,
+    Index
 
 
 @document

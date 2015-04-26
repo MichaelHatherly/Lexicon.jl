@@ -1,84 +1,59 @@
-## Docs-specific rendering
+## General markdown rendering  –––––––––––––––––––––––––––––––––––––
 
-function writemd(io::IO, docs::Docile.Interface.Docs{:md})
-    println(io, docs.data)
+# noneH_addnewline add a new line if mdstyle is not a H1-6  but italic, bold, or normal
+function println_mdstyle(io::IO, mdstyle::ASCIIString, item, noneH_addnewline = true)
+    if mdstyle in MDHTAGS
+        println(io, "$mdstyle $item")
+    else
+        println(io, "$mdstyle$item$mdstyle")
+        noneH_addnewline && println(io)
+    end
 end
 
-## General markdown rendering
-print_help(io::IO, cv::ASCIIString, item) = cv in MDHTAGS            ?
-                                            println(io, "$cv $item") :
-                                            println(io, cv, item, cv)
-
 function save(file::AbstractString, mime::MIME"text/md", doc::Metadata, config::Config)
-    ents = Entries()
+    ents = Entries(config)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
         headermd(f, doc, config)
-        ents = writemd(f, doc, ents, config)
+        ents = mainsetup(f, mime, doc, ents, file, config)
     end
     return ents
 end
 
-function writemd(io::IO, doc::Metadata, ents::Entries, config::Config)
-    # Root may be a file or directory. Get the dir.
-    rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
-
-    for file in manual(doc)
-        println(io, readall(joinpath(rootdir, file)))
-    end
-
-    index = Dict{Symbol, Any}()
-    for (obj, entry) in entries(doc)
-        addentry!(index, obj, entry)
-    end
-
-    if !isempty(index)
+function process_entries(io::IO, mime::MIME"text/md", grpname::AbstractString,
+                                                entries::Dict, config::Config)
+    if has_items(entries)
+        config.md_subheader == :simple && println_mdstyle(io, config.mdstyle_subheader, grpname)
+        println(io)
         for k in config.category_order
-            haskey(index, k) || continue
-            for (s, obj) in index[k]
-                push!(ents, modulename(doc), obj, entries(doc)[obj])
+            if length(entries[k]) > 0
+                config.md_subheader == :category && println_mdstyle(io, config.mdstyle_subheader,
+                                                              "$(ucfirst(string(k)))s [$grpname]\n")
+                for (modname, obj, ent, anchorname) in entries[k]
+                    writemd(io, modname, obj, ent, anchorname, config)
+                end
             end
         end
-        println(io)
-        writemd(io, ents, config)
-    end
-    return ents
-end
-
-function writemd(io::IO, ents::Entries, config::Config)
-    exported = Entries()
-    internal = Entries()
-
-    for (modname, obj, ent) in ents.entries
-        isexported(modname, obj) ?
-            push!(exported, modname, obj, ent) :
-            config.include_internal && push!(internal, modname, obj, ent)
-    end
-
-    if !isempty(exported.entries)
-        print_help(io, config.mdstyle_exported, "Exported")
-        for (modname, obj, ent) in exported.entries
-            writemd(io, modname, obj, ent, config)
-        end
-    end
-    if !isempty(internal.entries)
-        print_help(io, config.mdstyle_internal, "Internal")
-        for (modname, obj, ent) in internal.entries
-            writemd(io, modname, obj, ent, config)
-        end
     end
 end
 
-function writemd{category}(io::IO, modname, obj, ent::Entry{category}, config::Config)
+function writemime(io::IO, mime::MIME"text/md", manual::AbstractString)
+    println(io, manual)
+end
+
+function writemd{category}(io::IO, modname, obj, ent::Entry{category},
+                           anchorname::AbstractString, config::Config)
     objname = writeobj(obj, ent)
     println(io, "---\n")
-    print_help(io, config.mdstyle_objname, objname)
+    println(io, """<a id="$anchorname" class="lexicon_definition"></a>""")
+    println_mdstyle(io, config.mdstyle_objname,
+                    string(objname, config.md_permalink ? " [¶](#$anchorname)" : ""))
     writemd(io, docs(ent))
     println(io)
     for k in sort(collect(keys(ent.data)))
-        print_help(io, config.mdstyle_meta, "$k:")
+        println_mdstyle(io, config.mdstyle_meta, "$k:", false)
         writemd(io, Meta{k}(ent.data[k]))
         println(io)
     end
@@ -94,11 +69,56 @@ function writemd(io::IO, m::Meta{:source})
 end
 
 function headermd(io::IO, doc::Metadata, config::Config)
-    print_help(io, config.mdstyle_header, doc.modname)
+    println_mdstyle(io, config.mdstyle_header, doc.modname)
+    println(io)
+end
+
+## Docs-specific rendering
+
+function writemd(io::IO, docs::Docile.Interface.Docs{:md})
+    println(io, docs.data)
 end
 
 ### API-Index ----------------------------------------------------------------------------
 
-function save(file::AbstractString, mime::MIME"text/md", index_entries::Vector, c::Config)
-    throw(ArgumentError("The markdown format does currently not support saving of separate API-Index pages.)"))
+function save(file::AbstractString, mime::MIME"text/md", index::Index, c::Config)
+    # Write the API-Index file.
+    genindexfiledir = dirname(abspath(file))
+    isfile(file) || mkpath(genindexfiledir)
+    open(file, "w") do f
+        info("writing API-Index to $(file)")
+        println_mdstyle(f, c.mdstyle_header, "API-INDEX\n")
+        println(f)
+
+        for ent in index.entries
+            for i in 1:length(ent.sourcepaths)
+                relsourcepath = relpath(ent.sourcepaths[i], genindexfiledir)
+                println_mdstyle(f, c.mdstyle_genindex_mod,
+                    "$(c.md_genindex_modprefix)$(ent.modulenames[i])\n")
+
+                process_api_index(f, "Exported", ent.exported, relsourcepath, c);
+                process_api_index(f, "Internal", ent.internal, relsourcepath, c)
+            end
+        end
+    end
+end
+
+function process_api_index(io::IO, grpname::AbstractString, entries::Dict,
+                           relsourcepath::AbstractString, config::Config)
+    if has_items(entries)
+        config.md_subheader == :simple && (println(io, "---\n");
+                                       println_mdstyle(io, config.mdstyle_subheader, "$grpname\n"))
+        for k in config.category_order
+            if length(entries[k]) > 0
+                if config.md_subheader == :category
+                    println(io, "---\n")
+                    println_mdstyle(io, config.mdstyle_subheader, "$(ucfirst(string(k)))s [$grpname]\n")
+                end
+                for (modname, obj, ent, anchorname) in entries[k]
+                    description = split(data(docs(ent)), '\n')[1]
+                    println(io, "[$(writeobj(obj, ent))]($relsourcepath#$anchorname)  $description\n")
+                end
+            end
+        end
+    end
 end
