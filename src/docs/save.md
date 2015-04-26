@@ -58,11 +58,12 @@ git subtree push --prefix site origin gh-pages
 ```
 
 One can also use the MkDocs option `gh-deploy` - consult their guides.
+
 ```julia
 using Lexicon
 index = save("docs/api/Lexicon.md", Lexicon);
 save("docs/api/index.md", Index([index]); md_subheader = :category);
-run(`mkdocs gh-deploy`)
+run(`mkdocs gh-deploy --clean`)
 
 ```
 

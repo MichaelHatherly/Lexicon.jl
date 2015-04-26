@@ -36,6 +36,15 @@ type Config
         (:md_permalink           , true)
         ])
 
+    """
+    Returns a default Config. If any args... are given these will overwrite the defaults.
+
+    ```
+    using Lexicon
+    config = Config(md_permalink = false, mathjax = true)
+
+    ```
+    """
     function Config(; args...)
         return update_config!(new(), merge(defaults, Dict(args)))
     end

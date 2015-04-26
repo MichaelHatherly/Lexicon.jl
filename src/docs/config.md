@@ -43,3 +43,81 @@ characters or 0 to 2 `*` characters.
   To disable it the keyword argument `md_permalink = false` should be set.
 
 Any option can be user adjusted by passing keyword arguments to the `save` method.
+
+
+#### Config Usage
+
+There are 3 ways to define user adjusted configuration settings.
+
+**Config**
+
+```julia
+using Lexicon
+
+# get default `Config`
+config = Config()
+
+# get a new adjusted `Config`
+config = Config(md_permalink = false, mathjax = true)
+
+```
+
+**Document `save` method**
+
+The document `save` method accepts also a 'Config' as argument or supplies internaly a default one.
+Similar to the above 'Config usage' one can also pass otional `args...` which will overwrite a
+deepcopy of config but not change config itself.
+This allows using the same base configuration settings multiple times.
+
+```julia
+using Lexicon
+
+# 1. get a new adjusted `Config`
+config = Config(md_permalink = false, mathjax = true)
+
+# 2.using the adjusted `Config`
+save("docs/api/Lexicon.md", Lexicon, config);
+
+# 3.overwrite a deepcopy of `config`
+save("docs/api/Lexicon.md", Lexicon, config; md_permalink = true);
+
+# 4. This uses the same configuration as set in '1.' (md_permalink is still `false`)
+save("docs/api/Lexicon.md", Lexicon, config);
+
+```
+
+The document `save` also supplies a default 'Config'.
+
+```julia
+using Lexicon
+
+# 1. using the default supplied Config of method `save`
+save("docs/api/Lexicon.md", Lexicon);
+
+# 2. this is the same as '1.'
+config = Config()
+save("docs/api/Lexicon.md", Lexicon, config);
+
+```
+
+The next three examples are all using the same configuration to save *Lexicon*
+
+```julia
+using Lexicon
+
+# 1.
+config = Config(md_permalink = false, mathjax = true)
+save("docs/api/Lexicon.md", Lexicon, config);
+
+# 2.
+config = Config()
+save("docs/api/Lexicon.md", Lexicon, config; md_permalink = false, mathjax = true);
+
+# 3.
+save("docs/api/Lexicon.md", Lexicon; md_permalink = false, mathjax = true);
+
+```
+
+**API-Index `save` method**
+
+The *API-Index* `save` method works similar to the above *Document `save` method*
