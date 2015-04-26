@@ -7,10 +7,7 @@ const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]
 const MDSTYLETAGS = ["", "*", "**"]
 const MD_SUBHEADER_OPTIONS = [:skip, :simple, :category]
 
-"""
-TODO: Prober DocumentationMain configuration use a separate file for documentation of options or
-keep the info in save ?
-"""
+file"docs/config.md"
 type Config
     category_order         :: Vector{Symbol}
     include_internal       :: Bool
@@ -39,6 +36,15 @@ type Config
         (:md_permalink           , true)
         ])
 
+    """
+    Returns a default Config. If any args... are given these will overwrite the defaults.
+
+    ```
+    using Lexicon
+    config = Config(md_permalink = false, mathjax = true)
+
+    ```
+    """
     function Config(; args...)
         return update_config!(new(), merge(defaults, Dict(args)))
     end
