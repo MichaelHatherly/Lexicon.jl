@@ -43,20 +43,3 @@ characters or 0 to 2 `*` characters.
   To disable it the keyword argument `md_permalink = false` should be set.
 
 Any option can be user adjusted by passing keyword arguments to the `save` method.
-
-**Example:** using defaults.
-
-```julia
-using Lexicon
-save("docs/api/Lexicon.md", Lexicon);
-
-```
-
-**Example:** adjusting the initial config.
-
-```julia
-using Lexicon
-config = Config(include_internal = true, md_subheader = :skip)
-save("docs/api/Lexicon.md", Lexicon, config);
-
-```

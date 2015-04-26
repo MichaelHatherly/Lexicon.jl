@@ -10,6 +10,17 @@ save("docs/api/Lexicon.md", Lexicon);
 
 ```
 
+```julia
+using Lexicon, Docile, Docile.Interface
+index  = Index()
+update!(index, save("docs/api/Lexicon.md", Lexicon));
+update!(index, save("docs/api/Docile.md", Docile));
+update!(index, save("docs/api/Docile.Interface.md", Docile.Interface));
+# save a joined Reference-Index
+save("docs/api/api-index.md", index);
+
+```
+
 #### MkDocs
 
 Beginning with Lexicon 0.1 you can save documentation as pre-formatted markdown files which can
@@ -29,7 +40,7 @@ commands are run from the top-level folder in the package.
 ```julia
 using Lexicon
 index = save("docs/api/Lexicon.md", Lexicon);
-save("docs/api/index.md", index; md_subheader = :category);
+save("docs/api/index.md", Index([index]); md_subheader = :category);
 run(`mkdocs build`)
 
 ```
@@ -42,7 +53,16 @@ From the command line, or using `run`, push the `doc/site` directory to the
 git add .
 git commit -m "documentation changes"
 git push origin master
-git subtree push --prefix docs/build origin gh-pages
+git subtree push --prefix site origin gh-pages
+
+```
+
+One can also use the MkDocs option `gh-deploy` - consult their guides.
+```julia
+using Lexicon
+index = save("docs/api/Lexicon.md", Lexicon);
+save("docs/api/index.md", Index([index]); md_subheader = :category);
+run(`mkdocs gh-deploy`)
 
 ```
 
