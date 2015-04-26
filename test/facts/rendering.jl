@@ -1,6 +1,5 @@
 facts("Rendering.") do
 
-    sep = Base.path_separator
     output = IOBuffer()
 
     context("Query output.") do
@@ -56,6 +55,7 @@ facts("Rendering.") do
 
     if VERSION < v"0.4.0-dev+4393"
         context("Testing relpath.") do
+            sep = Base.path_separator
             filepaths = [
                 "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
                 "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",
