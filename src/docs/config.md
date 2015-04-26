@@ -1,6 +1,6 @@
 User adjustable Lexicon configuration.
 
-#### Options
+##### Options
 
 *General Options*
 
@@ -45,11 +45,11 @@ characters or 0 to 2 `*` characters.
 Any option can be user adjusted by passing keyword arguments to the `save` method.
 
 
-#### Config Usage
+##### Config Usage
 
 There are 3 ways to define user adjusted configuration settings.
 
-**Config**
+*1. Config*
 
 ```julia
 using Lexicon
@@ -62,7 +62,7 @@ config = Config(md_permalink = false, mathjax = true)
 
 ```
 
-**Document `save` method**
+*2. Document `save` method*
 
 The document `save` method accepts also a 'Config' as argument or supplies internaly a default one.
 Similar to the above 'Config usage' one can also pass otional `args...` which will overwrite a
@@ -118,6 +118,7 @@ save("docs/api/Lexicon.md", Lexicon; md_permalink = false, mathjax = true);
 
 ```
 
-**API-Index `save` method**
+
+*3. API-Index `save` method*
 
 The *API-Index* `save` method works similar to the above *Document `save` method*
