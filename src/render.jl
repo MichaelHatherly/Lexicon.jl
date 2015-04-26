@@ -151,20 +151,22 @@ function prepare_entries(idx::Dict{Symbol, Any}, ents::Entries, doc::Metadata, c
 end
 
 file"docs/save.md"
-function save(file::AbstractString, modulename::Module, config::Config = Config(); args...)
+function save(file::AbstractString, modulename::Module, config::Config; args...)
     config = update_config!(deepcopy(config), Dict(args))
     mime = MIME("text/$(strip(last(splitext(file)), '.'))")
     index_entries = save(file, mime, documentation(modulename), config)
     return index_entries
 end
+save(file::AbstractString, modulename::Module; args...) = save(file, modulename, Config(); args...)
 
 """
 Saves an *API-Index* to `file`.
 """
-function save(file::AbstractString, index::Index, config::Config = Config(); args...)
+function save(file::AbstractString, index::Index, config::Config; args...)
     config = update_config!(deepcopy(config), Dict(args))
     save(file, MIME("text/$(strip(last(splitext(file)), '.'))"), index, config)
 end
+save(file::AbstractString, index::Index; args...) = save(file, index, Config(); args...)
 
 # Convert's a string to a valid html id
 function generate_html_id(s::AbstractString)
