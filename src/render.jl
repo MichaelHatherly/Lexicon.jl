@@ -19,7 +19,7 @@ type Config
     mdstyle_objname        :: ASCIIString
     mdstyle_meta           :: ASCIIString
     mdstyle_subheader      :: ASCIIString
-    mdstyle_genindex_mod   :: ASCIIString
+    mdstyle_index_mod      :: ASCIIString
     md_subheader           :: Symbol
     md_genindex_modprefix  :: ASCIIString
     md_permalink           :: Bool
@@ -33,7 +33,7 @@ type Config
         (:mdstyle_objname        , "####"),
         (:mdstyle_meta           , "*"),
         (:mdstyle_subheader      , "##"),
-        (:mdstyle_genindex_mod   , "##"),
+        (:mdstyle_index_mod      , "##"),
         (:md_subheader           , :simple),
         (:md_genindex_modprefix  , "MODULE: "),
         (:md_permalink           , true)
@@ -53,8 +53,7 @@ function update_config!(config::Config, args::Dict)
         end
     end
 
-    for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_subheader,
-                                                                :mdstyle_genindex_mod]
+    for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_subheader, :mdstyle_index_mod]
         getfield(config, k) in vcat(MDHTAGS, MDSTYLETAGS) ||
                 error("""Invalid mdstyle : config-item `$k -> $(getfield(config, k))`.
                       Valid values: [$(join(vcat(MDHTAGS, MDSTYLETAGS), ", "))].""")

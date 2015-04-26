@@ -29,7 +29,7 @@ characters or 0 to 2 `*` characters.
 * `mdstyle_meta`           (default: `"*"`):   style for the metadata section on each
   documentation entry.
 * `mdstyle_subheader`      (default: `"##"`):  style for the documentation and *API-Index* subheader.
-* `mdstyle_genindex_mod`   (default: `"##"`):  style for the *API-Index* module header.
+* `mdstyle_index_mod`      (default: `"##"`):  style for the *API-Index* module header.
 
 * `md_subheader`           (default: `:simple`): Valid options are ":skip, :simple, :category"
 
