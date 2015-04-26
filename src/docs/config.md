@@ -38,7 +38,7 @@ characters or 0 to 2 `*` characters.
 
 * `md_index_modprefix`     (default: `"MODULE: "`): This option sets for the *API-Index Page*
   a "prefix" text before the modulename.
-  `md_genindex_module_prefix = ""` if only the modulename should be displayed.
+  `md_index_modprefix = ""` if only the modulename should be displayed.
 * `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.
   To disable it the keyword argument `md_permalink = false` should be set.
 
