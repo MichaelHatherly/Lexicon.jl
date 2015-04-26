@@ -1,6 +1,5 @@
 facts("Rendering.") do
 
-    sep = Base.path_separator
     output = IOBuffer()
 
     context("Query output.") do
@@ -38,16 +37,25 @@ facts("Rendering.") do
     end
 
     context("Saving static content.") do
+        index  = Index()
+        config = Config(include_internal = true)
         for modname in (Lexicon, Docile, Docile.Interface), ft in ("md", "html")
             dir = joinpath(tempdir(), randstring())
             f = joinpath(dir, "$(modname).$(ft)")
-            save(f, modname; mathjax = true)
+            # TODO: update / save index is not implemented for html
+            if ft == "md"
+                update!(index, save(f, modname, config; mathjax = true))
+                save(joinpath(dir, "index_$(modname).$(ft)"), index, config)
+            else
+                save(f, modname, config; mathjax = true)
+            end
             rm(dir, recursive = true)
         end
     end
 
     if VERSION < v"0.4.0-dev+4393"
         context("Testing relpath.") do
+            sep = Base.path_separator
             filepaths = [
                 "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)Lexicon.md",
                 "$(sep)home$(sep)user$(sep).julia$(sep)v0.4$(sep)Lexicon$(sep)docs$(sep)api$(sep)lib$(sep)file1.md",

@@ -1,62 +1,46 @@
 Write the documentation stored in `modulename` to the specified `file`.
-The format is guessed from the file's extension. Currently supported formats
-are `HTML` and `markdown`.
-
-#### Options
-
-*General Options*
-
-* `category_order` (default: `[:module, :function, :method, :type, :typealias, :macro, :global, :comment]`)
-  Categories  to include in the output in the defined order.
-* `include_internal` (default: `true`): To exclude documentation for non-exported objects,
-  the keyword argument `include_internal = false` should be set. This is only supported for
-  `markdown`.
-
-*HTML only options*
-
-* `mathjax` (default: `false`): If MathJax support is required then the optional keyword
-  argument `mathjax = true` can be given to the `save` method.
-  MathJax uses `\(...\)` for in-line maths and `\[...\]` or `$$...$$` for display equations.
-
-*Markdown only options*
-
-Valid values for the `mdstyle_*` options listed below are either 1 to 6 `#`
-characters or 0 to 2 `*` characters.
-
-* `mdstyle_header`   (default: `"#"`):   style for the documentation header.
-* `mdstyle_objname`  (default: `"###"`): style for each documented object.
-* `mdstyle_meta`     (default: `"*"`):   style for the metadata section on each documentation entry.
-* `mdstyle_exported` (default: `"##"`):  style for the "exported" documentation header.
-* `mdstyle_internal` (default: "##"):    style for the "internal" documentation header.
-
-Any option can be user adjusted by passing keyword arguments to the `save` method.
+The format is guessed from the file's extension. Currently supported formats are `HTML` and
+`markdown`.
 
 **Example:**
 
 ```julia
 using Lexicon
-save("Lexicon.md", Lexicon; include_internal = false, mdstyle_header = "###")
+save("docs/api/Lexicon.md", Lexicon);
+
+```
+
+```julia
+using Lexicon, Docile, Docile.Interface
+index  = Index()
+update!(index, save("docs/api/Lexicon.md", Lexicon));
+update!(index, save("docs/api/Docile.md", Docile));
+update!(index, save("docs/api/Docile.Interface.md", Docile.Interface));
+# save a joined Reference-Index
+save("docs/api/api-index.md", index);
 
 ```
 
 #### MkDocs
 
-Beginning with Lexicon 0.1 you can save documentation as pre-formatted markdown
-files which can then be post-processed using 3rd-party programs such as the
-static site generator [MkDocs](http://www.mkdocs.org).
+Beginning with Lexicon 0.1 you can save documentation as pre-formatted markdown files which can
+then be post-processed using 3rd-party programs such as the static site
+generator [MkDocs](http://www.mkdocs.org).
 
-For details on how to build documentation using MkDocs please consult their
-detailed guides and the Docile and Lexicon packages. A more customized build
-process can be found in the Sims.jl package.
+For details on how to build documentation using MkDocs please consult their detailed guides and the 
+Docile and Lexicon packages. A more customized build process can be found in the Sims.jl package.
+
+Seealso [Projects using Docile / Lexicon](https://github.com/MichaelHatherly/Docile.jl#projects-using-docile--lexicon)
 
 **Example:**
 
-The documentation for this package was created in the following manner. All
+The documentation for this package can be created in the following manner. All
 commands are run from the top-level folder in the package.
 
 ```julia
 using Lexicon
-save("docs/api/Lexicon.md", Lexicon)
+index = save("docs/api/Lexicon.md", Lexicon);
+save("docs/api/index.md", Index([index]); md_subheader = :category);
 run(`mkdocs build`)
 
 ```
@@ -69,7 +53,16 @@ From the command line, or using `run`, push the `doc/site` directory to the
 git add .
 git commit -m "documentation changes"
 git push origin master
-git subtree push --prefix docs/build origin gh-pages
+git subtree push --prefix site origin gh-pages
+
+```
+
+One can also use the MkDocs option `gh-deploy` - consult their guides.
+```julia
+using Lexicon
+index = save("docs/api/Lexicon.md", Lexicon);
+save("docs/api/index.md", Index([index]); md_subheader = :category);
+run(`mkdocs gh-deploy`)
 
 ```
 

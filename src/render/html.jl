@@ -1,9 +1,3 @@
-## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
-function writehtml(io::IO, docs::Docile.Interface.Docs{:md})
-    writemime(io, MIME("text/html"), parsed(docs))
-end
-
 ## General HTML rendering - static pages and IJulia –––––––––––––––––––––––––––––––––––––
 
 function save(file::AbstractString, mime::MIME"text/html", doc::Metadata, config::Config)
@@ -171,8 +165,14 @@ function wrap(fn::Function, io::IO, tag::AbstractString, attributes::AbstractStr
     println(io, "</", tag, ">")
 end
 
+## Docs-specific rendering ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+function writehtml(io::IO, docs::Docile.Interface.Docs{:md})
+    writemime(io, MIME("text/html"), parsed(docs))
+end
+
 ### API-Index ----------------------------------------------------------------------------
 
-function save(file::AbstractString, mime::MIME"text/html", index_entries::Vector, c::Config)
+function save(file::AbstractString, mime::MIME"text/html", index::Index, c::Config)
     throw(ArgumentError("The html format does currently not support saving of separate API-Index pages.)"))
 end

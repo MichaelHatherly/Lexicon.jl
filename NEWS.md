@@ -1,3 +1,12 @@
+### v0.1.9
+
+Contributed by [@peter1000](https://github.com/peter1000)
+
+* Add additional output filtering based on category.
+* Add optional output grouping by category.
+* Add optional API-Index pages for markdown output.
+* Add optional permalink for markdown output.
+
 ### v0.1.8
 
 * Update for new behaviour of `cp` in Julia 0.4.
