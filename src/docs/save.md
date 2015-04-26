@@ -21,7 +21,7 @@ save("docs/api/api-index.md", index);
 
 ```
 
-#### MkDocs
+##### MkDocs
 
 Beginning with Lexicon 0.1 you can save documentation as pre-formatted markdown files which can
 then be post-processed using 3rd-party programs such as the static site
