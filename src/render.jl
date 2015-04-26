@@ -21,7 +21,7 @@ type Config
     mdstyle_subheader      :: ASCIIString
     mdstyle_index_mod      :: ASCIIString
     md_subheader           :: Symbol
-    md_index_modprefix     :: UTF8String
+    md_index_modprefix     :: ByteString
     md_permalink           :: Bool
 
     const defaults = Dict{Symbol, Any}([
@@ -46,11 +46,11 @@ end
 
 function update_config!(config::Config, args::Dict)
     for (k, v) in args
-        if k in fieldnames(Config)
-            setfield!(config, k, convert(fieldtype(Config, k), v))
-        else
-            warn("Invalid setting: '$(k) = $(v)'.")
-         end
+        try
+            k in fieldnames(Config) ? setfield!(config, k, v) : warn("Invalid setting: '$(k) = $(v)'.")
+        catch err # e.g. TypeError
+            warn("Invalid setting: '$(k) = $(v)'. Error: $err")
+        end
     end
 
     for k in [:mdstyle_header, :mdstyle_objname, :mdstyle_meta, :mdstyle_subheader, :mdstyle_index_mod]
