@@ -83,17 +83,17 @@ end
 
 function save(file::AbstractString, mime::MIME"text/md", index::Index, c::Config)
     # Write the API-Index file.
-    genindexfiledir = dirname(abspath(file))
-    isfile(file) || mkpath(genindexfiledir)
+    indexfiledir = dirname(abspath(file))
+    isfile(file) || mkpath(indexfiledir)
     open(file, "w") do f
         info("writing API-Index to $(file)")
         println_mdstyle(f, c.mdstyle_header, "API-INDEX\n")
         println(f)
 
         for ent in index.entries
-            for i in 1:length(ent.sourcepaths)
-                relsourcepath = relpath(ent.sourcepaths[i], genindexfiledir)
-                println_mdstyle(f, c.mdstyle_index_mod, "$(c.md_index_modprefix)$(ent.modulenames[i])\n")
+            if !isempty(ent.sourcepath)
+                relsourcepath = relpath(ent.sourcepath, indexfiledir)
+                println_mdstyle(f, c.mdstyle_index_mod, "$(c.md_index_modprefix)$(ent.modulename)\n")
                 process_api_index(f, "Exported", ent.exported, relsourcepath, c);
                 process_api_index(f, "Internal", ent.internal, relsourcepath, c)
             end

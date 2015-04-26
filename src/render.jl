@@ -72,16 +72,15 @@ function update_config!(config::Config, args::Dict)
 end
 
 type Entries
-    sourcepaths :: Vector{UTF8String}
-    modulenames :: Vector{UTF8String}
+    sourcepath :: UTF8String
+    modulename :: UTF8String
     include_internal::Bool
     exported::Dict{Symbol, Vector{@compat(Tuple{Module, Any, AbstractEntry, AbstractString})}}
     internal::Dict{Symbol, Vector{@compat(Tuple{Module, Any, AbstractEntry, AbstractString})}}
 
-    Entries(config::Config) = new(UTF8String[], UTF8String[],
-                                    config.include_internal,
-                                    Dict([(c, []) for c in config.category_order]),
-                                    Dict([(c, []) for c in config.category_order]))
+    Entries(config::Config) = new("", "", config.include_internal,
+                                  Dict([(c, []) for c in config.category_order]),
+                                  Dict([(c, []) for c in config.category_order]))
 end
 
 function has_items(entries::Dict)
@@ -122,8 +121,8 @@ function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries,
     if !isempty(idx)
         ents = prepare_entries(idx, ents, doc, config)
         if (has_items(ents.exported) || has_items(ents.internal))
-            push!(ents.sourcepaths, abspath(filepath))
-            push!(ents.modulenames, string(modulename(doc)))
+            ents.sourcepath = abspath(filepath)
+            ents.modulename = string(modulename(doc))
             process_entries(io, mime, "Exported", ents.exported, config)
             process_entries(io, mime, "Internal", ents.internal, config)
         end
