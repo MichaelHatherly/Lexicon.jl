@@ -93,9 +93,7 @@ function save(file::AbstractString, mime::MIME"text/md", index::Index, c::Config
         for ent in index.entries
             for i in 1:length(ent.sourcepaths)
                 relsourcepath = relpath(ent.sourcepaths[i], genindexfiledir)
-                println_mdstyle(f, c.mdstyle_index_mod,
-                    "$(c.md_genindex_modprefix)$(ent.modulenames[i])\n")
-
+                println_mdstyle(f, c.mdstyle_index_mod, "$(c.md_index_modprefix)$(ent.modulenames[i])\n")
                 process_api_index(f, "Exported", ent.exported, relsourcepath, c);
                 process_api_index(f, "Internal", ent.internal, relsourcepath, c)
             end

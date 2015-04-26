@@ -38,7 +38,7 @@ characters or 0 to 2 `*` characters.
     * `md_subheader=:skip`     adds no subheaders to the documentation and *API-Index* and can be used
     for documentation which has only few entries.
 
-* `md_genindex_modprefix`  (default: `"MODULE: "`): This option sets for the *API-Index Page*
+* `md_index_modprefix`     (default: `"MODULE: "`): This option sets for the *API-Index Page*
   a "prefix" text before the modulename.
   `md_genindex_module_prefix = ""` if only the modulename should be displayed.
 * `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.

@@ -21,7 +21,7 @@ type Config
     mdstyle_subheader      :: ASCIIString
     mdstyle_index_mod      :: ASCIIString
     md_subheader           :: Symbol
-    md_genindex_modprefix  :: ASCIIString
+    md_index_modprefix     :: ByteString
     md_permalink           :: Bool
 
     const defaults = Dict{Symbol, Any}([
@@ -35,7 +35,7 @@ type Config
         (:mdstyle_subheader      , "##"),
         (:mdstyle_index_mod      , "##"),
         (:md_subheader           , :simple),
-        (:md_genindex_modprefix  , "MODULE: "),
+        (:md_index_modprefix     , "MODULE: "),
         (:md_permalink           , true)
         ])
 
