@@ -87,8 +87,6 @@ Iterator type for Metadata Entries with sorting options.
 **Constructors**
 
 ```julia
-using Lexicon, Docile, Docile.Interface
-docs = metadata(Docile);
 EachEntry(docs::Metadata; order = [:category, :name, :source])
 
 ```
@@ -134,7 +132,18 @@ type EachEntry
     kidx
 end
 
+"""
+Constructor.
 
+**Example**
+
+```julia
+using Lexicon, Docile, Docile.Interface
+docs = metadata(Docile);
+EachEntry(docs::Metadata; order = [:category, :name, :source])
+
+```
+"""
 function EachEntry(docs::Metadata; order = [:category, :name, :source])
     funmap = @compat Dict(:name     => (k,v) -> writeobj(k,v), # various vectors for sorting
                           :exported => (k,v) -> !exported(modulename(v), k),
