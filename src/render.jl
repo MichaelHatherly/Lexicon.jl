@@ -7,10 +7,7 @@ const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]
 const MDSTYLETAGS = ["", "*", "**"]
 const MD_SUBHEADER_OPTIONS = [:skip, :simple, :category]
 
-"""
-TODO: Prober DocumentationMain configuration use a separate file for documentation of options or
-keep the info in save ?
-"""
+file"docs/config.md"
 type Config
     category_order         :: Vector{Symbol}
     include_internal       :: Bool
