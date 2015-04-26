@@ -108,13 +108,13 @@ function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries,
         writemime(io, mime, readall(joinpath(rootdir, file)))
     end
     # TODO: this index should be renamed to not confuse with the `Index` type
-    index = Dict{Symbol, Any}()
+    idx = Dict{Symbol, Any}()
     for (obj, entry) in entries(doc)
-        addentry!(index, obj, entry)
+        addentry!(idx, obj, entry)
     end
 
-    if !isempty(index)
-        ents = prepare_entries(index, doc, config)
+    if !isempty(idx)
+        ents = prepare_entries(idx, ents, doc, config)
         if (has_items(ents.exported) || has_items(ents.internal))
             push!(ents.sourcepaths, abspath(filepath))
             push!(ents.modulenames, string(modulename(doc)))
@@ -125,15 +125,13 @@ function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries,
     return ents
 end
 
-# TODO: this index should be renamed to not confuse with the `Index` type
-function prepare_entries(index::Dict{Symbol, Any}, doc::Metadata, config::Config)
-    ents = Entries(config)
+function prepare_entries(idx::Dict{Symbol, Any}, ents::Entries, doc::Metadata, config::Config)
     pageanchors = Dict{Symbol, Dict{String, Int}}([])
     for k in config.category_order
-        haskey(index, k) || continue
+        haskey(idx, k) || continue
         k in pageanchors || (pageanchors[k] = Dict([]))
         basenames = pageanchors[k]
-        for (s, obj) in index[k]
+        for (s, obj) in idx[k]
             ent = entries(doc)[obj]
             if k == :comment
                 basename = "comment"
@@ -216,8 +214,8 @@ function writeobj(f::Function, entry::Entry{:macro})
     replace(string("@", metadata(entry)[:signature]), ",", ", ")
 end
 
-function addentry!{category}(index, obj, entry::Entry{category})
-    section, pair = get!(index, category, @compat(Tuple{AbstractString, Any})[]), (writeobj(obj, entry), obj)
+function addentry!{category}(idx, obj, entry::Entry{category})
+    section, pair = get!(idx, category, @compat(Tuple{AbstractString, Any})[]), (writeobj(obj, entry), obj)
     insert!(section, searchsortedlast(section, pair, by = x -> first(x)) + 1, pair)
 end
 
