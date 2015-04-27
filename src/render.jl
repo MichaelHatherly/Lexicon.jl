@@ -19,7 +19,10 @@ type Config
     mdstyle_index_mod      :: ASCIIString
     md_subheader           :: Symbol
     md_index_modprefix     :: ByteString
+    md_index_grpsection    :: Bool
+
     md_permalink           :: Bool
+    md_grp_permalink       :: Bool
 
     const defaults = Dict{Symbol, Any}([
         (:category_order         , [:module, :function, :method, :type,
@@ -33,7 +36,9 @@ type Config
         (:mdstyle_index_mod      , "##"),
         (:md_subheader           , :simple),
         (:md_index_modprefix     , "MODULE: "),
-        (:md_permalink           , true)
+        (:md_index_grpsection    , true),
+        (:md_permalink           , true),
+        (:md_grp_permalink       , false),
         ])
 
     """
@@ -72,17 +77,19 @@ function update_config!(config::Config, args::Dict)
 end
 
 type Entries
-    sourcepath :: ByteString
-    modulename :: Module
-    include_internal::Bool
-    has_items::Bool
-    exported::Dict{Symbol, Vector{@compat(Tuple{Any, AbstractEntry, AbstractString})}}
-    internal::Dict{Symbol, Vector{@compat(Tuple{Any, AbstractEntry, AbstractString})}}
+    sourcepath       :: ByteString
+    modulename       :: Module
+    include_internal :: Bool
+    has_items        :: Bool
+    exported         :: Dict{Symbol, Vector{@compat(Tuple{Any, AbstractEntry, AbstractString})}}
+    internal         :: Dict{Symbol, Vector{@compat(Tuple{Any, AbstractEntry, AbstractString})}}
+    grp_anchors      :: Vector{@compat(Tuple{AbstractString, AbstractString})}
 
     Entries(sourcepath::ByteString, modulename::Module, config::Config) =
                             new(sourcepath, modulename, config.include_internal, false,
                                             Dict([(c, []) for c in config.category_order]),
-                                            Dict([(c, []) for c in config.category_order]))
+                                            Dict([(c, []) for c in config.category_order]),
+                                            [])
 end
 
 function has_items(entries::Dict)
@@ -95,6 +102,11 @@ function push!(ents::Entries, obj, ent::AbstractEntry, anchorname::AbstractStrin
     elseif ents.include_internal
         push!(ents.internal[cat], (obj, ent, anchorname))
     end
+end
+
+# push grp_anchors to the Entries vector
+function push!(grp_anchors::Vector, grpname::AbstractString, grp_anchorname::AbstractString)
+    push!(grp_anchors, (grpname, grp_anchorname))
 end
 
 type Index
@@ -121,8 +133,8 @@ function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries, config::Con
         ents = prepare_entries(idx, ents, doc, config)
         if (has_items(ents.exported) || has_items(ents.internal))
             ents.has_items =true
-            process_entries(io, mime, "Exported", ents.exported, config)
-            process_entries(io, mime, "Internal", ents.internal, config)
+            process_entries(io, mime, ents.modulename, "Exported", ents.exported, ents.grp_anchors, config)
+            process_entries(io, mime, ents.modulename, "Internal", ents.internal, ents.grp_anchors, config)
         end
     end
     return ents

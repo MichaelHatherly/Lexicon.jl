@@ -38,9 +38,16 @@ characters or 0 to 2 `*` characters.
 
 * `md_index_modprefix`     (default: `"MODULE: "`): This option sets for the *API-Index Page*
   a "prefix" text before the modulename.
-  `md_index_modprefix = ""` if only the modulename should be displayed.
+  `md_index_modprefix = ""` if only the modulename should be displayed. This must be passed to the 
+  `Index save method`.
+* `md_index_grpsection`    (default: `true`):  `md_index_grpsection = true` will add to the
+  *API-Index Page* a Section with links to the module's group subheader sections. This must be passed
+  to the `Index save method`.
+
 * `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.
   To disable it the keyword argument `md_permalink = false` should be set.
+* `md_grp_permalink`       (default: `false`):  Adds a **¶** a permalink to each group section.
+  Subheaders "Exported" / "Internal" or subheaders per category.
 
 Any option can be user adjusted by passing keyword arguments to the `save` method.
 

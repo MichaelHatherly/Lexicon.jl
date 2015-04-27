@@ -22,15 +22,33 @@ function save(file::AbstractString, mime::MIME"text/md", doc::Metadata, config::
     return ents
 end
 
-function process_entries(io::IO, mime::MIME"text/md", grpname::AbstractString,
-                                                entries::Dict, config::Config)
+function process_entries(io::IO, mime::MIME"text/md", modulename::Module, grpname::AbstractString,
+                                                entries::Dict, grp_anchors::Vector, config::Config)
     if has_items(entries)
-        config.md_subheader == :simple && println_mdstyle(io, config.mdstyle_subheader, grpname)
-        println(io)
+        if config.md_subheader == :simple
+            println(io)
+            grp_anchorname = generate_html_id("$(string(modulename))__$(grpname)")
+            println(io, """<a id="$grp_anchorname" class="lexicon_grp_definition"></a>""")
+            println_mdstyle(io, config.mdstyle_subheader,
+                            string(grpname, config.md_grp_permalink ? " [¶](#$grp_anchorname)" : ""))
+            println(io)
+            # collect grp_anchorname
+            push!(grp_anchors, grpname, grp_anchorname)
+        end
         for k in config.category_order
             if length(entries[k]) > 0
-                config.md_subheader == :category && println_mdstyle(io, config.mdstyle_subheader,
-                                                              "$(ucfirst(string(k)))s [$grpname]\n")
+                if config.md_subheader == :category
+                    println(io)
+                    final_grpname = "$(ucfirst(string(k)))s [$grpname]"
+                    tmp_id_tag = "$(string(modulename))__$(string(k))s_$grpname"
+                    grp_anchorname = generate_html_id(tmp_id_tag)
+                    println(io, """<a id="$grp_anchorname" class="lexicon_grp_definition"></a>""")
+                    println_mdstyle(io, config.mdstyle_subheader, string(final_grpname,
+                                    config.md_grp_permalink ? " [¶](#$grp_anchorname)" : ""))
+                    println(io)
+                    # collect grp_anchorname
+                    push!(grp_anchors, final_grpname, grp_anchorname)
+                end
                 for (obj, ent, anchorname) in entries[k]
                     writemd(io, obj, ent, anchorname, config)
                 end
@@ -81,21 +99,29 @@ end
 
 ### API-Index ----------------------------------------------------------------------------
 
-function save(file::AbstractString, mime::MIME"text/md", index::Index, c::Config)
+function save(file::AbstractString, mime::MIME"text/md", index::Index, config::Config)
     # Write the API-Index file.
     indexfiledir = dirname(abspath(file))
     isfile(file) || mkpath(indexfiledir)
     open(file, "w") do f
         info("writing API-Index to $(file)")
-        println_mdstyle(f, c.mdstyle_header, "API-INDEX\n")
+        println_mdstyle(f, config.mdstyle_header, "API-INDEX\n")
         println(f)
 
         for ent in index.entries
             if ent.has_items
                 relsourcepath = relpath(ent.sourcepath, indexfiledir)
-                println_mdstyle(f, c.mdstyle_index_mod, "$(c.md_index_modprefix)$(string(ent.modulename))\n")
-                process_api_index(f, "Exported", ent.exported, relsourcepath, c);
-                process_api_index(f, "Internal", ent.internal, relsourcepath, c)
+                println_mdstyle(f, config.mdstyle_index_mod,
+                                   "$(config.md_index_modprefix)$(string(ent.modulename))\n")
+                if config.md_index_grpsection && !isempty(ent.grp_anchors)
+                    println(f, "---\n")
+                    println_mdstyle(f, config.mdstyle_subheader, "Sections\n")
+                    for (final_grpname, grp_anchorname) in ent.grp_anchors
+                        println(f, "[$(final_grpname)]($relsourcepath#$grp_anchorname)\n")
+                    end
+                end
+                process_api_index(f, "Exported", ent.exported, relsourcepath, config)
+                process_api_index(f, "Internal", ent.internal, relsourcepath, config)
             end
         end
     end
