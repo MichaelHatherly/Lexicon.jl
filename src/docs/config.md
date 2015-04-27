@@ -6,15 +6,20 @@ User adjustable Lexicon configuration.
 
 * `category_order` (default: `[:module, :function, :method, :type, :typealias, :macro, :global, :comment]`)
   Categories  to include in the output in the defined order.
+
+  *API-Index `save` ignores this:* and uses the setting each module was saved with.
 * `include_internal` (default: `true`): To exclude documentation for non-exported objects,
-  the keyword argument `include_internal = false` should be set. This is only supported for
-  `markdown`.
+  the keyword argument `include_internal = false` should be set. This is only supported for `markdown`.
+
+  *API-Index `save` ignores this:* and uses the setting each module was saved with.
 
 *HTML only options*
 
 * `mathjax` (default: `false`): If MathJax support is required then the optional keyword
   argument `mathjax = true` can be given to the `save` method.
   MathJax uses `\(...\)` for in-line maths and `\[...\]` or `$$...$$` for display equations.
+
+  *API-Index `save` ignores this.* NOTE: The html format does not yet support saving of separate Index pages.
 
 *Markdown only options*
 
@@ -24,11 +29,20 @@ characters or 0 to 2 `*` characters.
 * `mdstyle_header`         (default: `"#"`):   style for the documentation header and *API-Index*
   modules header.
 * `mdstyle_objname`        (default: `"####"`): style for each documented object.
-* `mdstyle_meta`           (default: `"*"`):   style for the metadata section on each
-  documentation entry.
+
+  *API-Index `save` ignores this.*
+* `mdstyle_meta`           (default: `"*"`):   style for the metadata section on each documentation entry.
+
+  *API-Index `save` ignores this.*
 * `mdstyle_subheader`      (default: `"##"`):  style for the documentation and *API-Index* subheader.
 * `mdstyle_index_mod`      (default: `"##"`):  style for the *API-Index* module header.
 
+  *Document `save` ignores this.*
+
+* `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.
+  To disable it the keyword argument `md_permalink = false` should be set.
+* `md_grp_permalink`       (default: `true`):  Adds a **¶** a permalink to documentation and
+  *API-Index* subheaders
 * `md_subheader`           (default: `:simple`): Valid options are ":skip, :simple, :category"
 
     * `md_subheader=:simple`   adds documentation and *API-Index* subheaders "Exported" / "Internal".
@@ -38,18 +52,18 @@ characters or 0 to 2 `*` characters.
     * `md_subheader=:skip`     adds no subheaders to the documentation and *API-Index* and can be used
     for documentation which has only few entries.
 
+  *API-Index `save` ignores this:* and uses the setting each module was saved with.
 * `md_index_modprefix`     (default: `"MODULE: "`): This option sets for the *API-Index Page*
   a "prefix" text before the modulename.
-  `md_index_modprefix = ""` if only the modulename should be displayed. This must be passed to the
-  `Index save method`.
-* `md_index_grpsection`    (default: `true`):  `md_index_grpsection = true` will add to the
-  *API-Index Page* a Section with links to the module's group subheader sections. This must be passed
-  to the `Index save method`.
+  `md_index_modprefix = ""` if only the modulename should be displayed.
 
-* `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.
-  To disable it the keyword argument `md_permalink = false` should be set.
-* `md_grp_permalink`       (default: `false`):  Adds a **¶** a permalink to each group section.
-  Subheaders "Exported" / "Internal" or subheaders per category.
+  *Document `save` ignores this.*
+
+* `md_index_grpsection`    (default: `true`):  `md_index_grpsection = true` will add to the
+  *API-Index Page* a Section with links to the module's group subheader sections.
+
+  *Document `save` ignores this.*
+
 
 Any option can be user adjusted by passing keyword arguments to the `save` method.
 
@@ -138,11 +152,11 @@ using Lexicon
 index = Index([save("docs/api/Lexicon.md", Lexicon)]);
 
 # 1.
-config = Config(md_subheader = :category)
+config = Config(md_index_grpsection = false)
 save("docs/api/index.md", index, config);
 
-# 2. using the default supplied Config
-save("docs/api/index.md", index; md_subheader = :category);
+# 2. using the default supplied Config and overwrite a deepcopy
+save("docs/api/index.md", index; md_index_grpsection = false);
 
 # 3. using all defaults
 save("docs/api/index.md", index);
