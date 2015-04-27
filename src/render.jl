@@ -5,7 +5,7 @@ parsedocs(ds::Docile.Interface.Docs{:md}) = Markdown.parse(data(ds))
 ## Common -------------------------------------------------------------------------------
 const MDHTAGS = ["#", "##", "###", "####", "#####", "######"]
 const MDSTYLETAGS = ["", "*", "**"]
-const MD_SUBHEADER_OPTIONS = [:skip, :simple, :category]
+const MD_SUBHEADER_OPTIONS = [:skip, :simple, :category, :split_category]
 
 file"docs/config.md"
 type Config
@@ -20,7 +20,6 @@ type Config
     md_subheader           :: Symbol
     md_index_modprefix     :: ByteString
     md_index_grpsection    :: Bool
-
     md_permalink           :: Bool
     md_grp_permalink       :: Bool
 

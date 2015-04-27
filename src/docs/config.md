@@ -33,12 +33,14 @@ characters or 0 to 2 `*` characters.
 
     * `md_subheader=:simple`   adds documentation and *API-Index* subheaders "Exported" / "Internal".
     * `md_subheader=:category` adds documentation and *API-Index* subheaders per category.
+    * `md_subheader=:split_category` adds documentation and *API-Index* subheaders per category.
+      Each categort is split into: `category ["Exported"]` and `category ["Internal"]
     * `md_subheader=:skip`     adds no subheaders to the documentation and *API-Index* and can be used
     for documentation which has only few entries.
 
 * `md_index_modprefix`     (default: `"MODULE: "`): This option sets for the *API-Index Page*
   a "prefix" text before the modulename.
-  `md_index_modprefix = ""` if only the modulename should be displayed. This must be passed to the 
+  `md_index_modprefix = ""` if only the modulename should be displayed. This must be passed to the
   `Index save method`.
 * `md_index_grpsection`    (default: `true`):  `md_index_grpsection = true` will add to the
   *API-Index Page* a Section with links to the module's group subheader sections. This must be passed
