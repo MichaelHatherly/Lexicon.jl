@@ -11,13 +11,13 @@ function println_mdstyle(io::IO, mdstyle::ASCIIString, item, noneH_addnewline = 
 end
 
 function save(file::AbstractString, mime::MIME"text/md", doc::Metadata, config::Config)
-    ents = Entries(config)
+    ents = Entries(abspath(file), modulename(doc), config)
     # Write the main file.
     isfile(file) || mkpath(dirname(file))
     open(file, "w") do f
         info("writing documentation to $(file)")
         headermd(f, doc, config)
-        ents = mainsetup(f, mime, doc, ents, file, config)
+        ents = mainsetup(f, mime, doc, ents, config)
     end
     return ents
 end
@@ -31,8 +31,8 @@ function process_entries(io::IO, mime::MIME"text/md", grpname::AbstractString,
             if length(entries[k]) > 0
                 config.md_subheader == :category && println_mdstyle(io, config.mdstyle_subheader,
                                                               "$(ucfirst(string(k)))s [$grpname]\n")
-                for (modname, obj, ent, anchorname) in entries[k]
-                    writemd(io, modname, obj, ent, anchorname, config)
+                for (obj, ent, anchorname) in entries[k]
+                    writemd(io, obj, ent, anchorname, config)
                 end
             end
         end
@@ -43,7 +43,7 @@ function writemime(io::IO, mime::MIME"text/md", manual::AbstractString)
     println(io, manual)
 end
 
-function writemd{category}(io::IO, modname, obj, ent::Entry{category},
+function writemd{category}(io::IO, obj, ent::Entry{category},
                            anchorname::AbstractString, config::Config)
     objname = writeobj(obj, ent)
     println(io, "---\n")
@@ -91,9 +91,9 @@ function save(file::AbstractString, mime::MIME"text/md", index::Index, c::Config
         println(f)
 
         for ent in index.entries
-            if !isempty(ent.sourcepath)
+            if ent.has_items
                 relsourcepath = relpath(ent.sourcepath, indexfiledir)
-                println_mdstyle(f, c.mdstyle_index_mod, "$(c.md_index_modprefix)$(ent.modulename)\n")
+                println_mdstyle(f, c.mdstyle_index_mod, "$(c.md_index_modprefix)$(string(ent.modulename))\n")
                 process_api_index(f, "Exported", ent.exported, relsourcepath, c);
                 process_api_index(f, "Internal", ent.internal, relsourcepath, c)
             end
@@ -112,7 +112,7 @@ function process_api_index(io::IO, grpname::AbstractString, entries::Dict,
                     println(io, "---\n")
                     println_mdstyle(io, config.mdstyle_subheader, "$(ucfirst(string(k)))s [$grpname]\n")
                 end
-                for (modname, obj, ent, anchorname) in entries[k]
+                for (obj, ent, anchorname) in entries[k]
                     description = split(data(docs(ent)), '\n')[1]
                     println(io, "[$(writeobj(obj, ent))]($relsourcepath#$anchorname)  $description\n")
                 end

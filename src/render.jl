@@ -72,27 +72,28 @@ function update_config!(config::Config, args::Dict)
 end
 
 type Entries
-    sourcepath :: UTF8String
-    modulename :: UTF8String
+    sourcepath :: ByteString
+    modulename :: Module
     include_internal::Bool
-    exported::Dict{Symbol, Vector{@compat(Tuple{Module, Any, AbstractEntry, AbstractString})}}
-    internal::Dict{Symbol, Vector{@compat(Tuple{Module, Any, AbstractEntry, AbstractString})}}
+    has_items::Bool
+    exported::Dict{Symbol, Vector{@compat(Tuple{Any, AbstractEntry, AbstractString})}}
+    internal::Dict{Symbol, Vector{@compat(Tuple{Any, AbstractEntry, AbstractString})}}
 
-    Entries(config::Config) = new("", "", config.include_internal,
-                                  Dict([(c, []) for c in config.category_order]),
-                                  Dict([(c, []) for c in config.category_order]))
+    Entries(sourcepath::ByteString, modulename::Module, config::Config) =
+                            new(sourcepath, modulename, config.include_internal, false,
+                                            Dict([(c, []) for c in config.category_order]),
+                                            Dict([(c, []) for c in config.category_order]))
 end
 
 function has_items(entries::Dict)
     return sum([length(x) for x in values(entries)]) > 0
 end
 
-function push!(ents::Entries, modulename::Module, obj, ent::AbstractEntry,
-                                anchorname::AbstractString,  cat::Symbol)
-    if isexported(modulename, obj)
-        push!(ents.exported[cat], (modulename, obj, ent, anchorname))
+function push!(ents::Entries, obj, ent::AbstractEntry, anchorname::AbstractString, cat::Symbol)
+    if isexported(ents.modulename, obj)
+        push!(ents.exported[cat], (obj, ent, anchorname))
     elseif ents.include_internal
-        push!(ents.internal[cat], (modulename, obj, ent, anchorname))
+        push!(ents.internal[cat], (obj, ent, anchorname))
     end
 end
 
@@ -105,14 +106,12 @@ function update!(index::Index, ents::Entries)
     push!(index.entries, ents)
 end
 
-function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries,
-                              filepath::AbstractString, config::Config)
+function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries, config::Config)
     # Root may be a file or directory. Get the dir.
     rootdir = isfile(root(doc)) ? dirname(root(doc)) : root(doc)
     for file in manual(doc)
         writemime(io, mime, readall(joinpath(rootdir, file)))
     end
-    # TODO: this index should be renamed to not confuse with the `Index` type
     idx = Dict{Symbol, Any}()
     for (obj, entry) in entries(doc)
         addentry!(idx, obj, entry)
@@ -121,8 +120,7 @@ function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries,
     if !isempty(idx)
         ents = prepare_entries(idx, ents, doc, config)
         if (has_items(ents.exported) || has_items(ents.internal))
-            ents.sourcepath = abspath(filepath)
-            ents.modulename = string(modulename(doc))
+            ents.has_items =true
             process_entries(io, mime, "Exported", ents.exported, config)
             process_entries(io, mime, "Internal", ents.internal, config)
         end
@@ -148,8 +146,7 @@ function prepare_entries(idx::Dict{Symbol, Any}, ents::Entries, doc::Metadata, c
                     anchornum = basenames[basename] += 1 :
                     anchornum = basenames[basename] = 1
             string(k, "_", generate_html_id(s))
-            push!(ents, modulename(doc), obj, entries(doc)[obj],
-                    "$(string(k))__$(basename).$(anchornum)", k)
+            push!(ents, obj, entries(doc)[obj], "$(string(k))__$(basename).$(anchornum)", k)
         end
     end
     return ents
