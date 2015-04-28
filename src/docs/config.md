@@ -42,7 +42,7 @@ characters or 0 to 2 `*` characters.
 * `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.
   To disable it the keyword argument `md_permalink = false` should be set.
 * `md_grp_permalink`       (default: `true`):  Adds a **¶** a permalink to documentation and
-  *API-Index* subheaders
+  *API-Index* subheaders.
 * `md_subheader`           (default: `:simple`): Valid options are ":skip, :simple, :category"
 
     * `md_subheader=:simple`   adds documentation and *API-Index* subheaders "Exported" / "Internal".
