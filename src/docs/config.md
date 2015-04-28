@@ -4,18 +4,18 @@ User adjustable Lexicon configuration.
 
 *General Options*
 
-* `category_order` (default: `[:module, :function, :method, :type, :typealias, :macro, :global, :comment]`)
+* `category_order`      (default: `[:module, :function, :method, :type, :typealias, :macro, :global, :comment]`)
   Categories  to include in the output in the defined order.
 
   *API-Index `save` ignores this:* and uses the setting each module was saved with.
-* `include_internal` (default: `true`): To exclude documentation for non-exported objects,
+* `include_internal`    (default: `true`): To exclude documentation for non-exported objects,
   the keyword argument `include_internal = false` should be set. This is only supported for `markdown`.
 
   *API-Index `save` ignores this:* and uses the setting each module was saved with.
 
 *HTML only options*
 
-* `mathjax` (default: `false`): If MathJax support is required then the optional keyword
+* `mathjax`             (default: `false`): If MathJax support is required then the optional keyword
   argument `mathjax = true` can be given to the `save` method.
   MathJax uses `\(...\)` for in-line maths and `\[...\]` or `$$...$$` for display equations.
 
@@ -26,24 +26,25 @@ User adjustable Lexicon configuration.
 Valid values for the `mdstyle_*` options listed below are either 1 to 6 `#`
 characters or 0 to 2 `*` characters.
 
-* `mdstyle_header`         (default: `"#"`):   style for the documentation header and *API-Index*
+* `mdstyle_header`              (default: `"#"`):   style for the documentation header and *API-Index*
   modules header.
-* `mdstyle_objname`        (default: `"####"`): style for each documented object.
+* `mdstyle_objname`             (default: `"####"`): style for each documented object.
 
   *API-Index `save` ignores this.*
-* `mdstyle_meta`           (default: `"*"`):   style for the metadata section on each documentation entry.
+* `mdstyle_meta`                (default: `"*"`):   style for the metadata section on each documentation entry.
 
   *API-Index `save` ignores this.*
-* `mdstyle_subheader`      (default: `"##"`):  style for the documentation and *API-Index* subheader.
-* `mdstyle_index_mod`      (default: `"##"`):  style for the *API-Index* module header.
+* `mdstyle_subheader`           (default: `"##"`):  style for the documentation and *API-Index* subheader.
+* `mdstyle_index_mod`           (default: `"##"`):  style for the *API-Index* module header.
 
   *Document `save` ignores this.*
 
-* `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.
+* `md_permalink`                (default: `true`):  Adds a **¶** a permalink to each definition.
   To disable it the keyword argument `md_permalink = false` should be set.
-* `md_grp_permalink`       (default: `true`):  Adds a **¶** a permalink to documentation and
+* `md_grp_permalink`            (default: `true`):  Adds a **¶** a permalink to documentation and
   *API-Index* subheaders.
-* `md_subheader`           (default: `:simple`): Valid options are ":skip, :simple, :category"
+* `md_permalink_char`           (default: `¶`):  Can be used to set a different permalink char.
+* `md_subheader`                (default: `:simple`): Valid options are ":skip, :simple, :category"
 
     * `md_subheader=:simple`   adds documentation and *API-Index* subheaders "Exported" / "Internal".
     * `md_subheader=:category` adds documentation and *API-Index* subheaders per category.
@@ -53,13 +54,28 @@ characters or 0 to 2 `*` characters.
     for documentation which has only few entries.
 
   *API-Index `save` ignores this:* and uses the setting each module was saved with.
-* `md_index_modprefix`     (default: `"MODULE: "`): This option sets for the *API-Index Page*
+
+* `md_split_category_prefixed`  (default: `:false`): If `md_subheader=:split_category` this will set:
+
+  If `md_split_category_prefixed=true`: a prefix to the Section Categories: e.g
+
+  * Exported Methods
+  * Internal Methods
+
+  If `md_split_category_prefixed=false`: a postfix to the Section Categories is set: e.g
+
+  * Methods \[Exported\]
+  * Methods \[Internal\]
+
+  *API-Index `save` ignores this:* and uses the setting each module was saved with.
+
+* `md_index_modprefix`          (default: `"MODULE: "`): This option sets for the *API-Index Page*
   a "prefix" text before the modulename.
   `md_index_modprefix = ""` if only the modulename should be displayed.
 
   *Document `save` ignores this.*
 
-* `md_index_grpsection`    (default: `true`):  `md_index_grpsection = true` will add to the
+* `md_index_grpsection`         (default: `true`):  `md_index_grpsection = true` will add to the
   *API-Index Page* a Section with links to the module's group subheader sections.
 
   *Document `save` ignores this.*
