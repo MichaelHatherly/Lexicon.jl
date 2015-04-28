@@ -73,12 +73,12 @@ end
 function writehtml(io::IO, ents::EntriesHtml)
     wrap(io, "div", "class='entries'") do
         for (modname, obj, ent) in ents.entries
-            writehtml(io, modname, obj, ent)
+            writehtml(io, obj, ent)
         end
     end
 end
 
-function writehtml{category}(io::IO, modname, obj, ent::Entry{category})
+function writehtml{category}(io::IO, obj, ent::Entry{category})
     wrap(io, "div", "class='entry'") do
         objname = writeobj(obj, ent)
         idname = "$(category)_" * generate_html_id(objname)
