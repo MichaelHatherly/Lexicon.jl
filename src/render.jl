@@ -10,6 +10,7 @@ const MD_SUBHEADER_OPTIONS = [:skip, :simple, :category]
 file"docs/config.md"
 type Config
     category_order         :: Vector{Symbol}
+    metadata_order         :: Vector{Symbol}
     include_internal       :: Bool
     mathjax                :: Bool
     mdstyle_header         :: ASCIIString
@@ -24,6 +25,7 @@ type Config
     const defaults = Dict{Symbol, Any}([
         (:category_order         , [:module, :function, :method, :type,
                                     :typealias, :macro, :global, :comment]),
+        (:metadata_order         , [:signature, :source]),
         (:include_internal       , true),
         (:mathjax                , false),
         (:mdstyle_header         , "#"),
