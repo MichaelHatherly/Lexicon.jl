@@ -52,11 +52,13 @@ function writemd{category}(io::IO, modname, obj, ent::Entry{category},
                     string(objname, config.md_permalink ? " [¶](#$anchorname)" : ""))
     writemd(io, docs(ent))
     println(io)
-    for m in config.metadata_order
-        if haskey(ent.data, m)
-            println_mdstyle(io, config.mdstyle_meta, "$m:", false)
-            writemd(io, Meta{m}(ent.data[m]))
-            println(io)
+    if has_output_metadata(ent, config)
+        for m in config.metadata_order
+            if haskey(ent.data, m)
+                println_mdstyle(io, config.mdstyle_meta, "$m:", false)
+                writemd(io, Meta{m}(ent.data[m]))
+                println(io)
+            end
         end
     end
 end

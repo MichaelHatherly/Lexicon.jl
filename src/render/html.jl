@@ -88,15 +88,17 @@ function writehtml{category}(io::IO, modname, obj, ent::Entry{category}, config:
         end
         wrap(io, "div", "class='entry-body'") do
             writehtml(io, docs(ent))
-            wrap(io, "div", "class='entry-meta'") do
-                println(io, "<strong>Details:</strong>")
-                wrap(io, "table", "class='meta-table'") do
-                    for m in config.metadata_order
-                        if haskey(ent.data, m)
-                            wrap(io, "tr") do
-                                print(io, "<td><strong>", m, ":</strong></td>")
-                                wrap(io, "td") do
-                                    writehtml(io, Meta{m}(ent.data[m]))
+            if has_output_metadata(ent, config)
+                wrap(io, "div", "class='entry-meta'") do
+                    println(io, "<strong>Details:</strong>")
+                    wrap(io, "table", "class='meta-table'") do
+                        for m in config.metadata_order
+                            if haskey(ent.data, m)
+                                wrap(io, "tr") do
+                                    print(io, "<td><strong>", m, ":</strong></td>")
+                                    wrap(io, "td") do
+                                        writehtml(io, Meta{m}(ent.data[m]))
+                                    end
                                 end
                             end
                         end

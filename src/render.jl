@@ -176,6 +176,18 @@ function save(file::AbstractString, index::Index, config::Config; args...)
 end
 save(file::AbstractString, index::Index; args...) = save(file, index, Config(); args...)
 
+# returns true if the Entry has metadata which should be included in the output
+function has_output_metadata(entry::Entry, config::Config)
+    output_metadata = false
+    for m in keys(metadata(entry))
+        if  m in config.metadata_order
+            output_metadata = true
+            break
+        end
+    end
+    return output_metadata
+end
+
 # Convert's a string to a valid html id
 function generate_html_id(s::AbstractString)
     # http://www.w3.org/TR/html4/types.html#type-id
