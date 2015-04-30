@@ -25,7 +25,7 @@ type Config
     const defaults = Dict{Symbol, Any}([
         (:category_order         , [:module, :function, :method, :type,
                                     :typealias, :macro, :global, :comment]),
-        (:metadata_order         , [:signature, :source]),
+        (:metadata_order         , [:source]),
         (:include_internal       , true),
         (:mathjax                , false),
         (:mdstyle_header         , "#"),
