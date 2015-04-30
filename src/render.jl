@@ -10,6 +10,7 @@ const MD_SUBHEADER_OPTIONS = [:skip, :simple, :category]
 file"docs/config.md"
 type Config
     category_order         :: Vector{Symbol}
+    metadata_order         :: Vector{Symbol}
     include_internal       :: Bool
     mathjax                :: Bool
     mdstyle_header         :: ASCIIString
@@ -24,6 +25,7 @@ type Config
     const defaults = Dict{Symbol, Any}([
         (:category_order         , [:module, :function, :method, :type,
                                     :typealias, :macro, :global, :comment]),
+        (:metadata_order         , [:source]),
         (:include_internal       , true),
         (:mathjax                , false),
         (:mdstyle_header         , "#"),
@@ -173,6 +175,18 @@ function save(file::AbstractString, index::Index, config::Config; args...)
     save(file, MIME("text/$(strip(last(splitext(file)), '.'))"), index, config)
 end
 save(file::AbstractString, index::Index; args...) = save(file, index, Config(); args...)
+
+# returns true if the Entry has metadata which should be included in the output
+function has_output_metadata(entry::Entry, config::Config)
+    output_metadata = false
+    for m in keys(metadata(entry))
+        if  m in config.metadata_order
+            output_metadata = true
+            break
+        end
+    end
+    return output_metadata
+end
 
 # Convert's a string to a valid html id
 function generate_html_id(s::AbstractString)

@@ -65,20 +65,20 @@ function writehtml(io::IO, doc::Metadata, ents::EntriesHtml, config::Config)
                 end
             end
         end
-        writehtml(io,ents)
+        writehtml(io,ents, config)
     end
     return ents
 end
 
-function writehtml(io::IO, ents::EntriesHtml)
+function writehtml(io::IO, ents::EntriesHtml, config::Config)
     wrap(io, "div", "class='entries'") do
         for (modname, obj, ent) in ents.entries
-            writehtml(io, modname, obj, ent)
+            writehtml(io, modname, obj, ent, config)
         end
     end
 end
 
-function writehtml{category}(io::IO, modname, obj, ent::Entry{category})
+function writehtml{category}(io::IO, modname, obj, ent::Entry{category}, config::Config)
     wrap(io, "div", "class='entry'") do
         objname = writeobj(obj, ent)
         idname = "$(category)_" * generate_html_id(objname)
@@ -88,14 +88,18 @@ function writehtml{category}(io::IO, modname, obj, ent::Entry{category})
         end
         wrap(io, "div", "class='entry-body'") do
             writehtml(io, docs(ent))
-            wrap(io, "div", "class='entry-meta'") do
-                println(io, "<strong>Details:</strong>")
-                wrap(io, "table", "class='meta-table'") do
-                    for k in sort(collect(keys(ent.data)))
-                        wrap(io, "tr") do
-                            print(io, "<td><strong>", k, ":</strong></td>")
-                            wrap(io, "td") do
-                                writehtml(io, Meta{k}(ent.data[k]))
+            if has_output_metadata(ent, config)
+                wrap(io, "div", "class='entry-meta'") do
+                    println(io, "<strong>Details:</strong>")
+                    wrap(io, "table", "class='meta-table'") do
+                        for m in config.metadata_order
+                            if haskey(ent.data, m)
+                                wrap(io, "tr") do
+                                    print(io, "<td><strong>", m, ":</strong></td>")
+                                    wrap(io, "td") do
+                                        writehtml(io, Meta{m}(ent.data[m]))
+                                    end
+                                end
                             end
                         end
                     end

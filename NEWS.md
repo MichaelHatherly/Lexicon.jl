@@ -6,6 +6,7 @@ Contributed by [@peter1000](https://github.com/peter1000)
 * Add optional output grouping by category.
 * Add optional API-Index pages for markdown output.
 * Add optional permalink for markdown output.
+* Add additional output filtering of metadata for markdown and html.
 
 ### v0.1.8
 

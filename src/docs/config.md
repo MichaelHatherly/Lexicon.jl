@@ -9,6 +9,9 @@ User adjustable Lexicon configuration.
 * `include_internal` (default: `true`): To exclude documentation for non-exported objects,
   the keyword argument `include_internal = false` should be set. This is only supported for
   `markdown`.
+* `metadata_order`      (default: `[:source]`)
+  Metadata to include in the output in the defined order. To not output any metadate
+  `metadata_order = Symbol[]` should be set.
 
 *HTML only options*
 

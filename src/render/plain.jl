@@ -75,24 +75,29 @@ function print_signature(io::IO, object, entry)
     println(io, colorize(:default, writeobj(object, entry)))
 end
 
-function writemime(io::IO, mime::MIME"text/plain", entry::Entry)
+function writemime(io::IO, mime::MIME"text/plain", entry::Entry, config::Config = Config())
     # Parse docstring into AST and print it out.
     writemime(io, mime, docs(entry))
 
     # Print metadata if any is available
-    isempty(metadata(entry)) || println(io, colorize(:green, " Details:\n"))
-    for (k, v) in metadata(entry)
-        if isa(v, Vector)
-            println(io, "\t", k, ":")
-            for line in v
-                if isa(line, NTuple)
-                    println(io, "\t\t", colorize(:cyan, string(line[1])), ": ", line[2])
+    if has_output_metadata(entry, config)
+        println(io, colorize(:green, " Details:\n"))
+        for m in config.metadata_order
+            if haskey(entry.data, m)
+                v = entry.data[m]
+                if isa(v, Vector)
+                    println(io, "\t", m, ":")
+                    for line in v
+                        if isa(line, NTuple)
+                            println(io, "\t\t", colorize(:cyan, string(line[1])), ": ", line[2])
+                        else
+                            println(io, "\t\t", string(line))
+                        end
+                    end
                 else
-                    println(io, "\t\t", string(line))
+                    println(io, "\t", m, ": ", v)
                 end
             end
-        else
-            println(io, "\t", k, ": ", v)
         end
     end
 end
