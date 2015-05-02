@@ -262,6 +262,11 @@ function url(m::Meta{:source})
     end
 end
 
+## Convert
+Base.convert(::Type{UTF8String}, s::Symbol) = utf8(string(s))
+Base.convert(::Type{UTF8String}, expr::Expr) = utf8(string(expr))
+
+
 ## Format-specific rendering ------------------------------------------------------------
 
 include("render/plain.jl")
