@@ -93,7 +93,7 @@ Code blocks may be skipped by adding an extra newline at the end of the block.
 
 **Example:**
 
-```julia skip
+```julia_skip
 doctest(Lexicon)
 ```
 """

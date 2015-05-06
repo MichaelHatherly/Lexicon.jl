@@ -4,12 +4,12 @@ The format is guessed from the file's extension. Currently supported formats are
 
 **Example:**
 
-```julia skip
+```julia_skip
 using Lexicon
 save("docs/api/Lexicon.md", Lexicon);
 ```
 
-```julia skip
+```julia_skip
 using Lexicon, Docile, Docile.Interface
 index  = Index()
 update!(index, save("docs/api/Lexicon.md", Lexicon));
@@ -35,7 +35,7 @@ Seealso [Projects using Docile / Lexicon](https://github.com/MichaelHatherly/Doc
 The documentation for this package can be created in the following manner. All
 commands are run from the top-level folder in the package.
 
-```julia skip
+```julia_skip
 using Lexicon
 index = save("docs/api/Lexicon.md", Lexicon);
 save("docs/api/index.md", Index([index]); md_subheader = :category);
@@ -55,7 +55,7 @@ git subtree push --prefix site origin gh-pages
 
 One can also use the MkDocs option `gh-deploy` - consult their guides.
 
-```julia skip
+```julia_skip
 using Lexicon
 index = save("docs/api/Lexicon.md", Lexicon);
 save("docs/api/index.md", Index([index]); md_subheader = :category);

@@ -134,7 +134,7 @@ Constructor.
 
 **Example**
 
-```julia skip
+```julia_skip
 using Lexicon, Docile, Docile.Interface
 docs = metadata(Docile);
 EachEntry(docs::Metadata; order = [:category, :name, :source])

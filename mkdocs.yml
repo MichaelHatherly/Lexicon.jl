@@ -2,7 +2,7 @@ site_name:           Lexicon.jl
 repo_url:            https://github.com/MichaelHatherly/Lexicon.jl
 site_description:    Julia package documentation generator.
 site_author:         Michael Hatherly
-theme:               readthedocs
+theme:               flatly
 markdown_extensions: [tables, fenced_code]
 pages:
     - ['index.md', 'Introduction']

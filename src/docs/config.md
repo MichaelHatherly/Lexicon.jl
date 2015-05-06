@@ -54,7 +54,7 @@ There are 3 ways to define user adjusted configuration settings.
 
 **Config**
 
-```julia skip
+```julia_skip
 using Lexicon
 
 # get default `Config`
@@ -71,7 +71,7 @@ Similar to the above 'Config usage' one can also pass otional `args...` which wi
 deepcopy of config but not change config itself.
 This allows using the same base configuration settings multiple times.
 
-```julia skip
+```julia_skip
 using Lexicon
 
 # 1. get a new adjusted `Config`
@@ -89,7 +89,7 @@ save("docs/api/Lexicon.md", Lexicon, config);
 
 The document `save` also supplies a default 'Config'.
 
-```julia skip
+```julia_skip
 using Lexicon
 
 # 1. using the default supplied Config of method `save`
@@ -102,7 +102,7 @@ save("docs/api/Lexicon.md", Lexicon, config);
 
 The next three examples are all using the same configuration to save *Lexicon*
 
-```julia skip
+```julia_skip
 using Lexicon
 
 # 1.
