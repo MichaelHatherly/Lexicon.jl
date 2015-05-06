@@ -13,14 +13,13 @@ Code blocks may be skipped by adding an extra newline at the end of the block.
 
 **Example:**
 
-```julia
+```julia skip
 doctest(Lexicon)
-
 ```
 
 
 *source:*
-[Lexicon/src/doctest.jl:101](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/doctest.jl#L101)
+[Lexicon/src/doctest.jl:100](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/doctest.jl#L100)
 
 ---
 
@@ -32,7 +31,7 @@ found.
 
 
 *source:*
-[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L150)
+[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L150)
 
 ---
 
@@ -44,7 +43,7 @@ found.
 
 
 *source:*
-[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L150)
+[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L150)
 
 ---
 
@@ -54,7 +53,7 @@ Saves an *API-Index* to `file`.
 
 
 *source:*
-[Lexicon/src/render.jl:171](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/render.jl#L171)
+[Lexicon/src/render.jl:173](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L173)
 
 ---
 
@@ -66,13 +65,12 @@ The format is guessed from the file's extension. Currently supported formats are
 
 **Example:**
 
-```julia
+```julia skip
 using Lexicon
 save("docs/api/Lexicon.md", Lexicon);
-
 ```
 
-```julia
+```julia skip
 using Lexicon, Docile, Docile.Interface
 index  = Index()
 update!(index, save("docs/api/Lexicon.md", Lexicon));
@@ -80,7 +78,6 @@ update!(index, save("docs/api/Docile.md", Docile));
 update!(index, save("docs/api/Docile.Interface.md", Docile.Interface));
 # save a joined Reference-Index
 save("docs/api/api-index.md", index);
-
 ```
 
 #### MkDocs
@@ -89,7 +86,7 @@ Beginning with Lexicon 0.1 you can save documentation as pre-formatted markdown 
 then be post-processed using 3rd-party programs such as the static site
 generator [MkDocs](http://www.mkdocs.org).
 
-For details on how to build documentation using MkDocs please consult their detailed guides and the 
+For details on how to build documentation using MkDocs please consult their detailed guides and the
 Docile and Lexicon packages. A more customized build process can be found in the Sims.jl package.
 
 Seealso [Projects using Docile / Lexicon](https://github.com/MichaelHatherly/Docile.jl#projects-using-docile--lexicon)
@@ -99,34 +96,31 @@ Seealso [Projects using Docile / Lexicon](https://github.com/MichaelHatherly/Doc
 The documentation for this package can be created in the following manner. All
 commands are run from the top-level folder in the package.
 
-```julia
+```julia skip
 using Lexicon
 index = save("docs/api/Lexicon.md", Lexicon);
 save("docs/api/index.md", Index([index]); md_subheader = :category);
 run(`mkdocs build`)
-
 ```
 
 From the command line, or using `run`, push the `doc/site` directory to the
 `gh-pages` branch on the package repository after pushing the changes to the
 `master` branch.
 
-```
+```bash
 git add .
 git commit -m "documentation changes"
 git push origin master
 git subtree push --prefix site origin gh-pages
-
 ```
 
 One can also use the MkDocs option `gh-deploy` - consult their guides.
 
-```julia
+```julia skip
 using Lexicon
 index = save("docs/api/Lexicon.md", Lexicon);
 save("docs/api/index.md", Index([index]); md_subheader = :category);
 run(`mkdocs gh-deploy --clean`)
-
 ```
 
 If this is the first push to the branch then the site may take some time to
@@ -138,7 +132,7 @@ The documentation will be available from
 
 
 *source:*
-[Lexicon/src/render.jl:160](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/render.jl#L160)
+[Lexicon/src/render.jl:162](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L162)
 
 ---
 
@@ -155,6 +149,9 @@ User adjustable Lexicon configuration.
 * `include_internal` (default: `true`): To exclude documentation for non-exported objects,
   the keyword argument `include_internal = false` should be set. This is only supported for
   `markdown`.
+* `metadata_order`      (default: `[:source]`)
+  Metadata to include in the output in the defined order. To not output any metadate
+  `metadata_order = Symbol[]` should be set.
 
 *HTML only options*
 
@@ -197,7 +194,7 @@ There are 3 ways to define user adjusted configuration settings.
 
 **Config**
 
-```julia
+```julia skip
 using Lexicon
 
 # get default `Config`
@@ -205,7 +202,6 @@ config = Config()
 
 # get a new adjusted `Config`
 config = Config(md_permalink = false, mathjax = true)
-
 ```
 
 **Document `save` method**
@@ -215,7 +211,7 @@ Similar to the above 'Config usage' one can also pass otional `args...` which wi
 deepcopy of config but not change config itself.
 This allows using the same base configuration settings multiple times.
 
-```julia
+```julia skip
 using Lexicon
 
 # 1. get a new adjusted `Config`
@@ -229,12 +225,11 @@ save("docs/api/Lexicon.md", Lexicon, config; md_permalink = true);
 
 # 4. This uses the same configuration as set in '1.' (md_permalink is still `false`)
 save("docs/api/Lexicon.md", Lexicon, config);
-
 ```
 
 The document `save` also supplies a default 'Config'.
 
-```julia
+```julia skip
 using Lexicon
 
 # 1. using the default supplied Config of method `save`
@@ -243,12 +238,11 @@ save("docs/api/Lexicon.md", Lexicon);
 # 2. this is the same as '1.'
 config = Config()
 save("docs/api/Lexicon.md", Lexicon, config);
-
 ```
 
 The next three examples are all using the same configuration to save *Lexicon*
 
-```julia
+```julia skip
 using Lexicon
 
 # 1.
@@ -261,7 +255,6 @@ save("docs/api/Lexicon.md", Lexicon, config; md_permalink = false, mathjax = tru
 
 # 3.
 save("docs/api/Lexicon.md", Lexicon; md_permalink = false, mathjax = true);
-
 ```
 
 **API-Index `save` method**
@@ -270,7 +263,7 @@ The *API-Index* `save` method works similar to the above *Document `save` method
 
 
 *source:*
-[Lexicon/src/render.jl:11](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/render.jl#L11)
+[Lexicon/src/render.jl:11](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L11)
 
 ---
 
@@ -280,10 +273,7 @@ Iterator type for Metadata Entries with sorting options.
 
 **Constructors**
 
-```julia
-EachEntry(docs::Metadata; order = [:category, :name, :source])
-
-```
+    EachEntry(docs::Metadata; order = [:category, :name, :source])
 
 **Arguments**
 
@@ -323,7 +313,7 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 
 *source:*
-[Lexicon/src/filtering.jl:130](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/filtering.jl#L130)
+[Lexicon/src/filtering.jl:127](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L127)
 
 ---
 
@@ -362,11 +352,8 @@ run(q)
 ```
 
 
-*signature:*
-query(args...)
-
 *source:*
-[Lexicon/src/query.jl:98](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L98)
+[Lexicon/src/query.jl:98](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L98)
 
 ## Internal
 
@@ -377,7 +364,7 @@ query(args...)
 Basic text importance scoring.
 
 *source:*
-[Lexicon/src/query.jl:171](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L171)
+[Lexicon/src/query.jl:171](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L171)
 
 ---
 
@@ -393,7 +380,7 @@ config = Config(md_permalink = false, mathjax = true)
 
 
 *source:*
-[Lexicon/src/render.jl:48](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/render.jl#L48)
+[Lexicon/src/render.jl:50](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L50)
 
 ---
 
@@ -403,16 +390,15 @@ Constructor.
 
 **Example**
 
-```julia
+```julia skip
 using Lexicon, Docile, Docile.Interface
 docs = metadata(Docile);
 EachEntry(docs::Metadata; order = [:category, :name, :source])
-
 ```
 
 
 *source:*
-[Lexicon/src/filtering.jl:147](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/filtering.jl#L147)
+[Lexicon/src/filtering.jl:143](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L143)
 
 ---
 
@@ -454,7 +440,7 @@ entries( filter(d, files = ["types.jl"]) )
 
 
 *source:*
-[Lexicon/src/filtering.jl:40](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/filtering.jl#L40)
+[Lexicon/src/filtering.jl:40](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L40)
 
 ---
 
@@ -487,7 +473,7 @@ end
 
 
 *source:*
-[Lexicon/src/filtering.jl:77](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/filtering.jl#L77)
+[Lexicon/src/filtering.jl:77](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L77)
 
 ---
 
@@ -496,7 +482,7 @@ end
 An entry and the set of all objects that are linked to it.
 
 *source:*
-[Lexicon/src/query.jl:32](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L32)
+[Lexicon/src/query.jl:32](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L32)
 
 ---
 
@@ -512,7 +498,7 @@ Holds the parsed user query.
 
 
 *source:*
-[Lexicon/src/query.jl:13](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L13)
+[Lexicon/src/query.jl:13](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L13)
 
 ---
 
@@ -521,7 +507,7 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 *source:*
-[Lexicon/src/query.jl:42](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L42)
+[Lexicon/src/query.jl:42](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L42)
 
 ---
 
@@ -530,5 +516,5 @@ Stores the matching entries resulting from running a query.
 Types that can be queried.
 
 *source:*
-[Lexicon/src/query.jl:2](https://github.com/MichaelHatherly/Lexicon.jl/tree/8d20e1e25fa75a91e4d908f67d7d53e85458f5d0/src/query.jl#L2)
+[Lexicon/src/query.jl:2](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L2)
 
