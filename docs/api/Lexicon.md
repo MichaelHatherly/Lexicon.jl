@@ -19,7 +19,7 @@ doctest(Lexicon)
 
 
 *source:*
-[Lexicon/src/doctest.jl:100](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/doctest.jl#L100)
+[Lexicon/src/doctest.jl:100](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/doctest.jl#L100)
 
 ---
 
@@ -31,7 +31,7 @@ found.
 
 
 *source:*
-[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L150)
+[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L150)
 
 ---
 
@@ -43,7 +43,7 @@ found.
 
 
 *source:*
-[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L150)
+[Lexicon/src/query.jl:150](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L150)
 
 ---
 
@@ -53,7 +53,7 @@ Saves an *API-Index* to `file`.
 
 
 *source:*
-[Lexicon/src/render.jl:173](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L173)
+[Lexicon/src/render.jl:173](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/render.jl#L173)
 
 ---
 
@@ -132,7 +132,7 @@ The documentation will be available from
 
 
 *source:*
-[Lexicon/src/render.jl:162](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L162)
+[Lexicon/src/render.jl:162](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/render.jl#L162)
 
 ---
 
@@ -263,7 +263,7 @@ The *API-Index* `save` method works similar to the above *Document `save` method
 
 
 *source:*
-[Lexicon/src/render.jl:11](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L11)
+[Lexicon/src/render.jl:11](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/render.jl#L11)
 
 ---
 
@@ -313,7 +313,7 @@ res = [v.data[:source][2] for (k,v) in EachEntry(d)]
 
 
 *source:*
-[Lexicon/src/filtering.jl:127](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L127)
+[Lexicon/src/filtering.jl:127](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/filtering.jl#L127)
 
 ---
 
@@ -353,7 +353,7 @@ run(q)
 
 
 *source:*
-[Lexicon/src/query.jl:98](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L98)
+[Lexicon/src/query.jl:98](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L98)
 
 ## Internal
 
@@ -364,7 +364,7 @@ run(q)
 Basic text importance scoring.
 
 *source:*
-[Lexicon/src/query.jl:171](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L171)
+[Lexicon/src/query.jl:171](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L171)
 
 ---
 
@@ -380,7 +380,7 @@ config = Config(md_permalink = false, mathjax = true)
 
 
 *source:*
-[Lexicon/src/render.jl:50](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/render.jl#L50)
+[Lexicon/src/render.jl:50](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/render.jl#L50)
 
 ---
 
@@ -398,7 +398,7 @@ EachEntry(docs::Metadata; order = [:category, :name, :source])
 
 
 *source:*
-[Lexicon/src/filtering.jl:143](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L143)
+[Lexicon/src/filtering.jl:143](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/filtering.jl#L143)
 
 ---
 
@@ -440,7 +440,7 @@ entries( filter(d, files = ["types.jl"]) )
 
 
 *source:*
-[Lexicon/src/filtering.jl:40](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L40)
+[Lexicon/src/filtering.jl:40](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/filtering.jl#L40)
 
 ---
 
@@ -473,7 +473,7 @@ end
 
 
 *source:*
-[Lexicon/src/filtering.jl:77](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/filtering.jl#L77)
+[Lexicon/src/filtering.jl:77](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/filtering.jl#L77)
 
 ---
 
@@ -482,7 +482,7 @@ end
 An entry and the set of all objects that are linked to it.
 
 *source:*
-[Lexicon/src/query.jl:32](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L32)
+[Lexicon/src/query.jl:32](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L32)
 
 ---
 
@@ -498,7 +498,7 @@ Holds the parsed user query.
 
 
 *source:*
-[Lexicon/src/query.jl:13](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L13)
+[Lexicon/src/query.jl:13](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L13)
 
 ---
 
@@ -507,7 +507,7 @@ Holds the parsed user query.
 Stores the matching entries resulting from running a query.
 
 *source:*
-[Lexicon/src/query.jl:42](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L42)
+[Lexicon/src/query.jl:42](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L42)
 
 ---
 
@@ -516,5 +516,5 @@ Stores the matching entries resulting from running a query.
 Types that can be queried.
 
 *source:*
-[Lexicon/src/query.jl:2](https://github.com/MichaelHatherly/Lexicon.jl/tree/110979631021a0b2bba6cb101f1590d45f09bd1d/src/query.jl#L2)
+[Lexicon/src/query.jl:2](https://github.com/MichaelHatherly/Lexicon.jl/tree/cff99c3d130df85a1c75926307aa0d13ea60e85d/src/query.jl#L2)
 

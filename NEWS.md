@@ -1,10 +1,8 @@
-### v0.1.10
+### v0.1.9
 
 * Backport Julia `0.4` `Markdown` codebase.
 
-### v0.1.9
-
-Contributed by [@peter1000](https://github.com/peter1000)
+Contributed by [@peter1000](https://github.com/peter1000):
 
 * Add additional output filtering based on category.
 * Add optional output grouping by category.
