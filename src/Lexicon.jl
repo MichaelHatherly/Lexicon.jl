@@ -1,6 +1,8 @@
 module Lexicon
 
-import Markdown
+if VERSION < v"0.4-"
+    import Markdown
+end
 
 import Docile.Interface:
 
