@@ -1,7 +1,7 @@
 ## Docs-specific rendering --------------------------------------------------------------
 
 function writemime(io::IO, mime::MIME"text/plain", docs::Docile.Interface.Docs{:md})
-    writemime(io, mime, parsed(docs))
+    Markdown.term(io, parsed(docs))
 end
 
 function writemime(io::IO, mime::MIME"text/plain", docs::Docile.Interface.Docs{:txt})
@@ -76,8 +76,10 @@ function print_signature(io::IO, object, entry)
 end
 
 function writemime(io::IO, mime::MIME"text/plain", entry::Entry, config::Config = Config())
-    # Parse docstring into AST and print it out.
+    # Parse docstring into AST and print it out with additional space above and below.
+    println(io)
     writemime(io, mime, docs(entry))
+    println(io)
 
     # Print metadata if any is available
     if has_output_metadata(entry, config)

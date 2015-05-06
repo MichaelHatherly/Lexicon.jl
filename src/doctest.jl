@@ -93,9 +93,8 @@ Code blocks may be skipped by adding an extra newline at the end of the block.
 
 **Example:**
 
-```julia
+```julia skip
 doctest(Lexicon)
-
 ```
 """
 function doctest(modname::Module)
@@ -106,10 +105,10 @@ function doctest(modname::Module)
         isa(docs(entry), Docile.Interface.Docs{:md}) || continue # Markdown is the only supported format.
         count = 0
         for block in parsed(docs(entry)).content
-            if isa(block, Markdown.BlockCode)
+            if iscode(block)
                 count += 1
                 try
-                    if endswith(block.code, "\n") # skip code block with trailing newline
+                    if !runnable(block) # skip code block with trailing newline
                         push!(summ, Result{Skipped}(block.code, (obj, count)))
                         continue
                     end
@@ -124,6 +123,13 @@ function doctest(modname::Module)
     end
     summ
 end
+
+iscode(::Markdown.Code) = true
+iscode(::Any)           = false
+
+runnable(code::Markdown.Code) =
+    contains(code.language, "julia") &&
+    !(contains(code.language, "skip"))
 
 function runcode(block, modname)
     sandbox = Module(:__SANDBOX__)

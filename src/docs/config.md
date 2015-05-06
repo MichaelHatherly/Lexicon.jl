@@ -54,7 +54,7 @@ There are 3 ways to define user adjusted configuration settings.
 
 **Config**
 
-```julia
+```julia skip
 using Lexicon
 
 # get default `Config`
@@ -62,7 +62,6 @@ config = Config()
 
 # get a new adjusted `Config`
 config = Config(md_permalink = false, mathjax = true)
-
 ```
 
 **Document `save` method**
@@ -72,7 +71,7 @@ Similar to the above 'Config usage' one can also pass otional `args...` which wi
 deepcopy of config but not change config itself.
 This allows using the same base configuration settings multiple times.
 
-```julia
+```julia skip
 using Lexicon
 
 # 1. get a new adjusted `Config`
@@ -86,12 +85,11 @@ save("docs/api/Lexicon.md", Lexicon, config; md_permalink = true);
 
 # 4. This uses the same configuration as set in '1.' (md_permalink is still `false`)
 save("docs/api/Lexicon.md", Lexicon, config);
-
 ```
 
 The document `save` also supplies a default 'Config'.
 
-```julia
+```julia skip
 using Lexicon
 
 # 1. using the default supplied Config of method `save`
@@ -100,12 +98,11 @@ save("docs/api/Lexicon.md", Lexicon);
 # 2. this is the same as '1.'
 config = Config()
 save("docs/api/Lexicon.md", Lexicon, config);
-
 ```
 
 The next three examples are all using the same configuration to save *Lexicon*
 
-```julia
+```julia skip
 using Lexicon
 
 # 1.
@@ -118,7 +115,6 @@ save("docs/api/Lexicon.md", Lexicon, config; md_permalink = false, mathjax = tru
 
 # 3.
 save("docs/api/Lexicon.md", Lexicon; md_permalink = false, mathjax = true);
-
 ```
 
 **API-Index `save` method**

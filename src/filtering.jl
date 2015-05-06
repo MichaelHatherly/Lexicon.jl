@@ -86,10 +86,7 @@ Iterator type for Metadata Entries with sorting options.
 
 **Constructors**
 
-```julia
-EachEntry(docs::Metadata; order = [:category, :name, :source])
-
-```
+    EachEntry(docs::Metadata; order = [:category, :name, :source])
 
 **Arguments**
 
@@ -137,11 +134,10 @@ Constructor.
 
 **Example**
 
-```julia
+```julia skip
 using Lexicon, Docile, Docile.Interface
 docs = metadata(Docile);
 EachEntry(docs::Metadata; order = [:category, :name, :source])
-
 ```
 """
 function EachEntry(docs::Metadata; order = [:category, :name, :source])
