@@ -1,3 +1,8 @@
+module TestCases
+
+using Docile
+@document
+
 "f"
 :f
 
@@ -102,6 +107,8 @@ abstract S
 
 "A.B.T"
 type T
+end
+
 end
 
 end

@@ -9,7 +9,9 @@ using Docile.Interface, Lexicon, FactCheck
 
 import Lexicon: Query
 
-include("testcases.jl")
+require(joinpath(dirname(@__FILE__), "testcases.jl"))
+
+import TestCases: f, g, A, T, @m, K, S
 
 include("facts/query-parsing.jl")
 include("facts/querying-results.jl")

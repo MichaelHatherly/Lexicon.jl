@@ -18,7 +18,7 @@ facts("Rendering.") do
 
         writemime(output, MIME"text/plain"(), run(@query(Docile.meta)))
 
-        writemime(output, MIME"text/plain"(), run(@query(Docile.Entry, 2)))
+        writemime(output, MIME"text/plain"(), run(@query(Docile.Interface.Entry, 2)))
 
         writemime(output, MIME"text/plain"(), run(@query(Docile)))
 

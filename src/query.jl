@@ -131,10 +131,17 @@ objects(H"macrocall", ex) =
     [:(getfield($(modname(ex)), $(ex.args[1].args[2])))] :
     [ex.args[1]]
 
+# Tuple overhaul.
+if VERSION ≥ v"0.4-4319"
+    tuple_collect(sig) = collect(sig.parameters)
+else
+    tuple_collect(sig) = collect(sig)
+end
+
 function partial_signature_matching(f::Function, sig)
     ms = Set{Method}()
     for m in f.env
-        msig = tuple(Docile.tuple_collect(m.sig)...)
+        msig = tuple(tuple_collect(m.sig)...)
         for n = 1:length(msig)
             isequal(typeintersect(msig[1:n], sig), Union()) || push!(ms, m)
         end
@@ -144,7 +151,7 @@ end
 
 """
 Search loaded documentation for methods of generic function `f` that match `sig`.
-Optionally, provide an index (1-based) to view an individual entry if several different ones are 
+Optionally, provide an index (1-based) to view an individual entry if several different ones are
 found.
 """
 function query(f::Function, sig, index = 0)
