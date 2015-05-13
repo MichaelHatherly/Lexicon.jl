@@ -39,11 +39,11 @@
 
 [call(::Type{Lexicon.Config})](Lexicon.md#method__call.1)  Returns a default Config. If any args... are given these will overwrite the defaults.
 
-[call(::Type{Lexicon.EachEntry}, docs::Docile.Metadata)](Lexicon.md#method__call.2)  Constructor.
+[call(::Type{Lexicon.EachEntry}, docs::Docile.Legacy.Metadata)](Lexicon.md#method__call.2)  Constructor.
 
-[filter(docs::Docile.Metadata)](Lexicon.md#method__filter.1)  Filter Metadata based on categories or file source.
+[filter(docs::Docile.Legacy.Metadata)](Lexicon.md#method__filter.1)  Filter Metadata based on categories or file source.
 
-[filter(f::Function, docs::Docile.Metadata)](Lexicon.md#method__filter.2)  Filter Metadata based on a function.
+[filter(f::Function, docs::Docile.Legacy.Metadata)](Lexicon.md#method__filter.2)  Filter Metadata based on a function.
 
 ---
 

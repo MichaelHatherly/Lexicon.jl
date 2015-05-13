@@ -1,3 +1,8 @@
+### v0.1.10
+
+* Changes for Docile compatibility.
+* Fix documentation.
+
 ### v0.1.9
 
 * Backport Julia `0.4` `Markdown` codebase.
