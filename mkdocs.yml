@@ -4,8 +4,3 @@ site_description:    Julia package documentation generator.
 site_author:         Michael Hatherly
 theme:               flatly
 markdown_extensions: [tables, fenced_code]
-pages:
-    - ['index.md', 'Introduction']
-    - ['manual.md', 'Manual', 'Overview']
-    - ['api/Lexicon.md', 'API', 'Lexicon']
-    - ['api/index.md', 'API', 'Index']
