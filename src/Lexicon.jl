@@ -1,46 +1,12 @@
 module Lexicon
 
-import Docile.Interface:
+"""
+!!summary(Documentation generator and viewer for the Julia Language.)
 
-    parsedocs,
-    macroname,
-    name
-
-import Base:
-
-    start,
-    next,
-    done,
-    length,
-    push!,
-    run,
-    writemime,
-    ==
-
-using
-
-    Base.Meta,
-    Compat,
-    Docile,
-    Docile.Interface
-
-export
-
-    @query,
-    query,
-    save,
-    update!,
-
-    doctest,
-    failed,
-    passed,
-    skipped,
-    EachEntry,
-    Config,
-    Index
-
-
-@document
+It provides access to the documentation created by
+[*Docile*][https://github.com/MichaelHatherly/Docile.jl].
+"""
+Lexicon
 
 # Conditional importing of the `Markdown` module.
 if VERSION < v"0.4-dev+1488"
@@ -48,12 +14,13 @@ if VERSION < v"0.4-dev+1488"
     import .Markdown
 end
 
-include("compat.jl")
-include("query.jl")
-include("render.jl")
-include("doctest.jl")
-include("filtering.jl")
 
-__init__() = setup_help() # Hook into the REPL's `?`.
+include("Utilities.jl")                             # Code useful across submodules.
+include(joinpath("Doctest", "Doctest.jl"))
+include(joinpath("Documents", "Documents.jl"))      # API for creating static documentation.
+include(joinpath("Query", "Query.jl"))
+include(joinpath("Render", "Render.jl"))            # API for creating static documentation.
+include(joinpath("REPL", "REPL.jl"))
+include(joinpath("Extensions", "Extensions.jl"))
 
-end # module
+end
