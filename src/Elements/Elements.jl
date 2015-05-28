@@ -21,7 +21,22 @@ type Node{T <: NodeT}
     data     :: Dict{Symbol, Any}
     parent   :: Node
     Node() = new(Any[], Dict{Symbol, Any}())
+    Node(children, data) = new(children, data)
 end
+
+function (==){T}(a::Node{T}, b::Node{T})
+    length(a.children) == length(b.children) || return false
+    for (x, y) in zip(a.children, b.children)
+        x == y || return false
+    end
+    length(a.data) == length(b.data) || return false
+    for (x, y) in zip(a.data, b.data)
+        x == y || return false
+    end
+    # Don't check the parent node. Infinite loop!
+    true
+end
+(==){S, T}(a::Node{S}, b::Node{T}) = false
 
 config(; kwargs...) = config(kwargs)
 config(args)        = Dict{Symbol, Any}(args)
@@ -48,11 +63,13 @@ update!(n::Node{Docs}, x::Union(AbstractString, Module))     = push!(n.children,
 update!(n::Node,       x::Dict)                              = merge!(n.data, x)
 update!(n::Node,       x::Symbol)                            = n.data[:id] = x
 
+update!{S, T}(n::Node{S}, t::T) = throw(ArgumentError("Can't add '$(T)' to '$(S)' node."))
+
 setparent!(n::Node{Document}, x::Node{Section})                    = x.parent = n
 setparent!(n::Node{Section},  x::Union(Node{Section}, Node{Page})) = x.parent = n
 setparent!(n::Node{Page},     x::Node{Docs})                       = x.parent = n
 
-setparent!{T, S}(n::Node{T}, x::Node{S}) = throw(ArgumentError("Can't nest '$(S)' in '$(T)'."))
+setparent!{S, T}(n::Node{S}, x::Node{T}) = throw(ArgumentError("Can't nest '$(T)' in '$(S)'."))
 
 ## Display methods. For debugging. ##
 
