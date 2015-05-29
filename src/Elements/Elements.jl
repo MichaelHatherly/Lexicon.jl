@@ -80,7 +80,6 @@ maxwidth(data) = maximum([length(string(k)) for k in keys(data)])
 
 function Base.writemime{T}(io::IO, mime::MIME"text/plain", n::Node{T}, indent = 0)
     println(io, pad(indent), rename(T), "(")
-    isdefined(n, :name) && println(io, pad(indent + 1), repr(n.name), ',')
     for child in n.children
         inner(io, mime, child, indent + 1)
     end
