@@ -16,6 +16,11 @@ immutable Section  <: NodeT end
 immutable Page     <: NodeT end
 immutable Docs     <: NodeT end
 
+immutable EmptyNodeError    <: Exception msg :: AbstractString end
+immutable ChildTypeError    <: Exception msg :: AbstractString end
+immutable ParentTypeError   <: Exception msg :: AbstractString end
+immutable MissingKeyError   <: Exception msg :: AbstractString end
+
 type Node{T <: NodeT}
     children :: Vector
     data     :: Dict{Symbol, Any}
@@ -48,7 +53,7 @@ page(args...; kwargs...)    = (Page,    args, config(kwargs))
 docs(args...; kwargs...)    = (Docs,    args, config(kwargs))
 
 function build!{T}(node::Node{T}, args, kwargs)
-    isempty(args) && throw(ArgumentError("Empty '$(T)'."))
+    isempty(args) && throw(EmptyNodeError("Empty '$(T)'."))
     isa(node, Node{Docs}) || haskey(kwargs, :outname) || getoutname(node, kwargs)
     for arg in args update!(node, arg) end
     update!(node, kwargs)
@@ -64,16 +69,16 @@ update!(n::Node{Page}, x::Union(AbstractString, Node{Docs})) = push!(n.children,
 update!(n::Node{Docs}, x::Union(AbstractString, Module))     = push!(n.children, x)
 update!(n::Node,       x::Dict)                              = merge!(n.data, x)
 
-update!{S, T}(n::Node{S}, t::T) = throw(ArgumentError("Can't add '$(T)' to '$(S)' node."))
+update!{S, T}(n::Node{S}, t::T) = throw(ChildTypeError("Can't add '$(T)' to '$(S)' node."))
 
 setparent!(n::Node{Document}, x::Node{Section})                    = x.parent = n
 setparent!(n::Node{Section},  x::Union(Node{Section}, Node{Page})) = x.parent = n
 setparent!(n::Node{Page},     x::Node{Docs})                       = x.parent = n
 
-setparent!{S, T}(n::Node{S}, x::Node{T}) = throw(ArgumentError("Can't nest '$(T)' in '$(S)'."))
+setparent!{S, T}(n::Node{S}, x::Node{T}) = throw(ParentTypeError("Can't nest '$(T)' in '$(S)'."))
 
 function getoutname{T}(node::Node{T}, d::Dict)
-    haskey(d, :title) || throw(ArgumentError("'$T' has no key 'title'."))
+    haskey(d, :title) || throw(MissingKeyError("'$T' has no key 'title'."))
     replace_chars = Set(Char[' ', '&', '-'])
     io = IOBuffer()
     for c in d[:title]
