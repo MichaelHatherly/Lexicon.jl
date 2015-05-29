@@ -49,6 +49,7 @@ docs(args...; kwargs...)    = (Docs,    args, config(kwargs))
 
 function build!{T}(node::Node{T}, args, kwargs)
     isempty(args) && throw(ArgumentError("Empty '$(T)'."))
+    isa(node, Node{Docs}) || haskey(kwargs, :outname) || getoutname(node, kwargs)
     for arg in args update!(node, arg) end
     update!(node, kwargs)
     node
@@ -71,6 +72,16 @@ setparent!(n::Node{Section},  x::Union(Node{Section}, Node{Page})) = x.parent = 
 setparent!(n::Node{Page},     x::Node{Docs})                       = x.parent = n
 
 setparent!{S, T}(n::Node{S}, x::Node{T}) = throw(ArgumentError("Can't nest '$(T)' in '$(S)'."))
+
+function getoutname{T}(node::Node{T}, d::Dict)
+    haskey(d, :title) || throw(ArgumentError("'$T' has no key 'title'."))
+    replace_chars = Set(Char[' ', '&', '-'])
+    io = IOBuffer()
+    for c in d[:title]
+        c in replace_chars ? write(io, "_") : write(io, lowercase(string(c)))
+    end
+    d[:outname] = takebuf_string(io)
+end
 
 ## Display methods. For debugging. ##
 

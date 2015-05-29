@@ -4,7 +4,7 @@ import Lexicon.Elements: document, section, page, docs
  
 import Docile
  
-pages = [page("# $(ucfirst(f))", "$(f).md") for f in [
+pages = [page("# $(ucfirst(f))", "$(f).md", title = f) for f in [
              "introduction",
              "syntax",
              "metamacros"
@@ -37,6 +37,7 @@ out = document(
             title  = "Types",
             filter = obj -> isa(obj, DataType),
             ),
+        outname = "api"
         ),
     title = "Docile Documentation",
     )
