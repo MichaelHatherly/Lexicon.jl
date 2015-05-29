@@ -47,7 +47,8 @@ section(args...; kwargs...) = (Section, args, config(kwargs))
 page(args...; kwargs...)    = (Page,    args, config(kwargs))
 docs(args...; kwargs...)    = (Docs,    args, config(kwargs))
 
-function build!(node::Node, args, kwargs)
+function build!{T}(node::Node{T}, args, kwargs)
+    isempty(args) && throw(ArgumentError("Empty '$(T)'."))
     for arg in args update!(node, arg) end
     update!(node, kwargs)
     node
