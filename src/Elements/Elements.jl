@@ -63,7 +63,6 @@ end
 update!(n::Node{Page}, x::Union(AbstractString, Node{Docs})) = push!(n.children, x)
 update!(n::Node{Docs}, x::Union(AbstractString, Module))     = push!(n.children, x)
 update!(n::Node,       x::Dict)                              = merge!(n.data, x)
-update!(n::Node,       x::Symbol)                            = n.data[:id] = x
 
 update!{S, T}(n::Node{S}, t::T) = throw(ArgumentError("Can't add '$(T)' to '$(S)' node."))
 

@@ -21,12 +21,10 @@ mods  = [docs("### ``$(m)``", m) for m in [
  
 out = document(
     section(
-        :manual,
         pages...,
         title  = "Manual Pages",
         ),
     section(
-        :api,
         page(
             mods...,
             title  = "Function & Methods",
