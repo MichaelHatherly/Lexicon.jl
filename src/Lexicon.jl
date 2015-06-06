@@ -17,7 +17,7 @@ include("Utilities.jl")
 
 include(joinpath("Elements", "Elements.jl"))
 include(joinpath("Render", "Render.jl"))
-include(joinpath("Query", "Query.jl"))
+include(joinpath("Queries", "Queries.jl"))
 include(joinpath("REPL", "REPL.jl"))
 include(joinpath("Externals", "Externals.jl"))
 
