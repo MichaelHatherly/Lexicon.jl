@@ -1,5 +1,5 @@
 """
-Error type thrown by query construction methods."
+Error type thrown by query construction methods.
 """
 immutable QueryBuildError <: Exception
     msg ::UTF8String
