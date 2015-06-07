@@ -11,23 +11,19 @@ abstract Term
 ``Query`` objects store trees of ``Term`` nodes to find documentation in Docile.
 
 - ``term``:  The root node of the term tree.
-- ``mods``:  Set of modules used to narrow down the search domain.
 - ``index``: Select which docstring to display from query results.
 
-When ``mods`` is empty all available modules will be searched. If ``index`` is
-``0`` then a summary is shown when more than one result is found for a given
-query.
+If ``index`` is ``0`` then a summary is shown when more than one result is found
+for a given query.
 """
 immutable Query
     term  :: Term
-    mods  :: Set{Module}
     index :: Int
-    Query(term, vector, index) = new(term, modules(vector), index)
+    Query(term, index) = new(term, index)
 end
 
 (==)(a::Query, b::Query) =
     (a.term  == b.term) &&
-    (a.mods  == b.mods) &&
     (a.index == b.index)
 
 ## Data Terms. ##
@@ -114,7 +110,8 @@ matches any methods of function ``foobar`` with type signature
 ``(UTF8String, Bool)``.
 """
 immutable ArgumentTypes <: TypeTerm
-    signature :: Tuple
+    signature
+    ArgumentTypes(sig) = new(to_tuple_type(sig))
 end
 
 """
@@ -131,7 +128,8 @@ matches methods with a computed return type of ``(Bool, Int)``.
 match all methods of function ``foobar`` with a return type of ``Int``.
 """
 immutable ReturnTypes <: TypeTerm
-    signature :: Tuple
+    signature
+    ReturnTypes(sig) = new(to_tuple_type(sig))
 end
 
 """
