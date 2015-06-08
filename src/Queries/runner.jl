@@ -69,9 +69,15 @@ function getscore(term::Object, m, obj::Docile.Collector.QualifiedSymbol)
     score += m == obj.mod && score > 0.0 ? 0.5 : 0.0
 end
 
-getscore(term::Object, m, obj) = term.object == obj ? 1.0 : 0.0
+function getscore(term::Object, m, obj)
+    score =  term.object == obj ? 0.8 : 0.0
+    score += term.object == m   ? 0.2 : 0.0
+end
 
-getscore(term::Object, m, obj::Method) = _getscore(term.object, m, obj)
+function getscore(term::Object, m, obj::Method)
+    score = _getscore(term.object, m, obj)
+    score += term.object == m ? 0.2 : 0.0
+end
 
 function _getscore(f::Base.Callable, m::Module, obj::Method)
     _isgeneric(f) && for meth in methods(f)
