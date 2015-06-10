@@ -21,7 +21,7 @@ buildquery(sym::Symbol, index::Int) = :(Query(Object($(quot(sym)), $(esc(sym))),
 
 buildquery(ex::Expr, index::Int) = :(Query($(build(ex)), $(index)))
 
-buildquery(other...) = throw(QueryBuildError("Invalid query syntax. '$(other)'"))
+buildquery(other...) = throw(QueryBuildError("Invalid query syntax."))
 
 ## Inner build methods. ##
 
@@ -57,7 +57,7 @@ function build(H"vect, vcat", ex::Expr)
     :(Metadata($(out)))
 end
 
-build(other...) = throw(QueryBuildError("Invalid query syntax. '$(other)'"))
+build(other...) = throw(QueryBuildError("Invalid query syntax."))
 
 buildvect(ex::Expr)  = Expr(:tuple, extractpair(ex)...)
 buildvect(s::Symbol) = Expr(:tuple, quot(s), :(MatchAnything()))
