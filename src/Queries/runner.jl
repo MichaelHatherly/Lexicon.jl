@@ -9,29 +9,13 @@ immutable Result
     score  :: Float64
 end
 
-# Preliminary. Remove once rendering it done.
-function Base.writemime(io::IO, ::MIME"text/plain", result::Result)
-    print(io, " - ", @sprintf("(%6.2f): ", result.score))
-    line = string(result.mod, '.', result.object)
-    print(io, rpad(line, 50)[1:50], length(line) > 50 ? "..." : "")
-end
-
 """
 List of all matching ``Result`` objects for query passed to ``runquery``.
 """
 immutable Results
-    query   :: Query
-    results :: Vector{Result}
+    query :: Query
+    data  :: Vector{Result}
     Results(query::Query) = new(query, Result[])
-end
-
-# Preliminary. Remove once rendering it done.
-function Base.writemime(io::IO, mime::MIME"text/plain", results::Results)
-    println(io, "Results:")
-    for result in results.results
-        println(io)
-        writemime(io, mime, result)
-    end
 end
 
 # Run queries. #
@@ -44,7 +28,7 @@ function runquery(query::Query)
     for m in Docile.Cache.loadedmodules()
         for obj in Docile.Cache.objects(m)
             score = getscore(query.term, m, obj)
-            score > 0 && push!(results.results, Result(m, obj, score))
+            score > 0 && push!(results.data, Result(m, obj, score))
         end
     end
     results
