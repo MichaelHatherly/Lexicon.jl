@@ -38,15 +38,18 @@ name(mod, t::DataType) = t.name.name
 function name(mod, obj::Function)
     meta = Cache.getmeta(mod, obj)
     if meta[:category] == :macro
-        meta[:signature].args[1]
+        symbol(string("@", meta[:signature].args[1]))
     else
-        symbol(string(obj))
+        obj.env.name
     end
 end
 
 name(mod, q::QualifiedSymbol) = q.sym
 
-name(mod, aside::Aside) = symbol("")
+function name(mod, obj::Aside)
+    linenumber, path = Cache.getmeta(mod, obj)[:textsource]
+    return symbol("aside_$(first(splitext(basename(path))))_L$(linenumber)")
+end
 
 # Show Objects. #
 

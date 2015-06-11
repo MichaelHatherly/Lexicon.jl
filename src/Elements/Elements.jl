@@ -19,9 +19,10 @@ immutable Docs     <: NodeT end
 type Node{T <: NodeT}
     children :: Vector
     data     :: Dict{Symbol, Any}
+    cache    :: Dict{Symbol, Any}
     parent   :: Node
-    Node() = new(Any[], Dict{Symbol, Any}())
-    Node(children, data) = new(children, data)
+    Node() = new(Any[], Dict{Symbol, Any}(), Dict{Symbol, Any}())
+    Node(children, data) = new(children, data, Dict{Symbol, Any}())
 end
 
 function (==){T}(a::Node{T}, b::Node{T})
@@ -31,6 +32,10 @@ function (==){T}(a::Node{T}, b::Node{T})
     end
     length(a.data) == length(b.data) || return false
     for (x, y) in zip(a.data, b.data)
+        x == y || return false
+    end
+    length(a.cache) == length(b.cache) || return false
+    for (x, y) in zip(a.cache, b.cache)
         x == y || return false
     end
     # Don't check the parent node. Infinite loop!
@@ -99,5 +104,7 @@ inner(io::IO, mime::MIME"text/plain", n::Node, indent) = writemime(io, mime, n, 
 inner(io::IO, ::MIME"text/plain", v, indent)           = println(io, pad(indent), repr(v), ',')
 
 rename(T) = lowercase(last(split(string(T), '.')))
+
+include("utilities.jl")
 
 end
