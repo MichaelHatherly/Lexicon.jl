@@ -8,7 +8,6 @@ an object was actually found or not.
 """
 function findconfig(n::Node, key::Symbol, T)
     haskey(n.data, key) && return asnull(T, n.data, key)
-    # Stage 2: Parent's config.
     while isdefined(n, :parent)
         n = n.parent
         haskey(n.data, key) && return asnull(T, n.data, key)

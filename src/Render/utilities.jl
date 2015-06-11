@@ -61,12 +61,10 @@ function showobj(io::IO, result::Result, columns::Int)
 end
 
 function showobj(io::IO, mod::Module, obj::Function)
-    print(io, ".")
+    print(io, ".", name(mod, obj))
     meta = Cache.getmeta(mod, obj)
     if meta[:category] == :macro
-        print(io, "@", meta[:signature])
-    else
-        print(io, obj)
+        print(io, "(", join(meta[:signature].args[2:end], ", "), ")")
     end
 end
 showobj(io::IO, mod::Module, obj::Module) = print(io)
