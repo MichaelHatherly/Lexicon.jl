@@ -19,9 +19,10 @@ immutable Docs     <: NodeT end
 type Node{T <: NodeT}
     children :: Vector
     data     :: Dict{Symbol, Any}
+    cache    :: Dict{Symbol, Any}
     parent   :: Node
-    Node() = new(Any[], Dict{Symbol, Any}())
-    Node(children, data) = new(children, data)
+    Node() = new(Any[], Dict{Symbol, Any}(), Dict{Symbol, Any}())
+    Node(children, data) = new(children, data, Dict{Symbol, Any}())
 end
 
 function (==){T}(a::Node{T}, b::Node{T})
