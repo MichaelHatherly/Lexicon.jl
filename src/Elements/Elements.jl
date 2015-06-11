@@ -100,4 +100,6 @@ inner(io::IO, ::MIME"text/plain", v, indent)           = println(io, pad(indent)
 
 rename(T) = lowercase(last(split(string(T), '.')))
 
+include("utilities.jl")
+
 end
