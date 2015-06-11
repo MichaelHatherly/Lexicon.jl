@@ -69,8 +69,12 @@ end
 showobj(io::IO, mod::Module, obj::Module) = print(io)
 showobj(io::IO, mod::Module, obj::QualifiedSymbol) = print(io, ".", obj.sym)
 
-function showobj(io::IO, mod::Module, obj::DataType)
-    print(io, last(@compat(split(sprint(show, obj), string(mod), limit = 2))))
+if VERSION < v"0.4-dev"
+    showobj(io::IO, mod::Module, obj::DataType) = print(io, ".", obj)
+else
+    function showobj(io::IO, mod::Module, obj::DataType)
+        print(io, last(@compat(split(sprint(show, obj), string(mod), limit = 2))))
+    end
 end
 
 # Don't show the line and file info.
