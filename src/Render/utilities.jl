@@ -89,3 +89,35 @@ function highlight_exported(io, mod, obj)
     color = name(mod, obj) in get(exports) ? :green : :none
     print_with_color(color, io, string(mod))
 end
+
+# Sets an ``:outname`` from the node's configuration or generates one from ``:title``
+function setoutname!(n::Node)
+    haskey(n.cache, :outname) && return
+    haskey(n.data, :outname) && return n.cache[:outname] = utf8(string(n.data[:outname]))
+    replace_chars = Set(Char[' ', '&', '-'])
+    io = IOBuffer()
+    for c in n.data[:title]
+        c in replace_chars ? write(io, "_") : write(io, lowercase(string(c)))
+    end
+    n.cache[:outname] = utf8(takebuf_string(io))
+end
+
+function getheadertype(s::AbstractString)
+    for i in 1:min(length(s), 7)
+        s[i] != '#' && return i < 2 ? :none : symbol("header$(i-1)")
+    end
+    return :none
+end
+
+# Checks the node's configuration settings.
+function checkconfig!{T}(n::Node{T})
+    haskey(n.data, :title) || throw(ArgumentError("'$(rename(T))' has no key ':title'."))
+    isa(n.data[:title], UTF8String) || (n.data[:title] = utf8(string(n.data[:title])))
+    setoutname!(n)
+    for child in n.children
+        checkinner!(child)
+    end
+end
+checkinner!(n) = return
+checkinner!(n::Node{Section}) = checkconfig!(n)
+checkinner!(n::Node{Page})    = checkconfig!(n)
