@@ -34,6 +34,10 @@ function (==){T}(a::Node{T}, b::Node{T})
     for (x, y) in zip(a.data, b.data)
         x == y || return false
     end
+    length(a.cache) == length(b.cache) || return false
+    for (x, y) in zip(a.cache, b.cache)
+        x == y || return false
+    end
     # Don't check the parent node. Infinite loop!
     true
 end
