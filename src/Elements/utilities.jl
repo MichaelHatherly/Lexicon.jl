@@ -15,14 +15,3 @@ function findconfig(n::Node, key::Symbol, T)
     Nullable{T}()
 end
 asnull(T, config, key) = Nullable{T}(convert(T, config[key]))
-
-set_root_cache!(node::Node, key::Symbol, value) = getroot(node).cache[key] = value
-push_root_cache!(node::Node, key::Symbol, value) = push!(getroot(node).cache[key], value)
-append_root_cache!(node::Node, key::Symbol, value) = append!(getroot(node).cache[key], value)
-
-function getroot(node::Node)
-    while isdefined(node.parent)
-        node = node.parent
-    end
-    node
-end
