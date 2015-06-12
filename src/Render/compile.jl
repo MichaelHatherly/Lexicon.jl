@@ -19,7 +19,7 @@ compilation only has to take place once.
 :compile!
 
 function compile!{T}(node::Node{T})
-    # Don't compile more that once.
+    # Don't compile more than once.
     get(node.cache, :cached, false) && return node
     node.cache[:cached] = true
     # Do things applicable to every node type here.
