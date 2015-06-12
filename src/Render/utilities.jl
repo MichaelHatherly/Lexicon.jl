@@ -89,3 +89,88 @@ function highlight_exported(io, mod, obj)
     color = name(mod, obj) in get(exports) ? :green : :none
     print_with_color(color, io, string(mod))
 end
+
+# Sets an ``:outname`` from the node's configuration or generates one from ``:title``
+function setoutname!(n::Node)
+    haskey(n.cache, :outname) && return
+    haskey(n.data, :outname) && return n.cache[:outname] = utf8(string(n.data[:outname]))
+    replace_chars = Set(Char[' ', '&', '-'])
+    io = IOBuffer()
+    for c in n.data[:title]
+        c in replace_chars ? write(io, "_") : write(io, lowercase(string(c)))
+    end
+    n.cache[:outname] = utf8(takebuf_string(io))
+end
+
+function getheadertype(s::AbstractString)
+    for i in 1:min(length(s), 7)
+        s[i] != '#' && return i < 2 ? :none : symbol("header$(i-1)")
+    end
+    return :none
+end
+
+# Checks the node's configuration settings.
+function checkconfig!{T}(n::Node{T})
+    haskey(n.data, :title) || throw(ArgumentError("'$(rename(T))' has no key ':title'."))
+    isa(n.data[:title], UTF8String) || (n.data[:title] = utf8(string(n.data[:title])))
+    setoutname!(n)
+    for child in n.children
+        checkinner!(child)
+    end
+end
+checkinner!(n) = return
+checkinner!(n::Node{Section}) = checkconfig!(n)
+checkinner!(n::Node{Page})    = checkconfig!(n)
+
+# Returns for the  module ``m`` all documented objects after applying any 
+# configuration filter for the node ``n``.
+function objectsfiltered(n::Node{Docs}, m::Module)
+    objects = Cache.objects(m)
+    f = findconfig(n, :filter, Function)
+    objects = isnull(f) ? objects : filter(get(f), objects)
+end
+
+"""
+Is the documented object ``obj`` exported from the given module ``m``?
+"""
+isexported(m::Module, obj) = name(m, obj) in Cache.getmeta(Cache.getmodule(m))[:exports]
+
+"""
+Is the object ``obj`` from module ``m`` a Docile category ``cat`` or one of the categories ``cats``.
+"""
+:iscategory
+
+iscategory(m::Module, obj, cat::Symbol)          = Cache.getmeta(m, obj)[:category] == cat
+iscategory(m::Module, obj, cats::Vector{Symbol}) = Cache.getmeta(m, obj)[:category] in cats
+
+"""
+Is the docstring's location of object ``obj`` from module ``m``` in one of the files ``files``.
+"""
+function isinfile(m::Module, obj, files::Vector)
+    textsource = Cache.getmeta(m, obj)[:textsource][2]
+    for f in files
+        endswith(textsource, f) && return true
+    end
+    false
+end
+
+
+hasparameters(expr::Expr) = length(expr.args) > 1 && isexpr(expr.args[2], :parameters)
+
+"""
+Extract the expressions from a ``{}`` in a function definition.
+"""
+gettvars(expr::Expr) = isexpr(expr.args[1], :curly) ? expr.args[1].args[2:end] : Any[]
+
+"""
+Extract the expressions representing a method definition's arguments withouth keyword arguments.
+"""
+getargs(expr::Expr) = hasparameters(expr) ? expr.args[3:end] : expr.args[2:end]
+
+"""
+Extract the expressions representing a method definition's keyword arguments.
+"""
+getkwargs(expr::Expr) = hasparameters(expr) ? expr.args[2].args[2:end] : Any[]
+
+# Helper
+hasparameters(expr::Expr) = length(expr.args) > 1 && isexpr(expr.args[2], :parameters)
