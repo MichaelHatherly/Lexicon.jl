@@ -53,7 +53,7 @@ end
 Chained(functors...) = Chained{length(functors)}(functors)
 
 function applyf(chain::Chained, a, b)
-    for each in chain
+    for each in chain.functors
         applyf(each, a, b) && return true
         applyf(each, b, a) && return false
     end
