@@ -43,6 +43,24 @@ applyf(not::Not, x)    = !not.functor(x)
 applyf(not::Not, a, b) = !not.functor(a, b)
 
 
+"""
+Combining functors in order.
+"""
+immutable Chained{N} <: Functor
+    functors :: NTuple{N, Functor}
+end
+
+Chained(functors...) = Chained{length(functors)}(functors)
+
+function applyf(chain::Chained, a, b)
+    for each in chain
+        applyf(each, a, b) && return true
+        applyf(each, b, a) && return false
+    end
+    false
+end
+
+
 if VERSION >= v"0.4-dev"
     Base.call(f::Functor, x)    = applyf(f, x)
     Base.call(f::Functor, a, b) = applyf(f, a, b)
