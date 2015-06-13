@@ -8,6 +8,7 @@ import Lexicon
 
 include(joinpath("Elements", "facts.jl"))
 include(joinpath("Queries", "facts.jl"))
+include(joinpath("Compiler", "facts.jl"))
 include(joinpath("Render", "facts.jl"))
 
 isinteractive() || FactCheck.exitstatus()
