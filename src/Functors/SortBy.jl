@@ -21,7 +21,7 @@ import ..Functors:
 # No sorting.
 immutable Default <: Functor end
 
-applyf(::Default, a, b) = true
+applyf(::Default, a, b) = false
 
 
 # Sort by the string representation of an object.

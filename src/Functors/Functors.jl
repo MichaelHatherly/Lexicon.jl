@@ -39,8 +39,8 @@ end
 
 (!){F <: Functor}(functor::F) = Not{F}(functor)
 
-applyf(not::Not, x)    = !not.functor(x)
-applyf(not::Not, a, b) = !not.functor(a, b)
+applyf(not::Not, x)    = !applyf(not.functor, x)
+applyf(not::Not, a, b) = !applyf(not.functor, a, b)
 
 
 """

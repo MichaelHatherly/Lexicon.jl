@@ -6,6 +6,8 @@ immutable ObjectPair
     obj :: Any
 end
 
+(==)(a::ObjectPair, b::ObjectPair) = a.mod == b.mod && a.obj == b.obj
+
 
 """
 Cache data that is independant of output format.
