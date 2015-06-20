@@ -18,13 +18,35 @@ import ..Functors:
     applyf
 
 
-# Group by the line number and file.
+"""
+By default group by the line number and file of each object.
+
+Usage
+
+    GroupBy.Default()
+
+"""
 immutable Default <: Functor end
 
 applyf(::Default, x) = Cache.getmeta(x.mod, x.obj)[:textsource]
 
 
-# Passing any appropriate function.
+"""
+Group by a user-defined anonymous function that returns a key for
+each object.
+
+Usage
+
+    GroupBy.Custom() do x
+        # ...
+    end
+
+Or without using ``do``-block syntax
+
+    GroupBy.Custom(x -> generate_key(x))
+
+where ``generate_key`` is an arbitrary function used for illustrative purposes.
+"""
 immutable Custom <: Functor
     func :: Function
 end

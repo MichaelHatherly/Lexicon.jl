@@ -38,6 +38,10 @@ import ..Queries:
     Results,
     Result
 
+import ..Utilities:
+
+    name
+
 
 import ..Markdown
 

@@ -18,4 +18,6 @@ g_1(x) = x
 "..."
 g_2(x) = x
 
+export D_1, f_1, g_1
+
 end

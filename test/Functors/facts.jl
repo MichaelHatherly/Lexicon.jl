@@ -89,6 +89,20 @@ facts("Functors.") do
         for (res, obj) in zip([false, true, false, false, true, false, true], objects)
             @fact applyf(f6, obj) => res
         end
+
+        # Pick only exported objects.
+        f7 = FilterBy.Exported()
+
+        for (res, obj) in zip([true, false, true, true, false, true, false], objects)
+            @fact applyf(f7, obj) => res
+        end
+
+        # Pick only non-exported objects.
+        f8 = !FilterBy.Exported()
+
+        for (res, obj) in zip([false, true, false, false, true, false, true], objects)
+            @fact applyf(f8, obj) => res
+        end
     end
 
     context("SortBy.") do
