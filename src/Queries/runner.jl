@@ -51,7 +51,7 @@ end
 function getscore(term::RegexTerm, m, obj)
     rawdocs = Docile.Cache.getraw(m, obj)
     pieces  = matchall(term.regex, rawdocs)
-    (length(pieces) - 1) / length(rawdocs)
+    length(pieces) / length(rawdocs)
 end
 
 ## Object. ##
