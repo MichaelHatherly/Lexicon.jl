@@ -9,6 +9,7 @@ using Compat
 
 import Docile.Utilities: @H_str, Head
 import Docile
+import ..Lexicon.Utilities: @s_str
 import Base.Meta: isexpr, quot
 
 include("utilities.jl")

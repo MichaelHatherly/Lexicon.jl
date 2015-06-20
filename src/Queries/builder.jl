@@ -42,7 +42,15 @@ end
 build(H".", ex::Expr)     = :(Object($(ex.args[end]), $(esc(ex))))
 build(H"tuple", ex::Expr) = :(ArgumentTypes($(esc(ex))))
 
-build(H"macrocall", ex::Expr) = build(ex.args[1])
+function build(H"macrocall", ex::Expr)
+    # Non-empty regular expression patterns are used for matching.
+    # Empty pattern will search for documentation about the macro.
+    if ex.args[1] ∈ (s"@r_str", s"@r_mstr") && ex.args[2] ≠ ""
+        :(RegexTerm($(esc(ex))))
+    else
+        build(ex.args[1])
+    end
+end
 
 function build(H"::", ex::Expr)
     out = :(ReturnTypes($(esc(last(ex.args)))))

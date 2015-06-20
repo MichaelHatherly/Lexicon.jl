@@ -28,4 +28,6 @@ function url(linesource::Tuple)
     end
 end
 
+macro s_str(text) Expr(:quote, symbol(text)) end
+
 end

@@ -46,6 +46,14 @@ function getscore(term::Text, m, obj)
     (length(pieces) - 1) / length(rawdocs)
 end
 
+## Regular expressions. ##
+
+function getscore(term::RegexTerm, m, obj)
+    rawdocs = Docile.Cache.getraw(m, obj)
+    pieces  = matchall(term.regex, rawdocs)
+    (length(pieces) - 1) / length(rawdocs)
+end
+
 ## Object. ##
 
 function getscore(term::Object, m, obj::Docile.Collector.QualifiedSymbol)

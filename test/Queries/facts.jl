@@ -8,6 +8,7 @@ import Lexicon.Queries:
     Query,
 
     Text,
+    RegexTerm,
     Object,
     Metadata,
 
@@ -138,6 +139,18 @@ facts("Query generation.") do
 
         check(query"\"...\"", Text("..."), 0)
         check(query"\"...\" 1", Text("..."), 1)
+
+    end
+
+    context("Regular Expressions.") do
+
+        check(query"r\"...\"", RegexTerm(r"..."), 0)
+        check(query"r\"...\" 1", RegexTerm(r"..."), 1)
+
+        λ = getfield(Base, symbol("@r_str"))
+
+        check(query"r\"\"", Object(symbol("@r_str"), λ), 0)
+        check(query"r\"\" 1", Object(symbol("@r_str"), λ), 1)
 
     end
 
@@ -274,6 +287,11 @@ facts("Running queries.") do
     context("Text.") do
         runquery(query"\"...\"")
         runquery(query"\"\"")
+    end
+
+    context("Regular Expressions.") do
+        runquery(query"r\"...\"")
+        runquery(query"r\"\"")
     end
 
     context("Metadata.") do

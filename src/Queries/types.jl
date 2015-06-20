@@ -49,6 +49,22 @@ end
 (==)(a::Text, b::Text) = a.text == b.text
 
 """
+Match object docstrings with regular expressions.
+"""
+immutable RegexTerm <: DataTerm
+    regex :: Regex
+end
+
+if VERSION < v"0.4-dev+5050"
+    const REGEX_OPTIONS_FIELD = :options
+else
+    const REGEX_OPTIONS_FIELD = :compile_options
+end
+
+(==)(a::RegexTerm, b::RegexTerm) = a.regex.pattern == b.regex.pattern &&
+    getfield(a.regex, REGEX_OPTIONS_FIELD) == getfield(b.regex, REGEX_OPTIONS_FIELD)
+
+"""
 Match the object ``object`` or it's symbolic representation.
 
 The ``symbol`` field is used when matching against globals and typealiases.
