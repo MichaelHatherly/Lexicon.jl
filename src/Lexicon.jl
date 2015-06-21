@@ -27,4 +27,6 @@ include(joinpath("Render", "Render.jl"))
 
 include(joinpath("Externals", "Externals.jl"))
 
+include(joinpath("Doctests", "Doctests.jl"))
+
 end # module

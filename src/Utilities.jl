@@ -64,4 +64,7 @@ function name(mod, obj::Aside)
     return symbol("aside_$(first(splitext(basename(path))))_L$(linenumber)")
 end
 
+
+message(msg::AbstractString) = print_with_color(:magenta, "Lexicon: ", msg, "\n")
+
 end

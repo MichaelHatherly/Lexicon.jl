@@ -11,6 +11,7 @@ include(joinpath("Queries", "facts.jl"))
 include(joinpath("Compiler", "facts.jl"))
 include(joinpath("Render", "facts.jl"))
 include(joinpath("Functors", "facts.jl"))
+include(joinpath("Doctests", "facts.jl"))
 
 isinteractive() || FactCheck.exitstatus()
 
