@@ -5,7 +5,10 @@ site_author:         Michael Hatherly
 theme:               flatly
 markdown_extensions: [tables, fenced_code]
 pages:
-    - ['index.md', 'Introduction']
-    - ['manual.md', 'Manual', 'Overview']
-    - ['api/Lexicon.md', 'API', 'Lexicon']
-    - ['api/index.md', 'API', 'Index']
+- Introduction: index.md
+- Manual:
+  - Overview: manual.md
+- API:
+  - Lexicon: api/Lexicon.md
+  - Index: api/index.md
+
