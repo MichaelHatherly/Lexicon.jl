@@ -1,3 +1,7 @@
+### v0.1.11
+
+* Fixes for Julia 0.4 bare docstring syntax.
+
 ### v0.1.10
 
 * Changes for Docile compatibility.
