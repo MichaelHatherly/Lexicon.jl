@@ -1,3 +1,7 @@
+### v0.1.13
+
+* Fix 0.3 error when writing docs with unicode characters.
+
 ### v0.1.12
 
 * Fix for Windows path error.
