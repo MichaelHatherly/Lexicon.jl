@@ -214,7 +214,7 @@ function generate_html_id(s::AbstractString)
         elseif c in replace_chars
             write(io, "_")
         else
-            write(io, string(Int(c)))
+            write(io, string(@compat(Int(c))))
         end
     end
     # Note: In our case no need to check for begins with letter or is empty
