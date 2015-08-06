@@ -1,3 +1,7 @@
+### v0.1.15
+
+* Fix for changes in 0.4 for return type of ``Dict`` iterators.
+
 ### v0.1.14
 
 * Fix test file loading error.
