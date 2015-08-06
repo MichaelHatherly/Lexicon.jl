@@ -137,7 +137,7 @@ function prepare_entries(idx::Dict{Symbol, Any}, ents::Entries, doc::Metadata, c
     pageanchors = Dict{Symbol, Dict{String, Int}}([])
     for k in config.category_order
         haskey(idx, k) || continue
-        k in pageanchors || (pageanchors[k] = Dict([]))
+        k in keys(pageanchors) || (pageanchors[k] = Dict())
         basenames = pageanchors[k]
         for (s, obj) in idx[k]
             ent = entries(doc)[obj]
