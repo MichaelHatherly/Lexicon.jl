@@ -17,7 +17,7 @@ function writemime(io::IO, mime::MIME"text/plain", qr::QueryResults)
     single = length(qr.matches) ≡ 1
     count = 1
     msg = false
-    for (score, entries) in reverse!(sort(collect(qr.scores)))
+    for (score, entries) in reverse!(sort([(a, b) for (a, b) in qr.scores]))
         for entry in entries
             match = qr.matches[entry]
             count, msg = writemime(io, mime, match, count, qr.query.index, single)

@@ -11,7 +11,9 @@ function test_query(q, text)
     @fact doc => text
 end
 
-getdoc(res) = data(docs(first(first(reverse(sort(collect(res.scores))))[2])))
+# getdoc(res) = data(docs(first(first(reverse(sort(collect(res.scores))))[2])))
+
+getdoc(res) = data(docs(first(first(reverse(sort([(a, b) for (a, b) in res.scores])))[2])))
 
 facts("Query results.") do
 
@@ -168,4 +170,3 @@ facts("Query results.") do
 
     end
 end
-
