@@ -4,8 +4,8 @@ environment:
   - JULIAVERSION: "stable/win32"
   - JULIAVERSION: "stable/win64"
   # Nightlies
-#  - JULIAVERSION: "download/win32"
-#  - JULIAVERSION: "download/win64"
+  - JULIAVERSION: "download/win32"
+  - JULIAVERSION: "download/win64"
 
 install:
 # Download most recent Julia Windows binary
@@ -16,7 +16,7 @@ install:
 build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
-  - C:\projects\julia\bin\julia -e "versioninfo(); Pkg.init(); Pkg.clone(pwd(), \"Lexicon\"); Pkg.add(\"Lint\")"
+  - C:\projects\julia\bin\julia -e "versioninfo(); Pkg.init(); Pkg.clone(pwd(), \"Lexicon\")"
 
 test_script:
   - C:\projects\julia\bin\julia test\runtests.jl
