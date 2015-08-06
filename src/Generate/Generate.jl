@@ -1,5 +1,7 @@
 module Generate
 
+include("atfile.jl")
+
 """
 
 """
