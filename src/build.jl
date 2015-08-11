@@ -58,18 +58,27 @@ buildwriter(part, isdef, m) = isdef ?
 function md_methodtable(io, f, m::Module)
     println(io, "### ", first(methods(f)).func.code.name)
     println(io, "```")
-    for meth in methods(f)
-        md_method(io, meth, m)
+
+    # We only consider methods with are defined in the parent (project) directory
+    pd = joinpath(Pkg.dir(), string(module_name(m)))
+    meths = filter(x -> startswith(string(x.func.code.file), pd), methods(f))
+    for (i, meth) in enumerate(meths)
+        md_method(io, meth, i, m)
     end
     println(io, "```")
+    print(io, "*Source:")
+    for (i, meth) in enumerate(meths)
+        print(io, " [", i, "](", method_link(meth), ")")
+    end
+    println(io, '*')
 end
-function md_method(io, meth, m::Module)
+function md_method(io, meth, i, m::Module)
     # We only print methods with are defined in the parent (project) directory
     pd = joinpath(Pkg.dir(), string(module_name(m)))
     if !(startswith(string(meth.func.code.file), pd))
         return
     end
-    print(io, meth.func.code.name)
+    print(io, i, "  ",  meth.func.code.name)
     tv, decls, file, line = Base.arg_decl_parts(meth)
     if !isempty(tv)
         Base.show_delim_array(io, tv, '{', ',', '}', false)
@@ -91,3 +100,6 @@ function has_h1_to_h3(md)
     return false
 end
 
+function method_link(meth)
+    "#pass"
+end
