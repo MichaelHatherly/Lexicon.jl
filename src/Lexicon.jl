@@ -37,7 +37,10 @@ export
     skipped,
     EachEntry,
     Config,
-    Index
+    Index,
+
+    @file,
+    files
 
 
 @document
@@ -53,6 +56,7 @@ include("query.jl")
 include("render.jl")
 include("doctest.jl")
 include("filtering.jl")
+include("build.jl")
 
 __init__() = setup_help() # Hook into the REPL's `?`.
 
