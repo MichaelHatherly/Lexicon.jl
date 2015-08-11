@@ -38,7 +38,7 @@ buildwriter(t::AbstractString, m::Module) = Expr(:block,
 
 buildwriter(part, isdef, m) = isdef ?
     begin
-        parts = Expr(:vect, [:(($(parse(p))), Base.Docs.@doc($(parse(p)))) for p in split(part, r"\s*,\s*")]...)
+        parts = Expr(:vect, [:(($(parse(p))), Base.Docs.@doc($(parse(p)))) for p in filter(x -> strip(x) != "", split(part, r"\s*[, \n]\s*"))]...)
         quote
             for (f, docstring) in $(esc(parts))
                 if isa(f, Function)
