@@ -9,7 +9,7 @@
 macro file(fn, md_string, m::Module) buildfile(fn, md_string, m) end
 
 function generate_for(m::Module, file_names...; doc_dir="docs", gen_dir="_generated")
-    eval(Expr(:toplevel, quote using $(symbol(m)) end))
+    eval(Expr(:toplevel, Expr(:using, symbol(m))))
     dd = joinpath(Pkg.dir(string(m)), doc_dir)
     for file_name in file_names
         eval(quote
@@ -66,9 +66,9 @@ function md_methodtable(io, f, m::Module)
     println(io, "```")
     print(io, "*Source:")
     for (i, meth) in enumerate(meths)
-        print(io, " [", i, "](", method_link(meth), ")")
+        print(io, " [", i, "](", method_link(meth, m), ")")
     end
-    println(io, '*')
+    println(io, "*.")
     println(io)
 end
 function md_method(io, meth, i, m::Module)
@@ -98,11 +98,6 @@ function has_h1_to_h3(md::Markdown.MD)
     end
     return false
 end
-
-function method_link(meth)
-    "#pass"
-end
-
 
 function local_doc(func; from = Main, include_submodules = true)
     if isa(func, Symbol)
@@ -152,3 +147,31 @@ end
 
 validmodule(mod::Module, object::Module) = object ≠ mod && object ≠ Main
 validmodule(::Module, other) = false
+
+function method_link(meth::Method, m::Module)
+    u, commit, root = module_url(meth, m)
+    file = relpath(string(meth.func.code.file), root)
+    line = meth.func.code.line
+
+    return "https://github.com/$u/tree/$commit/$file#L$line"
+end
+
+const _URL_CACHE = Dict{Module, Any}()
+function module_url(meth::Method, m::Module)
+    found = get(_URL_CACHE, m, nothing)
+    if found != nothing
+        return found
+    end
+    d = dirname(string(meth.func.code.file))
+    u = Pkg.Git.readchomp(`config remote.origin.url`, dir=d)
+    u = match(Pkg.Git.GITHUB_REGEX,u).captures[1]
+
+    root = cd(d) do # dir=d confuses --show-toplevel, apparently
+        Pkg.Git.readchomp(`rev-parse --show-toplevel`)
+    end
+    root = @windows? replace(root, "/", "\\") : root
+
+    commit = Pkg.Git.readchomp(`rev-parse HEAD`, dir=root)
+    return _URL_CACHE[m] = (u, commit, root)
+end
+
