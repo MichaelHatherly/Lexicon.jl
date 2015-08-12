@@ -6,12 +6,10 @@
 
 # Currently this prints the methodtable followed by the docstring.
 
-using LightGraphs
-
-
 macro file(fn, md_string, m::Module) buildfile(fn, md_string, m) end
 
 function files(file_names, m::Module; doc_dir="doc", gen_dir="_generated")
+    eval(Expr(:toplevel, quote using $(symbol(m)) end))
     dd = joinpath(Pkg.dir(string(m)), doc_dir)
     for file_name in file_names
         eval(quote
