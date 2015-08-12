@@ -36,7 +36,7 @@ buildwriter(t::AbstractString, m::Module) = Expr(:block,
 
 buildwriter(part, isdef, m) = isdef ?
     begin
-        parts = Expr(:vect, [:(($(parse(p))), Base.Docs.@doc($(parse(p)))) for p in filter(x -> strip(x) != "", split(part, r"\s*[, \n]\s*"))]...)
+        parts = Expr(:vect, [:(($(parse(p))), $(local_doc(parse(p); from=m))) for p in filter(x -> strip(x) != "", split(part, r"\s*[, \n]\s*"))]...)
         quote
             for (f, docstring) in $(esc(parts))
                 if isa(f, Function)
@@ -69,6 +69,7 @@ function md_methodtable(io, f, m::Module)
         print(io, " [", i, "](", method_link(meth), ")")
     end
     println(io, '*')
+    println(io)
 end
 function md_method(io, meth, i, m::Module)
     # We only print methods with are defined in the parent (project) directory
@@ -88,7 +89,7 @@ function md_method(io, meth, i, m::Module)
     println(io)
 end
 
-function has_h1_to_h3(md)
+function has_h1_to_h3(md::Markdown.MD)
     for i in 1:length(md)
         s = md[i]
         if isa(s, Markdown.Header) && typeof(s).parameters[1] <= 3
@@ -101,3 +102,40 @@ end
 function method_link(meth)
     "#pass"
 end
+
+
+function local_doc(func; from = Main, include_submodules = true)
+    if isa(func, Symbol)
+        func = from.(func)
+    end
+    if isa(func, Module)
+        # TODO work with submodules
+        return from.__META__[func]
+    end
+    out = IOBuffer()
+    for m in (include_submodules ? submodules(from) : Set([from]))
+        if isdefined(m, :__META__)
+            meta = m.__META__
+            if haskey(meta, func)
+                for each in meta[func].order
+                    writemime(out, "text/plain", Base.Docs.doc(func, each))
+                end
+            end
+        end
+    end
+    Markdown.parse(takebuf_string(out))
+end
+
+function submodules(mod::Module)
+   out = Set([mod])
+   for name in names(mod, true)
+       if isdefined(mod, name)
+           object = getfield(mod, name)
+           validmodule(mod, object) && union!(out, submodules(object))
+       end
+   end
+   out
+end
+
+validmodule(mod::Module, object::Module) = object ≠ mod && object ≠ Main
+validmodule(::Module, other) = false
