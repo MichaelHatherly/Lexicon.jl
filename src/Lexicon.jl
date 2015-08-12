@@ -39,8 +39,7 @@ export
     Config,
     Index,
 
-    @file,
-    files
+    generate_for
 
 
 @document
