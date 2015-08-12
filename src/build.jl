@@ -117,13 +117,26 @@ function local_doc(func; from = Main, include_submodules = true)
         if isdefined(m, :__META__)
             meta = m.__META__
             if haskey(meta, func)
+                if meta[func].main != nothing
+                    writemime(out, "text/plain", meta[func].main)
+                    println(out)
+                    println(out)
+                end
                 for each in meta[func].order
                     writemime(out, "text/plain", Base.Docs.doc(func, each))
+                    # two lines may be required to end the block.
+                    println(out)
+                    println(out)
                 end
             end
         end
     end
-    Markdown.parse(takebuf_string(out))
+    plain_docstring = takebuf_string(out)
+    if plain_docstring == ""
+        println("WARN: No docstring found for ", func)
+    end
+    return Markdown.parse(plain_docstring)
+
 end
 
 function submodules(mod::Module)
