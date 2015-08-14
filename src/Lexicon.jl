@@ -32,6 +32,7 @@ export
     update!,
 
     doctest,
+    run_doctests,
     failed,
     passed,
     skipped,
