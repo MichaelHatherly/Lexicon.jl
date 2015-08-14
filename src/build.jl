@@ -58,6 +58,7 @@ buildwriter(part, isdef, m) = isdef ?
     :(print(file, warn_if_h1($(esc(part)))))
 
 function warn_if_h1(part)
+    # NOTE: ATM this catches # comments inside ```, we could split on ```?
     if ismatch(r"(^|\n)\s{0,3}#[^#]", part) || ismatch(r"[^\n]\n\s{0,3}===", part)
         println("WARN: h1 detected in markdown file, this may cause ",
                 "formatting errors in mkdocs. ")
@@ -115,6 +116,9 @@ function local_doc(func::Symbol; from = Main, include_submodules = true)
 end
 function local_doc(func::Expr; from = Main, include_submodules = true)
     local_doc(eval(func); from=from, include_submodules=include_submodules)
+end
+function local_doc(m::Module; from = Main, include_submodules=include_submodules)
+    return from.__META__[m]
 end
 function local_doc(func::Function; from = Main, include_submodules = true)
     if isa(func, Module)
