@@ -55,7 +55,16 @@ buildwriter(part, isdef, m) = isdef ?
              end
         end
     end :
-    :(print(file, $(esc(part))))
+    :(print(file, warn_if_h1($(esc(part)))))
+
+function warn_if_h1(part)
+    if ismatch(r"(^|\n)\s{0,3}#[^#]", part) || ismatch(r"[^\n]\n\s{0,3}===", part)
+        println("WARN: h1 detected in markdown file, this may cause ",
+                "formatting errors in mkdocs. ")
+        println("      Titles should be defined in mkdocs.yml.")
+    end
+    part
+end
 
 function md_methodtable(io, f, m::Module)
     println(io, "```")
