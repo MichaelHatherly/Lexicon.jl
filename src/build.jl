@@ -40,7 +40,8 @@ buildwriter(part, isdef, m) = isdef ?
         quote
             for (f, docstring) in $(esc(parts))
                 if isa(f, Function)
-                    md_methodtable(file, f, $m)
+                    println(file, "### ", first(methods(f)).func.code.name)
+                    println(file)
                 end
                 if has_h1_to_h3(docstring)
                     println("WARN: docstring for ", f, " contains h1 - h3. ",
@@ -48,15 +49,16 @@ buildwriter(part, isdef, m) = isdef ?
                 end
                 writemime(file, "text/plain", docstring)
                 println(file)
-            end
+                if isa(f, Function)
+                    md_methodtable(file, f, $m)
+                end
+             end
         end
     end :
     :(print(file, $(esc(part))))
 
 function md_methodtable(io, f, m::Module)
-    println(io, "### ", first(methods(f)).func.code.name)
     println(io, "```")
-
     # We only consider methods with are defined in the parent (project) directory
     pd = joinpath(Pkg.dir(), string(module_name(m)))
     meths = filter(x -> startswith(string(x.func.code.file), pd), methods(f))
@@ -99,10 +101,13 @@ function has_h1_to_h3(md::Markdown.MD)
     return false
 end
 
-function local_doc(func; from = Main, include_submodules = true)
-    if isa(func, Symbol)
-        func = from.(func)
-    end
+function local_doc(func::Symbol; from = Main, include_submodules = true)
+    local_doc(from.(func); from=from, include_submodules=include_submodules)
+end
+function local_doc(func::Expr; from = Main, include_submodules = true)
+    local_doc(eval(func); from=from, include_submodules=include_submodules)
+end
+function local_doc(func::Function; from = Main, include_submodules = true)
     if isa(func, Module)
         # TODO work with submodules
         return from.__META__[func]
