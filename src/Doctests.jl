@@ -19,40 +19,35 @@ type Result
     source  :: Code
 end
 
-# TODO: better printing.
-function Base.writemime(io :: IO, mime :: MIME"text/plain", res :: Result)
-    header =
-    """
-    +++
-    Object: $(res.object)
-    Status: $(res.status)
-    """
-    extra =
-    """
-    Result: $(res.data)
-    Source:
-
-    ```
-    $(res.source.code)
-    ```
-    """
-    println(io, header)
-    res.status == FAILED && println(io, extra)
-end
-
 type Results
     modname :: Module
     results :: ObjectIdDict
 end
 
-function Base.writemime(io :: IO, mime :: MIME"text/plain", res :: Results)
-    println(io, "\n", res.modname, " test results:\n")
-    for (k, v) in sort(collect(res.results), by = x -> string(x[1]))
-        for each in v
-            writemime(io, mime, each)
-        end
+Base.writemime(io :: IO, :: MIME"text/plain", res :: Results) =
+    print(io, "Results($(res.modname), ...)")
+
+function matching(f, res :: Results)
+    out = []
+    for xs in values(res.results), x in xs
+        f(x) && push!(out, x)
     end
+    out
 end
+
+results(res :: Results) = matching(x -> true, res)
+passed(res :: Results)  = matching(x -> x.status == PASSED, res)
+failed(res :: Results)  = matching(x -> x.status == FAILED, res)
+
+describe(res :: Results) = Markdown.parse(
+"""
+### ``$(res.modname)`` Test Summary
+
+- **Total**:  $(length(results(res)))
+- **Passed**: $(length(passed(res)))
+- **Failed**: $(length(failed(res)))
+"""
+)
 
 function doctest(mod :: Module)
     out = ObjectIdDict()
