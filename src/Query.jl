@@ -1,0 +1,6 @@
+"""
+    Query
+"""
+module Query
+
+end

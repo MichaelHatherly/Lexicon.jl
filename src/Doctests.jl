@@ -1,0 +1,6 @@
+"""
+    Doctests
+"""
+module Doctests
+
+end

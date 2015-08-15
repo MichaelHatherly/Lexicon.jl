@@ -1,8 +1,6 @@
+"""
+    Utilities
+"""
 module Utilities
-
-"""
-
-"""
-Utilities
 
 end
