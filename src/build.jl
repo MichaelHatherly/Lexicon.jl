@@ -1,13 +1,30 @@
-# This file generated the Markdown documentation files.
 
-# The @file macro generates the documentation for a particular file
-# where the {{method1, methods2}} includes the documentation for each method
-# via the `buildwriter` function.
+"""The `@file` macro takes filename and a `md_string` and a module m.
 
-# Currently this prints the methodtable followed by the docstring.
+First it expands the {{}} syntax with respect to the module, i.e. docstings
+and signatures are inserted, if you pass a list of functions. If you pass
+commands these will be executed. You can't do both.
 
+    {{
+        func1
+        func2
+    }}
+
+    {{
+        > foo()
+    }}
+
+Multi-line commands are not-yet supported.
+"""
 macro file(fn, md_string, m::Module) buildfile(fn, md_string, m) end
 
+"""Build the documentation for module `m`, from the following files in
+`file_names`.
+
+1. The content will be read from each file.
+2. The `{{}}` syntax will be expand (see `@file`).
+3. The expanded markdown file will be written to `doc_dir/gen_dir/file_name`.
+"""
 function generate_for(m::Module, file_names...; doc_dir="docs", gen_dir="_generated")
     eval(Expr(:toplevel, Expr(:using, symbol(m))))
     dd = joinpath(Pkg.dir(string(m)), doc_dir)
@@ -18,6 +35,7 @@ function generate_for(m::Module, file_names...; doc_dir="docs", gen_dir="_genera
     end
 end
 
+"""Save the `{{}}`-expanded version of the markdown string to the target file."""
 buildfile(t, s::AbstractString, m::Module) = buildfile(t, Expr(:string, s), m)
 
 buildfile(target, source::Expr, m::Module) = quote
@@ -38,7 +56,8 @@ buildwriter(part, isdef, m) = isdef ?
     execute_or_doc(part, m):
     :(print(file, warn_if_h1($(esc(part)))))
 
-"""Check whether the block is all to be run e.g.
+"""Check whether the block contains only commands (lines which begin with
+`"> "` or `">! "` (the latter meaning the command is hidden). e.g.
 
     {{
         >! foo() = 23
@@ -49,7 +68,7 @@ buildwriter(part, isdef, m) = isdef ?
 
 Otherwise it's assumed the block is purely methods/modules to be documented.
 
-Returns (is_exe::Boo, things_to_run_or_funcs::Array)
+Returns (is_exe::Bool, things_to_run_or_funcs::Array)
 """
 function to_execute(part)
     res = Any[]
@@ -77,6 +96,9 @@ function to_execute(part)
     end
 end
 
+"""A part of the markdown file within the `{{}}`-syntax, should either be
+executed or the documentation-expanded.
+"""
 function execute_or_doc(part, m::Module)
     is_exe, arr = to_execute(part)
     if is_exe
@@ -86,6 +108,7 @@ function execute_or_doc(part, m::Module)
     end
 end
 
+"""Collect the documentation from an array of functions (defined in the module),"""
 function docit(arr, m::Module)
     parts = Expr(:vect, [:(($(parse(p))), $(local_doc(parse(p); from=m))) for p in arr]...)
     quote
@@ -107,6 +130,7 @@ function docit(arr, m::Module)
     end
 end
 
+"""Execute and array of commands (to parse and eval)."""
 function execute(arr)
     quote
         println(file, "```") # should have jl suffix?
@@ -133,6 +157,11 @@ function execute(arr)
     end
 end
 
+"""Throw a warning if docs contains an h1, since this can cause issues when
+rendering in mkdocs.
+
+Note: It should be preferred to insert Chapter headings automatically.
+"""
 function warn_if_h1(part)
     # NOTE: ATM this catches # comments inside ```, we could split on ```?
     if ismatch(r"(^|\n)\s{0,3}#[^#]", part) || ismatch(r"[^\n]\n\s{0,3}===", part)
@@ -143,6 +172,7 @@ function warn_if_h1(part)
     part
 end
 
+"""Collect the signatures and source-links to the methods of f defined in m."""
 function md_methodtable(io, f, m::Module)
     println(io, "```")
     # We only consider methods with are defined in the parent (project) directory
@@ -159,6 +189,10 @@ function md_methodtable(io, f, m::Module)
     println(io, "*.")
     println(io)
 end
+"""Print the signature of the method meth.
+
+If meth is not defined in `m` then nothing will be printed.
+"""
 function md_method(io, meth, i, m::Module)
     # We only print methods with are defined in the parent (project) directory
     pd = joinpath(Pkg.dir(), string(module_name(m)))
@@ -177,6 +211,12 @@ function md_method(io, meth, i, m::Module)
     println(io)
 end
 
+"""Warn if a docstring has a h1-h3. These can mess up formatting which
+makes assumptions on the layout of the documentation based on the levels
+of the headers.
+
+h4s should be preferred to denote sections in docstrings.
+"""
 function has_h1_to_h3(md::Markdown.MD)
     for i in 1:length(md)
         s = md[i]
@@ -187,6 +227,9 @@ function has_h1_to_h3(md::Markdown.MD)
     return false
 end
 
+"""Return the markdown documentation for the function or module as it's
+defined in `from`.
+"""
 function local_doc(func::Symbol; from = Main, include_submodules = true)
     local_doc(from.(func); from=from, include_submodules=include_submodules)
 end
@@ -245,6 +288,10 @@ end
 validmodule(m::Module, object::Module) = object ≠ m && object ≠ Main
 validmodule(::Module, other) = false
 
+"""Return github link to the line-number where the method is defined.
+
+Note: This references the current commit sha.
+"""
 function method_link(meth::Method, m::Module)
     u, commit, root = module_url(meth, m)
     file = relpath(string(meth.func.code.file), root)
@@ -254,6 +301,9 @@ function method_link(meth::Method, m::Module)
 end
 
 const _URL_CACHE = Dict{Module, Any}()
+"""Return the github account/project, the current commit, and the project
+root; as a tuple.
+"""
 function module_url(meth::Method, m::Module)
     found = get(_URL_CACHE, m, nothing)
     if found != nothing
