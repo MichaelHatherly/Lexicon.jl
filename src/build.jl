@@ -35,27 +35,103 @@ buildwriter(t::AbstractString, m::Module) = Expr(:block,
 )
 
 buildwriter(part, isdef, m) = isdef ?
-    begin
-        parts = Expr(:vect, [:(($(parse(p))), $(local_doc(parse(p); from=m))) for p in filter(x -> strip(x) != "", split(part, r"\s*[, \n]\s*"))]...)
-        quote
-            for (f, docstring) in $(esc(parts))
-                if isa(f, Function)
-                    println(file, "### ", first(methods(f)).func.code.name)
-                    println(file)
-                end
-                if has_h1_to_h3(docstring)
-                    println("WARN: docstring for ", f, " contains h1 - h3. ",
-                          "This may confuse formatting.")
-                end
-                writemime(file, "text/plain", docstring)
-                println(file)
-                if isa(f, Function)
-                    md_methodtable(file, f, $m)
-                end
-             end
-        end
-    end :
+    execute_or_doc(part, m):
     :(print(file, warn_if_h1($(esc(part)))))
+
+"""Check whether the block is all to be run e.g.
+
+    {{
+        >! foo() = 23
+        >! bar() = 1
+        > foo()
+        > bar()
+    }}
+
+Otherwise it's assumed the block is purely methods/modules to be documented.
+
+Returns (is_exe::Boo, things_to_run_or_funcs::Array)
+"""
+function to_execute(part)
+    res = Any[]
+    broken = false
+    # NOTE: If you have '\r' as line-breaks you're going to have a bad time.
+    for line in split(part, '\n')
+        # TODO allow multiline (e.g. with some syntax, like . ?)
+        if ismatch(r"^\s*>!? .+$", line)
+            mat = match(r"^\s*>(!?) (.*)$", line)
+            hidden = mat[1] == "!"
+            code = mat[2]
+            push!(res, (hidden, code))
+        else
+            if !(strip(line) == "")
+                broken = true
+                break
+            end
+        end
+    end
+    if !broken
+        return (true, res)
+    else
+        return (false, filter(x -> strip(x) != "",
+                              split(part, r"\s*[, \n]\s*")))
+    end
+end
+
+function execute_or_doc(part, m::Module)
+    is_exe, arr = to_execute(part)
+    if is_exe
+        execute(arr)
+    else
+        docit(arr, m)
+    end
+end
+
+function docit(arr, m::Module)
+    parts = Expr(:vect, [:(($(parse(p))), $(local_doc(parse(p); from=m))) for p in arr]...)
+    quote
+        for (f, docstring) in $(esc(parts))
+            if isa(f, Function)
+                println(file, "### ", first(methods(f)).func.code.name)
+                println(file)
+            end
+            if has_h1_to_h3(docstring)
+                println("WARN: docstring for ", f, " contains h1 - h3. ",
+                      "This may confuse formatting.")
+            end
+            writemime(file, "text/plain", docstring)
+            println(file)
+            if isa(f, Function)
+                md_methodtable(file, f, $m)
+            end
+         end
+    end
+end
+
+function execute(arr)
+    quote
+        println(file, "```") # should have jl suffix?
+        for (hidden, code) in $arr
+            hidden || println(file, "julia> ", code)
+            old_stderr, old_stdout = STDERR, STDOUT
+            hidden ? redirect_stderr() : redirect_stderr(file)
+            hidden ? redirect_stdout() : redirect_stdout(file)
+            try
+                res = eval(parse(code))
+                hidden || ismatch(r";\s*$", code) || println(file, res)
+            catch e
+                # Note: ATM this is printed even if hidden is true.
+                showerror(file, e)
+                println(file)
+            finally
+                redirect_stderr(old_stderr)
+                redirect_stdout(old_stdout)
+            end
+            #println(file)
+        end
+        println(file, "```")
+        println(file)
+    end
+end
 
 function warn_if_h1(part)
     # NOTE: ATM this catches # comments inside ```, we could split on ```?
@@ -138,6 +214,8 @@ function local_doc(func::Function; from = Main, include_submodules = true)
                 for each in meta[func].order
                     writemime(out, "text/plain", Base.Docs.doc(func, each))
                     # two lines may be required to end the block.
+                    # TODO I think this is printing too many blank lines
+                    # since often the writemime above does nothing.
                     println(out)
                     println(out)
                 end
@@ -152,18 +230,19 @@ function local_doc(func::Function; from = Main, include_submodules = true)
 
 end
 
-function submodules(mod::Module)
-   out = Set([mod])
-   for name in names(mod, true)
-       if isdefined(mod, name)
-           object = getfield(mod, name)
-           validmodule(mod, object) && union!(out, submodules(object))
+"""Returns the Set of submodules of module `m`."""
+function submodules(m::Module)
+   out = Set([m])
+   for name in names(m, true)
+       if isdefined(m, name)
+           object = getfield(m, name)
+           validmodule(m, object) && union!(out, submodules(object))
        end
    end
    out
 end
 
-validmodule(mod::Module, object::Module) = object ≠ mod && object ≠ Main
+validmodule(m::Module, object::Module) = object ≠ m && object ≠ Main
 validmodule(::Module, other) = false
 
 function method_link(meth::Method, m::Module)
