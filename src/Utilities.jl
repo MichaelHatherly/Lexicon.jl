@@ -44,4 +44,30 @@ function files(cond, root, out = Set(); recursive = true)
     out
 end
 
+"""
+    filehook(f, file)
+
+> Run a function ``f(file)`` whenever ``file`` is changed.
+
+Returns a function that can be called to abort the watcher.
+
+**Usage:**
+
+```julia
+fn = filehook("foobar.md") do
+    # ...
+end
+# ...
+fn()
+```
+"""
+function filehook(f, file)
+    s = Ref(true)
+    @async while true
+        watch_file(file)
+        s[] ? f(file) : return
+    end
+    () -> (s[] && (s[] = false; touch(file)); file)
+end
+
 end
