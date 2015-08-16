@@ -13,19 +13,19 @@ tryget(mod, field, default) = isdefined(mod, field) ? getfield(mod, field) : def
 > The set of submodules of a module ``mod``.
 
 """
-function submodules(mod :: Module)
-    out = Set([mod])
+function submodules(mod :: Module, out = Set())
+    push!(out, mod)
     for name in names(mod, true)
         if isdefined(mod, name)
             object = getfield(mod, name)
-            validmodule(mod, object) && union!(out, submodules(object))
+            validmodule(mod, object) && submodules(object, out)
         end
     end
     out
 end
 
-validmodule(mod :: Module, object :: Module) = object ≠ mod && object ≠ Main
-validmodule(:: Module, other)                = false
+validmodule(a :: Module, b :: Module) = b ≠ a && b ≠ Main
+validmodule(a, b) = false
 
 """
     files(cond, root)
