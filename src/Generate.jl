@@ -10,7 +10,7 @@ import Docile
 function loadfile(path :: AbstractString, out :: AbstractString)
     storage = task_local_storage()
     prev, path = getpath(path)
-    storage[:SOUCE_PATH] = path
+    storage[:SOURCE_PATH] = path
     try
         include_string(template(path, out))
     finally
