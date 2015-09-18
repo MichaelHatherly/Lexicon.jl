@@ -134,7 +134,7 @@ function mainsetup(io::IO, mime::MIME, doc::Metadata, ents::Entries,
 end
 
 function prepare_entries(idx::Dict{Symbol, Any}, ents::Entries, doc::Metadata, config::Config)
-    pageanchors = Dict{Symbol, Dict{String, Int}}([])
+    pageanchors = Dict{Symbol, Dict{AbstractString, Int}}([])
     for k in config.category_order
         haskey(idx, k) || continue
         k in keys(pageanchors) || (pageanchors[k] = Dict())

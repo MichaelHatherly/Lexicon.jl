@@ -1,17 +1,15 @@
 function test_query(q, text)
     res = run(q)
 
-    @fact res.query => q
-    @fact isempty(res.scores) => false
-    @fact isempty(res.matches) => false
+    @fact res.query --> q
+    @fact isempty(res.scores) --> false
+    @fact isempty(res.matches) --> false
 
     # Get the raw docstring.
     doc = getdoc(res)
 
-    @fact doc => text
+    @fact doc --> text
 end
-
-# getdoc(res) = data(docs(first(first(reverse(sort(collect(res.scores))))[2])))
 
 getdoc(res) = data(docs(first(first(reverse(sort([(a, b) for (a, b) in res.scores])))[2])))
 
@@ -123,14 +121,14 @@ facts("Query results.") do
 
     context("Partial signature matching.") do
 
-        @fact getdoc(query(f, (Any,))) => "f/1"
-        @fact getdoc(query(g, (Any,))) => "g/1"
+        @fact getdoc(query(f, (Any,))) --> "f/1"
+        @fact getdoc(query(g, (Any,))) --> "g/1"
 
-        @fact getdoc(query(A.f, (Any,))) => "A.f/1"
-        @fact getdoc(query(A.g, (Any,))) => "A.g/1"
+        @fact getdoc(query(A.f, (Any,))) --> "A.f/1"
+        @fact getdoc(query(A.g, (Any,))) --> "A.g/1"
 
-        @fact getdoc(query(A.B.f, (Any,))) => "A.B.f/1"
-        @fact getdoc(query(A.B.g, (Any,))) => "A.B.g/1"
+        @fact getdoc(query(A.B.f, (Any,))) --> "A.B.f/1"
+        @fact getdoc(query(A.B.g, (Any,))) --> "A.B.g/1"
 
     end
 

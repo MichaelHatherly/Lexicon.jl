@@ -5,7 +5,7 @@ type Failed <: Status end
 type Skipped <: Status end
 
 type Result{S <: Status}
-    codeblock::String
+    codeblock::AbstractString
     exception::Exception
     location::@compat(Tuple{Any, Int})
 
@@ -30,7 +30,7 @@ end
 printexception(io::IO, ::MIME"text/plain", r::Result{Passed}) = println(io)
 printexception(io::IO, ::MIME"text/plain", r::Result{Skipped}) = nothing
 
-function indented(io::IO, str::String, n::Int = 4)
+function indented(io::IO, str::AbstractString, n::Int = 4)
     for line in split(str, "\n")
         println(io, " "^n, line)
     end

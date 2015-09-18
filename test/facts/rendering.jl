@@ -129,7 +129,7 @@ facts("Rendering.") do
                 for startp in startpaths
                     res = Lexicon.relpath(filep, startp)
                     idx += 1
-                    @fact res => relpath_expected_results[idx] "Excpected: $(relpath_expected_results[idx])"
+                    @fact res --> relpath_expected_results[idx] "Excpected: $(relpath_expected_results[idx])"
                 end
             end
 

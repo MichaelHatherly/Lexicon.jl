@@ -1,5 +1,5 @@
 "Types that can be queried."
-typealias Queryable Union(Symbol, Expr, AbstractString)
+typealias Queryable @compat(Union{Symbol, Expr, AbstractString})
 
 """
 Holds the parsed user query.
@@ -101,13 +101,20 @@ query(ex::Queryable, index = 0) = build(objects(ex), modname(ex), index)
 query(other...) = throw(ArgumentError("Invalid arguments: query($(join(other, ", "))."))
 
 build(objects, mod, index)       = :(Lexicon.Query([$(objects...)], $(mod), $(index)))
-build(objects, ::Nothing, index) = :(Lexicon.Query([$(objects...)], $(index)))
+build(objects, ::@compat(Void), index) = :(Lexicon.Query([$(objects...)], $(index)))
 
 immutable Head{S} end
 
-macro H_str(text)
-    heads = [Head{symbol(t)} for t in split(text, ", ")]
-    Expr(:(::), Expr(:call, :Union, heads...))
+if VERSION < v"0.4.0-dev"
+    macro H_str(text)
+        heads = [Head{symbol(t)} for t in split(text, ", ")]
+        Expr(:(::), Expr(:call, :Union, heads...))
+    end
+else
+    macro H_str(text)
+        heads = [Head{symbol(t)} for t in split(text, ", ")]
+        Expr(:(::), Expr(:curly, :Union, heads...))
+    end
 end
 
 modname(ex::Expr) = modname(Head{ex.head}(), ex)
@@ -143,7 +150,7 @@ function partial_signature_matching(f::Function, sig)
     for m in f.env
         msig = tuple(tuple_collect(m.sig)...)
         for n = 1:length(msig)
-            isequal(typeintersect(msig[1:n], sig), Union()) || push!(ms, m)
+            isequal(typeintersect(msig[1:n], sig), @compat(Union{})) || push!(ms, m)
         end
     end
     ms
@@ -205,7 +212,7 @@ mostgeneral(T::DataType) = T{[tvar.ub for tvar in T.parameters]...}
 
 wrap_non_iterables(obj) = applicable(start, obj) ? obj : [obj]
 
-typealias SimpleObject Union(Symbol, Method, Module)
+typealias SimpleObject @compat(Union{Symbol, Method, Module})
 
 function append_result!(res, object::SimpleObject, meta)
     if haskey(entries(meta), object)

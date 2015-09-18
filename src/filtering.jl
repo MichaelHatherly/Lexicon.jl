@@ -37,7 +37,7 @@ entries( filter(d, files = ["types.jl"]) )
 ```
 
 """
-function Base.filter(docs::Metadata; categories = CATEGORY_ORDER, files = String[])
+function Base.filter(docs::Metadata; categories = CATEGORY_ORDER, files = AbstractString[])
     result = copy(docs)
     if length(files) > 0
         filter!((k,v) -> any(x -> contains(v.data[:source][2], x), files), result.entries)
