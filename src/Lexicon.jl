@@ -1,6 +1,8 @@
 module Lexicon
 
-import Docile.Interface:
+include("../deps/Docile/src/Docile.jl")
+
+import .Docile.Interface:
 
     parsedocs,
     macroname,
@@ -17,12 +19,7 @@ import Base:
     writemime,
     ==
 
-using
-
-    Base.Meta,
-    Compat,
-    Docile,
-    Docile.Interface
+using Base.Meta, Compat, .Docile, .Docile.Interface
 
 export
 

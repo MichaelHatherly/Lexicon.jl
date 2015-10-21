@@ -1,16 +1,14 @@
-OS_NAME == :Windows && Pkg.add("FactCheck") # Hack for appveyor.
-
 module LexiconTests
 
-using Docile
+using Lexicon.Docile
 @document
 
-using Docile.Interface, Lexicon, FactCheck
+using Lexicon.Docile.Interface, Lexicon, FactCheck
 
 import Lexicon: Query
 
 include(joinpath(dirname(@__FILE__), "testcases.jl"))
-Docile.Cache.register_module(joinpath(dirname(@__FILE__), "testcases.jl"))
+Lexicon.Docile.Cache.register_module(joinpath(dirname(@__FILE__), "testcases.jl"))
 
 import .TestCases: f, g, A, T, @m, K, S
 

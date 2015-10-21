@@ -1,6 +1,6 @@
 module TestCases
 
-using Docile
+using Lexicon.Docile
 @document
 
 "f"
@@ -37,7 +37,7 @@ end
 
 module A
 
-using Docile
+using Lexicon.Docile
 @document
 
 "A.f"
@@ -74,7 +74,7 @@ end
 
 module B
 
-using Docile
+using Lexicon.Docile
 @document
 
 "A.B.f"
