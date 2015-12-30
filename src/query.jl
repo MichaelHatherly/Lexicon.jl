@@ -147,10 +147,15 @@ end
 
 function partial_signature_matching(f::Function, sig)
     ms = Set{Method}()
-    for m in f.env
+    for m in methods(f)
         msig = tuple(tuple_collect(m.sig)...)
+        if length(msig) > 0 && msig[1] == typeof(f)
+            startof = 2
+        else
+            startof = 1
+        end
         for n = 1:length(msig)
-            isequal(typeintersect(msig[1:n], sig), @compat(Union{})) || push!(ms, m)
+            isequal(typeintersect(msig[startof:n], sig), @compat(Union{})) || push!(ms, m)
         end
     end
     ms
@@ -185,7 +190,7 @@ end
 calculate_score(query, text, object) = length(split(string(object, text), query)) - 1
 
 function append_result!(res, func::Function, meta)
-    ms = isgeneric(func) ? Set(methods(func)) : Set{Method}()
+    ms = _isgeneric(func) ? Set(methods(func)) : Set{Method}()
     for (object, entry) in entries(meta)
         if object ≡ func
             push!(res, entry, object, 2)
@@ -207,6 +212,14 @@ function append_result!(res, dt::DataType, meta)
 end
 
 append_result!(res, other, meta) = nothing
+
+function append_result!(res, lsd :: LambdaStaticData, meta)
+    for (object, entry) in entries(meta)
+        if object == lsd
+            push!(res, entry, object, 1)
+        end
+    end
+end
 
 mostgeneral(T::DataType) = T{[tvar.ub for tvar in T.parameters]...}
 

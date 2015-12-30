@@ -92,3 +92,15 @@ if VERSION < v"0.4.0-dev+4499"
         end
     end
 end
+
+if endswith(functionloc(isgeneric)[1], "deprecated.jl")
+    _isgeneric(x) = true
+else
+    _isgeneric(x) = isgeneric(x)
+end
+
+lsdfield(x :: Function, f)    = _isgeneric(x) ? lsdfield(methods(x), f) : lsdfield(x.code, f)
+lsdfield(x :: Method, f)      = lsdfield(x.func, f)
+lsdfield(x :: MethodTable, f) = lsdfield(x.defs, f)
+
+lsdfield(x :: LambdaStaticData, f) = getfield(x, f)
