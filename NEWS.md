@@ -1,3 +1,7 @@
+### v0.1.17
+
+* Fix issues caused by `julia/jb/functions` branch changes.
+
 ### v0.1.16
 
 * Fix deprecation warnings.
