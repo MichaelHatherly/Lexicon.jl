@@ -3,23 +3,23 @@ module TestCases
 using Docile
 @document
 
-"f"
-:f
-
 "f/0"
 f() = ()
 
 "f/1"
 f(x) = ()
 
-"g"
-:g
+"f"
+f
 
 "g/0"
 g() = ()
 
 "g/1"
 g(x) = ()
+
+"g"
+g
 
 "K"
 const K = ()
@@ -40,23 +40,23 @@ module A
 using Docile
 @document
 
-"A.f"
-:f
-
 "A.f/0"
 f() = ()
 
 "A.f/1"
 f(x) = ()
 
-"A.g"
-:g
+"A.f"
+f
 
 "A.g/0"
 g() = ()
 
 "A.g/1"
 g(x) = ()
+
+"A.g"
+g
 
 "A.K"
 const K = ()
@@ -77,23 +77,23 @@ module B
 using Docile
 @document
 
-"A.B.f"
-:f
-
 "A.B.f/0"
 f() = ()
 
 "A.B.f/1"
 f(x) = ()
 
-"A.B.g"
-:g
+"A.B.f"
+f
 
 "A.B.g/0"
 g() = ()
 
 "A.B.g/1"
 g(x) = ()
+
+"A.B.g"
+g
 
 "A.B.K"
 const K = ()
