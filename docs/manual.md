@@ -1,6 +1,6 @@
 ### Viewing Documentation
 
-Lexicon hooks into the REPL's `?` mode (help-mode) once `using Lexicon` has been
+Lexicon hooks into the REPL's `?` mode (help-mode) when `using Lexicon` is
 called from the REPL. Other environments, such as editors, are not currently
 supported.
 
@@ -12,7 +12,7 @@ types, and plain text.
 **Examples:**
 
 Searching for a `Function` named `foobar` will show a list of documentation
-associated with it and any of it's `Method`s that are also documented.
+associated with it and any of its `Method`s that are also documented.
 
 ```julia
 help?> foobar
