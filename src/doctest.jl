@@ -140,3 +140,19 @@ function runcode(block, modname)
         eval(sandbox, ex)
     end
 end
+
+"""Run doctests for every submodule of `m`. Usually this will be run before
+generating documentation.
+
+Returns true if the they run successfully, false is there was a test failure."""
+function run_doctests(m::Module)
+    for m in modules
+        failures = failed(doctest(m))
+        if !isempty(failures.results)
+            println("\nDoctests failed, aborting.\n")
+            display(failures)
+            return false  # Bail when doctests fail.
+        end
+    end
+    return true
+end
