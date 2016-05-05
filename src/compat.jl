@@ -1,4 +1,9 @@
 ### Handle differences between versions. --------------------------------------------------------
+if VERSION < v"0.4.0-dev"
+    function symbol(m::Module)
+        symbol(string(m))
+    end
+end
 
 if VERSION < v"0.4.0-dev+2418"
     # returns the index of the previous element for which the function returns true, or zero if it never does
