@@ -93,7 +93,7 @@ if VERSION < v"0.4.0-dev+4499"
     end
 end
 
-if endswith(functionloc(isgeneric)[1], "deprecated.jl")
+if typeof(functionloc(isgeneric)[1])!=Void && endswith(functionloc(isgeneric)[1], "deprecated.jl")
     _isgeneric(x) = true
 else
     _isgeneric(x) = isgeneric(x)
