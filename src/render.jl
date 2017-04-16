@@ -74,8 +74,8 @@ function update_config!(config::Config, args::Dict)
 end
 
 type Entries
-    sourcepaths :: Vector{UTF8String}
-    modulenames :: Vector{UTF8String}
+    sourcepaths :: Vector{UTF8String} # TODO: check if we really need a Vector: are there cases like that?
+    modulenames :: Vector{UTF8String} # TODO: check if we really need a Vector: are there cases like that?
     include_internal::Bool
     exported::Dict{Symbol, Vector{@compat(Tuple{Module, Any, AbstractEntry, AbstractString})}}
     internal::Dict{Symbol, Vector{@compat(Tuple{Module, Any, AbstractEntry, AbstractString})}}

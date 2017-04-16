@@ -1,6 +1,6 @@
 User adjustable Lexicon configuration.
 
-#### Options
+##### Options
 
 *General Options*
 
@@ -41,18 +41,18 @@ characters or 0 to 2 `*` characters.
 
 * `md_index_modprefix`     (default: `"MODULE: "`): This option sets for the *API-Index Page*
   a "prefix" text before the modulename.
-  `md_genindex_module_prefix = ""` if only the modulename should be displayed.
+  `md_index_modprefix = ""` if only the modulename should be displayed.
 * `md_permalink`           (default: `true`):  Adds a **¶** a permalink to each definition.
   To disable it the keyword argument `md_permalink = false` should be set.
 
 Any option can be user adjusted by passing keyword arguments to the `save` method.
 
 
-#### Config Usage
+##### Config Usage
 
 There are 3 ways to define user adjusted configuration settings.
 
-**Config**
+*1. Config*
 
 ```julia_skip
 using Lexicon
@@ -64,7 +64,7 @@ config = Config()
 config = Config(md_permalink = false, mathjax = true)
 ```
 
-**Document `save` method**
+*2. Document `save` method*
 
 The document `save` method accepts also a 'Config' as argument or supplies internaly a default one.
 Similar to the above 'Config usage' one can also pass otional `args...` which will overwrite a
@@ -117,6 +117,24 @@ save("docs/api/Lexicon.md", Lexicon, config; md_permalink = false, mathjax = tru
 save("docs/api/Lexicon.md", Lexicon; md_permalink = false, mathjax = true);
 ```
 
-**API-Index `save` method**
 
-The *API-Index* `save` method works similar to the above *Document `save` method*
+*3. API-Index `save` method*
+
+The configuration settings for the *API-Index* `save` method works similar to the above
+*Document `save` method*
+
+```
+using Lexicon
+index = Index([save("docs/api/Lexicon.md", Lexicon)]);
+
+# 1.
+config = Config(md_subheader = :category)
+save("docs/api/index.md", index, config);
+
+# 2. using the default supplied Config
+save("docs/api/index.md", index; md_subheader = :category);
+
+# 3. using all defaults
+save("docs/api/index.md", index);
+
+```
