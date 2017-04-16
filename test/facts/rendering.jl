@@ -53,6 +53,20 @@ facts("Rendering.") do
         end
     end
 
+    context("Convert Helpers.") do
+        expr = :(:function, (:call, (:curly, :myrehash, :K, :V), (:parameters, (:kw, (:(::), :rm, :Bool), false),
+                (:kw, (:(::), :prefix_ext, (:curly, :Dict, :K, :V)), (:call, :Dict, (:vect, (:tuple, (:quote, #QuoteNode
+                :remote), false))))), (:(::), :h, (:curly, :Dict, :K, :V)), (:(::), :k, :ByteString),
+                (:kw, :newsz, (:call, :length, (:., :h, (:quote, #QuoteNode
+                :keys)))), (:kw, (:(::), :x, (:curly, :Dict, :K, :V)), (:call, :Dict, (:vect, (:tuple, (:quote, #QuoteNode
+                :con), 10))))), (:block,))
+
+        mysymbol = :dummysym
+        @fact isa(convert(UTF8String, expr), UTF8String) => true "Conversion Expression -> UTF8String)"
+        @fact isa(convert(UTF8String, mysymbol), UTF8String) => true "Conversion Symbol -> UTF8String)"
+
+    end
+
     if VERSION < v"0.4.0-dev+4393"
         context("Testing relpath.") do
             sep = Base.path_separator
