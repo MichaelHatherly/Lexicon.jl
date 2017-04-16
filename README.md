@@ -53,6 +53,16 @@ Pkg.add("Lexicon")
 Package documentation is available for the [stable][stable-docs-url] and
 [development][latest-docs-url] versions.
 
+
+## Projects using Lexicon
+
+* [Docile.jl](https://github.com/MichaelHatherly/Docile.jl) Julia package documentation system.
+
+* [Lexicon.jl](https://github.com/MichaelHatherly/Lexicon.jl) Julia package documentation generator.
+
+If you use Lexicon please *file an issue* or send a *pull request* through GitHub to be listed here.
+
+
 ## Issues and Support
 
 Please file any issues or feature requests you might have through the GitHub
